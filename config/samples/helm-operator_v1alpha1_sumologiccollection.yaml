@@ -1,0 +1,2694 @@
+apiVersion: helm-operator.sumologic.com/v1alpha1
+kind: SumologicCollection
+metadata:
+  name: sumologiccollection-sample
+spec:
+  # Default values copied from <project_dir>/helm-charts/sumologic/values.yaml
+  falco:
+    addKernelDevel: true
+    affinity: {}
+    auditLog:
+      dynamicBackend:
+        enabled: false
+        url: ""
+      enabled: false
+    certs:
+      ca:
+        crt: ""
+      server:
+        crt: ""
+        key: ""
+    containerd:
+      enabled: true
+      socket: /run/containerd/containerd.sock
+    customRules:
+      rules_user_known_k8s_api_callers.yaml: |-
+        - macro: user_known_contact_k8s_api_server_activities
+          condition: >
+            (container.image.repository = "sumologic/kubernetes-fluentd") or
+            (container.image.repository = "quay.io/prometheus/prometheus") or
+            (container.image.repository = "quay.io/coreos/prometheus-operator") or
+            (container.image.repository = "quay.io/influxdb/telegraf-operator") or
+            (container.image.repository = "kiwigrid/k8s-sidecar")
+      rules_user_privileged_containers.yaml: |-
+        - macro: user_privileged_containers
+          condition: >
+            (container.image.repository endswith ".amazonaws.com/eks/kube-proxy")
+      rules_user_sensitive_mount_containers.yaml: |-
+        - macro: user_sensitive_mount_containers
+          condition: >
+            (container.image.repository = "falcosecurity/falco") or
+            (container.image.repository = "quay.io/prometheus/node-exporter")
+    daemonset:
+      env: {}
+      podAnnotations: {}
+      updateStrategy:
+        type: RollingUpdate
+    docker:
+      enabled: true
+      socket: /var/run/docker.sock
+    ebpf:
+      enabled: false
+      path: null
+      settings:
+        hostNetwork: true
+    enabled: false
+    extraArgs: []
+    extraInitContainers:
+    - command:
+      - sh
+      - -c
+      - |
+        while [ -f /host/etc/redhat-release ] && [ -z "$(ls /host/usr/src/kernels)" ] ; do
+        echo "waiting for kernel headers to be installed"
+        sleep 3
+        done
+      image: busybox
+      name: init-falco
+      volumeMounts:
+      - mountPath: /host/usr
+        name: usr-fs
+        readOnly: true
+      - mountPath: /host/etc
+        name: etc-fs
+        readOnly: true
+    extraVolumeMounts: []
+    extraVolumes: []
+    fakeEventGenerator:
+      args:
+      - run
+      - --loop
+      - ^syscall
+      enabled: false
+      replicas: 1
+    falco:
+      bufferedOutputs: false
+      fileOutput:
+        enabled: false
+        filename: ./events.txt
+        keepAlive: false
+      grpc:
+        certChain: /etc/falco/certs/server.crt
+        enabled: false
+        listenPort: 5060
+        privateKey: /etc/falco/certs/server.key
+        rootCerts: /etc/falco/certs/ca.crt
+        threadiness: 0
+        unixSocketPath: unix:///var/run/falco/falco.sock
+      grpcOutput:
+        enabled: false
+      httpOutput:
+        enabled: false
+        url: http://some.url
+      jsonIncludeOutputProperty: true
+      jsonOutput: true
+      logLevel: info
+      logStderr: true
+      logSyslog: true
+      output_timeout: 2000
+      outputs:
+        maxBurst: 1000
+        rate: 1
+      priority: debug
+      programOutput:
+        enabled: false
+        keepAlive: false
+        program: mail -s "Falco Notification" someone@example.com
+      rulesFile:
+      - /etc/falco/falco_rules.yaml
+      - /etc/falco/falco_rules.local.yaml
+      - /etc/falco/k8s_audit_rules.yaml
+      - /etc/falco/rules.d
+      stdoutOutput:
+        enabled: true
+      syscallEventDrops:
+        actions:
+        - log
+        - alert
+        maxBurst: 10
+        rate: 0.03333
+      syslogOutput:
+        enabled: true
+      timeFormatISO8601: false
+      webserver:
+        enabled: true
+        k8sAuditEndpoint: /k8s-audit
+        listenPort: 8765
+        nodePort: false
+        sslCertificate: /etc/falco/certs/server.pem
+        sslEnabled: false
+    falcosidekick:
+      affinity: {}
+      config:
+        alertmanager:
+          hostport: ""
+          minimumpriority: ""
+        aws:
+          accesskeyid: ""
+          cloudwatchlogs:
+            loggroup: ""
+            logstream: ""
+            minimumpriority: ""
+          lambda:
+            functionname: ""
+            minimumpriority: ""
+          region: ""
+          secretaccesskey: ""
+          sns:
+            minimumpriority: ""
+            rawjson: false
+            topicarn: ""
+          sqs:
+            minimumpriority: ""
+            url: ""
+        azure:
+          eventHub:
+            minimumpriority: ""
+            name: ""
+            namespace: ""
+          podIdentityClientID: ""
+          podIdentityName: ""
+          resourceGroupName: ""
+          subscriptionID: ""
+        checkcert: true
+        cloudevents:
+          address: ""
+          extension: ""
+          minimumpriority: ""
+        customfields: ""
+        datadog:
+          apikey: ""
+          host: ""
+          minimumpriority: ""
+        debug: false
+        discord:
+          icon: ""
+          minimumpriority: ""
+          webhookurl: ""
+        dogstatsd:
+          forwarder: ""
+          namespace: falcosidekick.
+          tags: ""
+        elasticsearch:
+          hostport: ""
+          index: falco
+          minimumpriority: ""
+          type: event
+        existingSecret: ""
+        extraEnv: []
+        gcp:
+          credentials: ""
+          pubsub:
+            minimumpriority: ""
+            projectid: ""
+            topic: ""
+        googlechat:
+          messageformat: ""
+          minimumpriority: ""
+          outputformat: all
+          webhookurl: ""
+        influxdb:
+          database: falco
+          hostport: ""
+          minimumpriority: ""
+          password: ""
+          user: ""
+        kafka:
+          messageformat: ""
+          minimumpriority: ""
+          partition: "0"
+          topic: ""
+          url: ""
+        kubeless:
+          function: ""
+          minimumpriority: ""
+          namespace: ""
+          port: 8080
+        loki:
+          hostport: ""
+          minimumpriority: ""
+        mattermost:
+          footer: ""
+          icon: ""
+          messageformat: ""
+          minimumpriority: ""
+          outputformat: all
+          username: ""
+          webhookurl: ""
+        nats:
+          hostport: ""
+          minimumpriority: ""
+        opsgenie:
+          apikey: ""
+          minimumpriority: ""
+          region: ""
+        pagerduty:
+          apikey: ""
+          assignee: ""
+          escalationpolicy: ""
+          minimumpriority: ""
+          service: ""
+        rocketchat:
+          icon: ""
+          messageformat: ""
+          minimumpriority: ""
+          outputformat: all
+          username: ""
+          webhookurl: ""
+        slack:
+          footer: ""
+          icon: ""
+          messageformat: ""
+          minimumpriority: ""
+          outputformat: all
+          username: ""
+          webhookurl: ""
+        smtp:
+          from: ""
+          hostport: ""
+          minimumpriority: ""
+          outputformat: html
+          password: ""
+          to: ""
+          user: ""
+        stan:
+          clientid: ""
+          clusterid: ""
+          hostport: ""
+          minimumpriority: ""
+        statsd:
+          forwarder: ""
+          namespace: falcosidekick.
+        teams:
+          activityimage: ""
+          minimumpriority: ""
+          outputformat: all
+          webhookurl: ""
+        webhook:
+          address: ""
+          customHeaders: ""
+          minimumpriority: ""
+      enabled: false
+      fullnameOverride: ""
+      global: {}
+      image:
+        pullPolicy: IfNotPresent
+        repository: falcosecurity/falcosidekick
+        tag: 2.21.0
+      imagePullSecrets: []
+      ingress:
+        annotations: {}
+        enabled: false
+        hosts:
+        - host: falcosidekick.local
+          paths: []
+        tls: []
+      nameOverride: ""
+      nodeSelector: {}
+      podAnnotations: {}
+      podSecurityContext:
+        fsGroup: 1234
+        runAsUser: 1234
+      podSecurityPolicy:
+        create: false
+      priorityClassName: ""
+      replicaCount: 2
+      resources: {}
+      service:
+        port: 2801
+        type: ClusterIP
+      tolerations: []
+      webui:
+        affinity: {}
+        enabled: false
+        image:
+          pullPolicy: IfNotPresent
+          repository: falcosecurity/falcosidekick-ui
+          tag: v0.1.0
+        imagePullSecrets: []
+        ingress:
+          annotations: {}
+          enabled: false
+          hosts:
+          - host: falcosidekick-ui.local
+            paths:
+            - /ui
+            - /events
+            - /healthz
+            - /ws
+          tls: []
+        nodeSelector: {}
+        podAnnotations: {}
+        podSecurityContext:
+          fsGroup: 1234
+          runAsUser: 1234
+        podSecurityPolicy:
+          create: false
+        priorityClassName: ""
+        resources: {}
+        retention: 50
+        service:
+          nodePort: 30282
+          port: 2802
+          type: ClusterIP
+        tolerations: []
+    global: {}
+    image:
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+      registry: public.ecr.aws
+      repository: sumologic/falco
+      tag: 0.27.0
+    nodeSelector: {}
+    podSecurityPolicy:
+      create: false
+    priorityClassName: null
+    proxy:
+      httpProxy: null
+      httpsProxy: null
+      noProxy: null
+    rbac:
+      create: true
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 1024Mi
+      requests:
+        cpu: 100m
+        memory: 512Mi
+    scc:
+      create: true
+    serviceAccount:
+      create: true
+      name: null
+    timezone: null
+    tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/master
+  fluent-bit:
+    affinity: {}
+    args: []
+    command: []
+    config:
+      customParsers: |
+        [PARSER]
+            Name        multi_line
+            Format      regex
+            Regex       (?<log>^{"log":"\d{4}-\d{1,2}-\d{1,2}.\d{2}:\d{2}:\d{2}.*)
+        [PARSER]
+            Name         crio
+            Format       regex
+            Regex        ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<log>.*)$
+            Time_Key     time
+            Time_Format  %Y-%m-%dT%H:%M:%S.%L%z
+        [PARSER]
+            Name         containerd
+            Format       regex
+            Regex        ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<log>.*)$
+            Time_Key     time
+            Time_Format  %Y-%m-%dT%H:%M:%S.%LZ
+      filters: |
+        [FILTER]
+            Name kubernetes
+            Match kube.*
+            Merge_Log On
+            Keep_Log Off
+            K8S-Logging.Parser On
+            K8S-Logging.Exclude On
+      inputs: |
+        [INPUT]
+            Name                tail
+            Path                /var/log/containers/*.log
+            Docker_Mode         On
+            Docker_Mode_Parser  multi_line
+            Tag                 containers.*
+            Refresh_Interval    1
+            Rotate_Wait         60
+            Mem_Buf_Limit       5MB
+            Skip_Long_Lines     On
+            DB                  /tail-db/tail-containers-state-sumo.db
+            DB.Sync             Normal
+        [INPUT]
+            Name            systemd
+            Tag             host.*
+            DB              /tail-db/systemd-state-sumo.db
+            Systemd_Filter  _SYSTEMD_UNIT=addon-config.service
+            Systemd_Filter  _SYSTEMD_UNIT=addon-run.service
+            Systemd_Filter  _SYSTEMD_UNIT=cfn-etcd-environment.service
+            Systemd_Filter  _SYSTEMD_UNIT=cfn-signal.service
+            Systemd_Filter  _SYSTEMD_UNIT=clean-ca-certificates.service
+            Systemd_Filter  _SYSTEMD_UNIT=containerd.service
+            Systemd_Filter  _SYSTEMD_UNIT=coreos-metadata.service
+            Systemd_Filter  _SYSTEMD_UNIT=coreos-setup-environment.service
+            Systemd_Filter  _SYSTEMD_UNIT=coreos-tmpfiles.service
+            Systemd_Filter  _SYSTEMD_UNIT=dbus.service
+            Systemd_Filter  _SYSTEMD_UNIT=docker.service
+            Systemd_Filter  _SYSTEMD_UNIT=efs.service
+            Systemd_Filter  _SYSTEMD_UNIT=etcd-member.service
+            Systemd_Filter  _SYSTEMD_UNIT=etcd.service
+            Systemd_Filter  _SYSTEMD_UNIT=etcd2.service
+            Systemd_Filter  _SYSTEMD_UNIT=etcd3.service
+            Systemd_Filter  _SYSTEMD_UNIT=etcdadm-check.service
+            Systemd_Filter  _SYSTEMD_UNIT=etcdadm-reconfigure.service
+            Systemd_Filter  _SYSTEMD_UNIT=etcdadm-save.service
+            Systemd_Filter  _SYSTEMD_UNIT=etcdadm-update-status.service
+            Systemd_Filter  _SYSTEMD_UNIT=flanneld.service
+            Systemd_Filter  _SYSTEMD_UNIT=format-etcd2-volume.service
+            Systemd_Filter  _SYSTEMD_UNIT=kube-node-taint-and-uncordon.service
+            Systemd_Filter  _SYSTEMD_UNIT=kubelet.service
+            Systemd_Filter  _SYSTEMD_UNIT=ldconfig.service
+            Systemd_Filter  _SYSTEMD_UNIT=locksmithd.service
+            Systemd_Filter  _SYSTEMD_UNIT=logrotate.service
+            Systemd_Filter  _SYSTEMD_UNIT=lvm2-monitor.service
+            Systemd_Filter  _SYSTEMD_UNIT=mdmon.service
+            Systemd_Filter  _SYSTEMD_UNIT=nfs-idmapd.service
+            Systemd_Filter  _SYSTEMD_UNIT=nfs-mountd.service
+            Systemd_Filter  _SYSTEMD_UNIT=nfs-server.service
+            Systemd_Filter  _SYSTEMD_UNIT=nfs-utils.service
+            Systemd_Filter  _SYSTEMD_UNIT=node-problem-detector.service
+            Systemd_Filter  _SYSTEMD_UNIT=ntp.service
+            Systemd_Filter  _SYSTEMD_UNIT=oem-cloudinit.service
+            Systemd_Filter  _SYSTEMD_UNIT=rkt-gc.service
+            Systemd_Filter  _SYSTEMD_UNIT=rkt-metadata.service
+            Systemd_Filter  _SYSTEMD_UNIT=rpc-idmapd.service
+            Systemd_Filter  _SYSTEMD_UNIT=rpc-mountd.service
+            Systemd_Filter  _SYSTEMD_UNIT=rpc-statd.service
+            Systemd_Filter  _SYSTEMD_UNIT=rpcbind.service
+            Systemd_Filter  _SYSTEMD_UNIT=set-aws-environment.service
+            Systemd_Filter  _SYSTEMD_UNIT=system-cloudinit.service
+            Systemd_Filter  _SYSTEMD_UNIT=systemd-timesyncd.service
+            Systemd_Filter  _SYSTEMD_UNIT=update-ca-certificates.service
+            Systemd_Filter  _SYSTEMD_UNIT=user-cloudinit.service
+            Systemd_Filter  _SYSTEMD_UNIT=var-lib-etcd2.service
+            Max_Entries     1000
+            Read_From_Tail  true
+      outputs: |
+        [OUTPUT]
+            Name          forward
+            Match         *
+            Host          ${FLUENTD_LOGS_SVC}.${NAMESPACE}.svc.cluster.local.
+            Port          24321
+            Retry_Limit   False
+            tls           off
+            tls.verify    on
+            tls.debug     1
+            # Disable keepalive for better load balancing
+            net.keepalive off
+      service: |
+        [SERVICE]
+            Flush        1
+            Daemon       Off
+            Log_Level    info
+            Parsers_File parsers.conf
+            Parsers_File custom_parsers.conf
+            HTTP_Server  On
+            HTTP_Listen  0.0.0.0
+            HTTP_Port    2020
+    daemonSetVolumeMounts:
+    - mountPath: /var/log
+      name: varlog
+    - mountPath: /var/lib/docker/containers
+      name: varlibdockercontainers
+      readOnly: true
+    - mountPath: /etc/machine-id
+      name: etcmachineid
+      readOnly: true
+    daemonSetVolumes:
+    - hostPath:
+        path: /var/log
+      name: varlog
+    - hostPath:
+        path: /var/lib/docker/containers
+      name: varlibdockercontainers
+    - hostPath:
+        path: /etc/machine-id
+        type: File
+      name: etcmachineid
+    dashboards:
+      annotations: {}
+      enabled: false
+      labelKey: grafana_dashboard
+    dnsConfig: {}
+    env:
+    - name: FLUENTD_LOGS_SVC
+      valueFrom:
+        configMapKeyRef:
+          key: fluentdLogs
+          name: sumologic-configmap
+    - name: NAMESPACE
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.namespace
+    envFrom: []
+    existingConfigMap: ""
+    extraContainers: []
+    extraPorts: []
+    extraVolumeMounts:
+    - mountPath: /tail-db
+      name: tail-db
+    extraVolumes:
+    - hostPath:
+        path: /var/lib/fluent-bit
+        type: DirectoryOrCreate
+      name: tail-db
+    fullnameOverride: ""
+    global: {}
+    image:
+      pullPolicy: IfNotPresent
+      repository: public.ecr.aws/sumologic/fluent-bit
+    imagePullSecrets: []
+    kind: DaemonSet
+    livenessProbe:
+      httpGet:
+        path: /
+        port: http
+    luaScripts: {}
+    nameOverride: ""
+    networkPolicy:
+      enabled: false
+    nodeSelector: {}
+    podAnnotations: {}
+    podLabels: {}
+    podSecurityContext: {}
+    podSecurityPolicy:
+      annotations: {}
+      create: false
+    priorityClassName: ""
+    prometheusRule:
+      enabled: false
+    rbac:
+      create: true
+    readinessProbe:
+      httpGet:
+        path: /
+        port: http
+    replicaCount: 1
+    resources: {}
+    securityContext: {}
+    service:
+      annotations: {}
+      labels:
+        sumologic.com/scrape: "true"
+      port: 2020
+      type: ClusterIP
+    serviceAccount:
+      annotations: {}
+      create: true
+    serviceMonitor:
+      enabled: false
+    testFramework:
+      image:
+        pullPolicy: Always
+        repository: busybox
+        tag: latest
+    tolerations:
+    - effect: NoSchedule
+      operator: Exists
+    updateStrategy: {}
+    volumeMounts:
+    - mountPath: fluent-bit/etc/fluent-bit.conf
+      name: config
+      subPath: fluent-bit.conf
+    - mountPath: /fluent-bit/etc/custom_parsers.conf
+      name: config
+      subPath: custom_parsers.conf
+  fluentd:
+    additionalPlugins: []
+    buffer:
+      chunkLimitSize: 1m
+      compress: gzip
+      extraConf: ""
+      filePaths:
+        events: /fluentd/buffer/events
+        logs:
+          containers: /fluentd/buffer/logs.containers
+          default: /fluentd/buffer/logs.default
+          kubelet: /fluentd/buffer/logs.kubelet
+          systemd: /fluentd/buffer/logs.systemd
+        metrics:
+          apiserver: /fluentd/buffer/metrics.apiserver
+          container: /fluentd/buffer/metrics.container
+          control-plane: /fluentd/buffer/metrics.control_plane
+          controller: /fluentd/buffer/metrics.controller
+          default: /fluentd/buffer/metrics.default
+          kubelet: /fluentd/buffer/metrics.kubelet
+          node: /fluentd/buffer/metrics.node
+          scheduler: /fluentd/buffer/metrics.scheduler
+          state: /fluentd/buffer/metrics.state
+        traces: /fluentd/buffer/traces
+      flushInterval: 5s
+      numThreads: 8
+      queueChunkLimitSize: 128
+      retryForever: true
+      retryMaxInterval: 10m
+      totalLimitSize: 128m
+      type: memory
+    compression:
+      enabled: true
+      encoding: gzip
+    events:
+      enabled: true
+      overrideOutputConf: ""
+      sourceCategory: ""
+      statefulset:
+        containers:
+          fluentd:
+            securityContext: {}
+        nodeSelector: {}
+        podAnnotations: {}
+        podLabels: {}
+        priorityClassName: null
+        resources:
+          limits:
+            cpu: 200m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 256Mi
+        tolerations: {}
+    image:
+      pullPolicy: IfNotPresent
+      repository: public.ecr.aws/sumologic/kubernetes-fluentd
+      tag: 1.12.1-sumo-0
+    logLevel: info
+    logLevelFilter: true
+    logs:
+      autoscaling:
+        enabled: false
+        maxReplicas: 10
+        minReplicas: 3
+        targetCPUUtilizationPercentage: 50
+      containers:
+        excludeContainerRegex: ""
+        excludeHostRegex: ""
+        excludeNamespaceRegex: ""
+        excludePodRegex: ""
+        extraFilterPluginConf: ""
+        extraOutputPluginConf: ""
+        k8sMetadataFilter:
+          bearerTokenFile: ""
+          caFile: ""
+          clientCert: ""
+          clientKey: ""
+          verifySsl: true
+          watch: "true"
+        multiline:
+          enabled: true
+        outputConf: '@include logs.output.conf'
+        overrideOutputConf: ""
+        overrideRawConfig: ""
+        sourceCategory: '%{namespace}/%{pod_name}'
+        sourceCategoryPrefix: kubernetes/
+        sourceCategoryReplaceDash: /
+        sourceName: '%{namespace}.%{pod}.%{container}'
+      default:
+        excludeFacilityRegex: ""
+        excludeHostRegex: ""
+        excludePriorityRegex: ""
+        excludeUnitRegex: ""
+        extraFilterPluginConf: ""
+        extraOutputPluginConf: ""
+        outputConf: '@include logs.output.conf'
+        overrideOutputConf: ""
+        sourceCategory: default
+        sourceCategoryPrefix: kubernetes/
+        sourceCategoryReplaceDash: /
+        sourceName: k8s_default
+      enabled: true
+      extraLogs: ""
+      input:
+        forwardExtraConf: ""
+      kubelet:
+        enabled: true
+        excludeFacilityRegex: ""
+        excludeHostRegex: ""
+        excludePriorityRegex: ""
+        excludeUnitRegex: ""
+        extraFilterPluginConf: ""
+        extraOutputPluginConf: ""
+        outputConf: '@include logs.output.conf'
+        overrideOutputConf: ""
+        sourceCategory: kubelet
+        sourceCategoryPrefix: kubernetes/
+        sourceCategoryReplaceDash: /
+        sourceName: k8s_kubelet
+      output:
+        addTimestamp: true
+        extraConf: ""
+        logFormat: fields
+        pluginLogLevel: error
+        timestampKey: timestamp
+      podDisruptionBudget:
+        minAvailable: 2
+      rawConfig: |-
+        @include common.conf
+        @include logs.conf
+      statefulset:
+        affinity: {}
+        containers:
+          fluentd:
+            securityContext: {}
+        nodeSelector: {}
+        podAnnotations: {}
+        podAntiAffinity: soft
+        podLabels: {}
+        priorityClassName: null
+        replicaCount: 3
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+          requests:
+            cpu: 500m
+            memory: 768Mi
+        tolerations: {}
+      systemd:
+        enabled: true
+        excludeFacilityRegex: ""
+        excludeHostRegex: ""
+        excludePriorityRegex: ""
+        excludeUnitRegex: ""
+        extraFilterPluginConf: ""
+        extraOutputPluginConf: ""
+        outputConf: '@include logs.output.conf'
+        overrideOutputConf: ""
+        sourceCategory: system
+        sourceCategoryPrefix: kubernetes/
+        sourceCategoryReplaceDash: /
+        sourceName: k8s_systemd
+    metadata:
+      apiGroups:
+      - apps/v1
+      - extensions/v1beta1
+      cacheRefresh: "3600"
+      cacheRefreshVariation: "900"
+      cacheSize: "10000"
+      cacheTtl: "7200"
+      coreApiVersions:
+      - v1
+      pluginLogLevel: error
+    metrics:
+      autoscaling:
+        enabled: false
+        maxReplicas: 10
+        minReplicas: 3
+        targetCPUUtilizationPercentage: 50
+      enabled: true
+      extraFilterPluginConf: ""
+      extraOutputPluginConf: ""
+      output:
+        apiserver:
+          id: sumologic.endpoint.metrics.apiserver
+          tag: prometheus.metrics.apiserver**
+          weight: 90
+        container:
+          id: sumologic.endpoint.metrics.container
+          source: kubelet
+          tag: prometheus.metrics.container**
+          weight: 90
+        control-plane:
+          id: sumologic.endpoint.metrics.control.plane
+          tag: prometheus.metrics.control-plane**
+          weight: 90
+        controller:
+          id: sumologic.endpoint.metrics.kube.controller.manager
+          tag: prometheus.metrics.controller-manager**
+          weight: 90
+        default:
+          id: sumologic.endpoint.metrics
+          tag: prometheus.metrics**
+          weight: 100
+        kubelet:
+          id: sumologic.endpoint.metrics.kubelet
+          tag: prometheus.metrics.kubelet**
+          weight: 90
+        node:
+          id: sumologic.endpoint.metrics.node.exporter
+          tag: prometheus.metrics.node**
+          weight: 90
+        scheduler:
+          id: sumologic.endpoint.metrics.kube.scheduler
+          tag: prometheus.metrics.scheduler**
+          weight: 90
+        state:
+          id: sumologic.endpoint.metrics.kube.state
+          tag: prometheus.metrics.state**
+          weight: 90
+      outputConf: '@include metrics.output.conf'
+      overrideOutputConf: ""
+      podDisruptionBudget:
+        minAvailable: 2
+      rawConfig: |-
+        @include common.conf
+        @include metrics.conf
+      statefulset:
+        affinity: {}
+        containers:
+          fluentd:
+            securityContext: {}
+        nodeSelector: {}
+        podAnnotations: {}
+        podAntiAffinity: soft
+        podLabels: {}
+        priorityClassName: null
+        replicaCount: 3
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+          requests:
+            cpu: 500m
+            memory: 768Mi
+        tolerations: {}
+    monitoring:
+      input: false
+      output: false
+    persistence:
+      accessMode: ReadWriteOnce
+      enabled: true
+      size: 10Gi
+    podAnnotations: {}
+    podLabels: {}
+    podSecurityPolicy:
+      create: false
+    proxyUri: ""
+    securityContext:
+      fsGroup: 999
+    verifySsl: true
+  kube-prometheus-stack:
+    additionalPrometheusRulesMap:
+      pre-1.14-node-rules:
+        groups:
+        - name: node-pre-1.14.rules
+          rules:
+          - expr: 1 - avg(rate(node_cpu_seconds_total{job="node-exporter",mode="idle"}[1m]))
+            record: :node_cpu_utilisation:avg1m
+          - expr: |-
+              1 - avg by (node) (
+                rate(node_cpu_seconds_total{job="node-exporter",mode="idle"}[1m])
+              * on (namespace, pod) group_left(node)
+                node_namespace_pod:kube_pod_info:)
+            record: node:node_cpu_utilisation:avg1m
+          - expr: |-
+              1 -
+              sum(
+                node_memory_MemFree_bytes{job="node-exporter"} +
+                node_memory_Cached_bytes{job="node-exporter"} +
+                node_memory_Buffers_bytes{job="node-exporter"}
+              )
+              /
+              sum(node_memory_MemTotal_bytes{job="node-exporter"})
+            record: ':node_memory_utilisation:'
+          - expr: |-
+              sum by (node) (
+                (
+                  node_memory_MemFree_bytes{job="node-exporter"} +
+                  node_memory_Cached_bytes{job="node-exporter"} +
+                  node_memory_Buffers_bytes{job="node-exporter"}
+                )
+                * on (namespace, pod) group_left(node)
+                  node_namespace_pod:kube_pod_info:
+              )
+            record: node:node_memory_bytes_available:sum
+          - expr: |-
+              (node:node_memory_bytes_total:sum - node:node_memory_bytes_available:sum)
+              /
+              node:node_memory_bytes_total:sum
+            record: node:node_memory_utilisation:ratio
+          - expr: |-
+              1 -
+              sum by (node) (
+                (
+                  node_memory_MemFree_bytes{job="node-exporter"} +
+                  node_memory_Cached_bytes{job="node-exporter"} +
+                  node_memory_Buffers_bytes{job="node-exporter"}
+                )
+              * on (namespace, pod) group_left(node)
+                node_namespace_pod:kube_pod_info:
+              )
+              /
+              sum by (node) (
+                node_memory_MemTotal_bytes{job="node-exporter"}
+              * on (namespace, pod) group_left(node)
+                node_namespace_pod:kube_pod_info:
+              )
+            record: 'node:node_memory_utilisation:'
+          - expr: 1 - (node:node_memory_bytes_available:sum / node:node_memory_bytes_total:sum)
+            record: 'node:node_memory_utilisation_2:'
+          - expr: |-
+              max by (instance, namespace, pod, device) ((node_filesystem_size_bytes{fstype=~"ext[234]|btrfs|xfs|zfs"}
+              - node_filesystem_avail_bytes{fstype=~"ext[234]|btrfs|xfs|zfs"})
+              / node_filesystem_size_bytes{fstype=~"ext[234]|btrfs|xfs|zfs"})
+            record: 'node:node_filesystem_usage:'
+          - expr: |-
+              sum by (node) (
+                node_memory_MemTotal_bytes{job="node-exporter"}
+                * on (namespace, pod) group_left(node)
+                  node_namespace_pod:kube_pod_info:
+              )
+            record: node:node_memory_bytes_total:sum
+          - expr: |-
+              sum(irate(node_network_receive_bytes_total{job="node-exporter",device!~"veth.+"}[1m])) +
+              sum(irate(node_network_transmit_bytes_total{job="node-exporter",device!~"veth.+"}[1m]))
+            record: :node_net_utilisation:sum_irate
+          - expr: |-
+              sum by (node) (
+                (irate(node_network_receive_bytes_total{job="node-exporter",device!~"veth.+"}[1m]) +
+                irate(node_network_transmit_bytes_total{job="node-exporter",device!~"veth.+"}[1m]))
+              * on (namespace, pod) group_left(node)
+                node_namespace_pod:kube_pod_info:
+              )
+            record: node:node_net_utilisation:sum_irate
+          - expr: |-
+              sum(irate(node_network_receive_drop_total{job="node-exporter",device!~"veth.+"}[1m])) +
+              sum(irate(node_network_transmit_drop_total{job="node-exporter",device!~"veth.+"}[1m]))
+            record: :node_net_saturation:sum_irate
+          - expr: |-
+              sum by (node) (
+                (irate(node_network_receive_drop_total{job="node-exporter",device!~"veth.+"}[1m]) +
+                irate(node_network_transmit_drop_total{job="node-exporter",device!~"veth.+"}[1m]))
+              * on (namespace, pod) group_left(node)
+                node_namespace_pod:kube_pod_info:
+              )
+            record: node:node_net_saturation:sum_irate
+          - expr: |-
+              max by (instance, namespace, pod, device) ((node_filesystem_size_bytes{fstype=~"ext[234]|btrfs|xfs|zfs"}
+              - node_filesystem_avail_bytes{fstype=~"ext[234]|btrfs|xfs|zfs"})
+              / node_filesystem_size_bytes{fstype=~"ext[234]|btrfs|xfs|zfs"})
+            record: 'node:node_filesystem_usage:'
+          - expr: |-
+              sum(node_load1{job="node-exporter"})
+              /
+              sum(node:node_num_cpu:sum)
+            record: ':node_cpu_saturation_load1:'
+          - expr: |-
+              sum by (node) (
+                node_load1{job="node-exporter"}
+              * on (namespace, pod) group_left(node)
+                node_namespace_pod:kube_pod_info:
+              )
+              /
+              node:node_num_cpu:sum
+            record: 'node:node_cpu_saturation_load1:'
+          - expr: avg(irate(node_disk_io_time_weighted_seconds_total{job="node-exporter",device=~"nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+"}[1m]))
+            record: :node_disk_saturation:avg_irate
+          - expr: |-
+              avg by (node) (
+                irate(node_disk_io_time_weighted_seconds_total{job="node-exporter",device=~"nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+"}[1m])
+              * on (namespace, pod) group_left(node)
+                node_namespace_pod:kube_pod_info:
+              )
+            record: node:node_disk_saturation:avg_irate
+          - expr: avg(irate(node_disk_io_time_seconds_total{job="node-exporter",device=~"nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+"}[1m]))
+            record: :node_disk_utilisation:avg_irate
+          - expr: |-
+              avg by (node) (
+                irate(node_disk_io_time_seconds_total{job="node-exporter",device=~"nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+"}[1m])
+              * on (namespace, pod) group_left(node)
+                node_namespace_pod:kube_pod_info:
+              )
+            record: node:node_disk_utilisation:avg_irate
+          - expr: |-
+              1e3 * sum(
+                (rate(node_vmstat_pgpgin{job="node-exporter"}[1m])
+              + rate(node_vmstat_pgpgout{job="node-exporter"}[1m]))
+              )
+            record: :node_memory_swap_io_bytes:sum_rate
+          - expr: |-
+              1e3 * sum by (node) (
+                (rate(node_vmstat_pgpgin{job="node-exporter"}[1m])
+              + rate(node_vmstat_pgpgout{job="node-exporter"}[1m]))
+              * on (namespace, pod) group_left(node)
+                node_namespace_pod:kube_pod_info:
+              )
+            record: node:node_memory_swap_io_bytes:sum_rate
+          - expr: |-
+              node:node_cpu_utilisation:avg1m
+                *
+              node:node_num_cpu:sum
+                /
+              scalar(sum(node:node_num_cpu:sum))
+            record: node:cluster_cpu_utilisation:ratio
+          - expr: |-
+              (node:node_memory_bytes_total:sum - node:node_memory_bytes_available:sum)
+              /
+              scalar(sum(node:node_memory_bytes_total:sum))
+            record: node:cluster_memory_utilisation:ratio
+          - expr: |-
+              sum by (node) (
+                node_load1{job="node-exporter"}
+              * on (namespace, pod) group_left(node)
+                node_namespace_pod:kube_pod_info:
+              )
+              /
+              node:node_num_cpu:sum
+            record: 'node:node_cpu_saturation_load1:'
+          - expr: |-
+              max by (instance, namespace, pod, device) (
+                node_filesystem_avail_bytes{fstype=~"ext[234]|btrfs|xfs|zfs"}
+                /
+                node_filesystem_size_bytes{fstype=~"ext[234]|btrfs|xfs|zfs"}
+                )
+            record: 'node:node_filesystem_avail:'
+          - expr: |-
+              max by (instance, namespace, pod, device) ((node_filesystem_size_bytes{fstype=~"ext[234]|btrfs|xfs|zfs"}
+              - node_filesystem_avail_bytes{fstype=~"ext[234]|btrfs|xfs|zfs"})
+              / node_filesystem_size_bytes{fstype=~"ext[234]|btrfs|xfs|zfs"})
+            record: 'node:node_filesystem_usage:'
+          - expr: |-
+              max(
+                max(
+                  kube_pod_info{job="kube-state-metrics", host_ip!=""}
+                ) by (node, host_ip)
+                * on (host_ip) group_right (node)
+                label_replace(
+                  (
+                    max(node_filesystem_files{job="node-exporter", mountpoint="/"})
+                    by (instance)
+                  ), "host_ip", "$1", "instance", "(.*):.*"
+                )
+              ) by (node)
+            record: 'node:node_inodes_total:'
+          - expr: |-
+              max(
+                max(
+                  kube_pod_info{job="kube-state-metrics", host_ip!=""}
+                ) by (node, host_ip)
+                * on (host_ip) group_right (node)
+                label_replace(
+                  (
+                    max(node_filesystem_files_free{job="node-exporter", mountpoint="/"})
+                    by (instance)
+                  ), "host_ip", "$1", "instance", "(.*):.*"
+                )
+              ) by (node)
+            record: 'node:node_inodes_free:'
+    alertmanager:
+      alertmanagerSpec:
+        additionalPeers: []
+        affinity: {}
+        alertmanagerConfigNamespaceSelector: {}
+        alertmanagerConfigSelector: {}
+        clusterAdvertiseAddress: false
+        configMaps: []
+        containers: []
+        image:
+          repository: quay.io/prometheus/alertmanager
+          sha: ""
+          tag: v0.21.0
+        listenLocal: false
+        logFormat: logfmt
+        logLevel: info
+        nodeSelector: {}
+        paused: false
+        podAntiAffinity: ""
+        podAntiAffinityTopologyKey: kubernetes.io/hostname
+        podMetadata: {}
+        portName: web
+        priorityClassName: ""
+        replicas: 1
+        resources: {}
+        retention: 120h
+        routePrefix: /
+        secrets: []
+        securityContext:
+          fsGroup: 2000
+          runAsGroup: 2000
+          runAsNonRoot: true
+          runAsUser: 1000
+        storage: {}
+        tolerations: []
+        useExistingSecret: false
+        volumeMounts: []
+        volumes: []
+      apiVersion: v2
+      config:
+        global:
+          resolve_timeout: 5m
+        receivers:
+        - name: "null"
+        route:
+          group_by:
+          - job
+          group_interval: 5m
+          group_wait: 30s
+          receiver: "null"
+          repeat_interval: 12h
+          routes:
+          - match:
+              alertname: Watchdog
+            receiver: "null"
+      enabled: false
+      ingress:
+        annotations: {}
+        enabled: false
+        hosts: []
+        labels: {}
+        paths: []
+        tls: []
+      ingressPerReplica:
+        annotations: {}
+        enabled: false
+        hostDomain: ""
+        hostPrefix: ""
+        labels: {}
+        paths: []
+        tlsSecretName: ""
+        tlsSecretPerReplica:
+          enabled: false
+          prefix: alertmanager
+      podDisruptionBudget:
+        enabled: false
+        maxUnavailable: ""
+        minAvailable: 1
+      secret:
+        annotations: {}
+      service:
+        additionalPorts: []
+        annotations: {}
+        clusterIP: ""
+        externalIPs: []
+        labels: {}
+        loadBalancerIP: ""
+        loadBalancerSourceRanges: []
+        nodePort: 30903
+        port: 9093
+        targetPort: 9093
+        type: ClusterIP
+      serviceAccount:
+        annotations: {}
+        create: true
+        name: ""
+      serviceMonitor:
+        interval: ""
+        metricRelabelings: []
+        relabelings: []
+        scheme: ""
+        selfMonitor: true
+        tlsConfig: {}
+      servicePerReplica:
+        annotations: {}
+        enabled: false
+        loadBalancerSourceRanges: []
+        nodePort: 30904
+        port: 9093
+        targetPort: 9093
+        type: ClusterIP
+      templateFiles: {}
+      tplConfig: false
+    commonLabels: {}
+    coreDns:
+      enabled: true
+      service:
+        port: 9153
+        targetPort: 9153
+      serviceMonitor:
+        interval: ""
+        metricRelabelings: []
+        relabelings: []
+    defaultRules:
+      additionalRuleLabels: {}
+      annotations: {}
+      appNamespacesTarget: .*
+      create: true
+      labels: {}
+      rules:
+        alertmanager: true
+        etcd: true
+        general: true
+        k8s: true
+        kubeApiserver: true
+        kubeApiserverAvailability: true
+        kubeApiserverError: true
+        kubeApiserverSlos: true
+        kubePrometheusGeneral: true
+        kubePrometheusNodeAlerting: true
+        kubePrometheusNodeRecording: true
+        kubeScheduler: true
+        kubeStateMetrics: true
+        kubelet: true
+        kubernetesAbsent: true
+        kubernetesApps: true
+        kubernetesResources: true
+        kubernetesStorage: true
+        kubernetesSystem: true
+        network: true
+        node: true
+        prometheus: true
+        prometheusOperator: true
+        time: true
+      runbookUrl: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#
+    fullnameOverride: ""
+    global:
+      imagePullSecrets: []
+      rbac:
+        create: true
+        pspAnnotations: {}
+        pspEnabled: true
+    grafana:
+      additionalDataSources: []
+      admin:
+        existingSecret: ""
+        passwordKey: admin-password
+        userKey: admin-user
+      adminPassword: prom-operator
+      adminUser: admin
+      affinity: {}
+      dashboardProviders: {}
+      dashboards: {}
+      dashboardsConfigMaps: {}
+      datasources: {}
+      defaultDashboardsEnabled: false
+      deploymentStrategy:
+        type: RollingUpdate
+      downloadDashboards:
+        env: {}
+        resources: {}
+      downloadDashboardsImage:
+        pullPolicy: IfNotPresent
+        repository: curlimages/curl
+        sha: ""
+        tag: 7.73.0
+      enabled: false
+      env: {}
+      envFromSecret: ""
+      envRenderSecret: {}
+      envValueFrom: {}
+      extraConfigmapMounts: []
+      extraContainerVolumes: []
+      extraContainers: ""
+      extraEmptyDirMounts: []
+      extraExposePorts: []
+      extraInitContainers: []
+      extraSecretMounts: []
+      extraVolumeMounts: []
+      global:
+        imagePullSecrets: []
+        rbac:
+          create: true
+          pspAnnotations: {}
+          pspEnabled: true
+      grafana.ini:
+        analytics:
+          check_for_updates: true
+        grafana_net:
+          url: https://grafana.net
+        log:
+          mode: console
+        paths:
+          data: /var/lib/grafana/data
+          logs: /var/log/grafana
+          plugins: /var/lib/grafana/plugins
+          provisioning: /etc/grafana/provisioning
+      hostAliases: []
+      image:
+        pullPolicy: IfNotPresent
+        repository: grafana/grafana
+        sha: ""
+        tag: 7.2.1
+      imageRenderer:
+        enabled: false
+        env: {}
+        hostAliases: []
+        image:
+          pullPolicy: Always
+          repository: grafana/grafana-image-renderer
+          sha: ""
+          tag: latest
+        networkPolicy:
+          limitEgress: false
+          limitIngress: true
+        podPortName: http
+        priorityClassName: ""
+        replicas: 1
+        resources: {}
+        revisionHistoryLimit: 10
+        securityContext: {}
+        service:
+          port: 8081
+          portName: http
+      ingress:
+        annotations: {}
+        enabled: false
+        extraPaths: []
+        hosts: []
+        labels: {}
+        path: /
+        tls: []
+      initChownData:
+        enabled: true
+        image:
+          pullPolicy: IfNotPresent
+          repository: busybox
+          sha: ""
+          tag: 1.31.1
+        resources: {}
+      ldap:
+        config: ""
+        enabled: false
+        existingSecret: ""
+      livenessProbe:
+        failureThreshold: 10
+        httpGet:
+          path: /api/health
+          port: 3000
+        initialDelaySeconds: 60
+        timeoutSeconds: 30
+      namespaceOverride: ""
+      nodeSelector: {}
+      notifiers: {}
+      persistence:
+        accessModes:
+        - ReadWriteOnce
+        enabled: false
+        finalizers:
+        - kubernetes.io/pvc-protection
+        size: 10Gi
+        type: pvc
+      plugins: []
+      podDisruptionBudget: {}
+      podPortName: grafana
+      rbac:
+        create: true
+        extraClusterRoleRules: []
+        extraRoleRules: []
+        namespaced: false
+        pspEnabled: true
+        pspUseAppArmor: true
+      readinessProbe:
+        httpGet:
+          path: /api/health
+          port: 3000
+      replicas: 1
+      resources: {}
+      revisionHistoryLimit: 10
+      securityContext:
+        fsGroup: 472
+        runAsGroup: 472
+        runAsUser: 472
+      service:
+        annotations: {}
+        labels: {}
+        port: 80
+        portName: service
+        targetPort: 3000
+        type: ClusterIP
+      serviceAccount:
+        create: true
+      serviceMonitor:
+        enabled: false
+        interval: ""
+        labels: {}
+        metricRelabelings: []
+        path: /metrics
+        relabelings: []
+        scrapeTimeout: 30s
+        selfMonitor: true
+      sidecar:
+        dashboards:
+          SCProvider: true
+          annotations: {}
+          enabled: true
+          folder: /tmp/dashboards
+          label: grafana_dashboard
+          provider:
+            allowUiUpdates: false
+            disableDelete: false
+            folder: ""
+            foldersFromFilesStructure: false
+            name: sidecarProvider
+            orgid: 1
+            type: file
+        datasources:
+          annotations: {}
+          createPrometheusReplicasDatasources: false
+          defaultDatasourceEnabled: true
+          enabled: true
+          label: grafana_datasource
+        enableUniqueFilenames: false
+        image:
+          repository: kiwigrid/k8s-sidecar
+          sha: ""
+          tag: 1.1.0
+        imagePullPolicy: IfNotPresent
+        notifiers:
+          enabled: false
+          label: grafana_notifier
+        resources: {}
+      smtp:
+        existingSecret: ""
+        passwordKey: password
+        userKey: user
+      testFramework:
+        enabled: true
+        image: bats/bats
+        imagePullPolicy: IfNotPresent
+        securityContext: {}
+        tag: v1.1.0
+      tolerations: []
+    kube-state-metrics:
+      affinity: {}
+      autosharding:
+        enabled: false
+      collectors:
+        certificatesigningrequests: true
+        configmaps: true
+        cronjobs: true
+        daemonsets: true
+        deployments: true
+        endpoints: true
+        horizontalpodautoscalers: true
+        ingresses: true
+        jobs: true
+        limitranges: true
+        mutatingwebhookconfigurations: true
+        namespaces: true
+        networkpolicies: true
+        nodes: true
+        persistentvolumeclaims: true
+        persistentvolumes: true
+        poddisruptionbudgets: true
+        pods: true
+        replicasets: true
+        replicationcontrollers: true
+        resourcequotas: true
+        secrets: true
+        services: true
+        statefulsets: true
+        storageclasses: true
+        validatingwebhookconfigurations: true
+        verticalpodautoscalers: false
+        volumeattachments: true
+      customLabels: {}
+      global:
+        imagePullSecrets: []
+        rbac:
+          create: true
+          pspAnnotations: {}
+          pspEnabled: true
+      hostNetwork: false
+      image:
+        pullPolicy: IfNotPresent
+        repository: quay.io/coreos/kube-state-metrics
+        tag: v1.9.7
+      imagePullSecrets: []
+      kubeTargetVersionOverride: ""
+      kubeconfig:
+        enabled: false
+      namespaceOverride: ""
+      nodeSelector: {}
+      podAnnotations: {}
+      podDisruptionBudget: {}
+      podSecurityPolicy:
+        additionalVolumes: []
+        annotations: {}
+        enabled: true
+      prometheus:
+        monitor:
+          additionalLabels: {}
+          enabled: false
+          honorLabels: false
+          namespace: ""
+      prometheusScrape: true
+      rbac:
+        create: true
+      replicas: 1
+      resources: {}
+      securityContext:
+        enabled: true
+        fsGroup: 65534
+        runAsGroup: 65534
+        runAsUser: 65534
+      service:
+        annotations: {}
+        loadBalancerIP: ""
+        nodePort: 0
+        port: 8080
+        type: ClusterIP
+      serviceAccount:
+        annotations: {}
+        create: true
+        imagePullSecrets: []
+      tolerations: []
+    kubeApiServer:
+      enabled: true
+      relabelings: []
+      serviceMonitor:
+        interval: ""
+        jobLabel: component
+        metricRelabelings: []
+        selector:
+          matchLabels:
+            component: apiserver
+            provider: kubernetes
+      tlsConfig:
+        insecureSkipVerify: false
+        serverName: kubernetes
+    kubeControllerManager:
+      enabled: true
+      endpoints: []
+      service:
+        port: 10252
+        targetPort: 10252
+      serviceMonitor:
+        https: false
+        insecureSkipVerify: null
+        interval: ""
+        metricRelabelings: []
+        relabelings: []
+        serverName: null
+    kubeDns:
+      enabled: false
+      service:
+        dnsmasq:
+          port: 10054
+          targetPort: 10054
+        skydns:
+          port: 10055
+          targetPort: 10055
+      serviceMonitor:
+        dnsmasqMetricRelabelings: []
+        dnsmasqRelabelings: []
+        interval: ""
+        metricRelabelings: []
+        relabelings: []
+    kubeEtcd:
+      enabled: true
+      endpoints: []
+      service:
+        port: 2379
+        targetPort: 2379
+      serviceMonitor:
+        caFile: ""
+        certFile: ""
+        insecureSkipVerify: false
+        interval: ""
+        keyFile: ""
+        metricRelabelings: []
+        relabelings: []
+        scheme: http
+        serverName: ""
+    kubeProxy:
+      enabled: true
+      endpoints: []
+      service:
+        port: 10249
+        targetPort: 10249
+      serviceMonitor:
+        https: false
+        interval: ""
+        metricRelabelings: []
+        relabelings: []
+    kubeScheduler:
+      enabled: true
+      endpoints: []
+      service:
+        port: 10251
+        targetPort: 10251
+      serviceMonitor:
+        https: false
+        insecureSkipVerify: null
+        interval: ""
+        metricRelabelings: []
+        relabelings: []
+        serverName: null
+    kubeStateMetrics:
+      enabled: true
+      serviceMonitor:
+        interval: ""
+        metricRelabelings: []
+        relabelings: []
+    kubeTargetVersionOverride: ""
+    kubelet:
+      enabled: true
+      namespace: kube-system
+      serviceMonitor:
+        cAdvisor: true
+        cAdvisorMetricRelabelings: []
+        cAdvisorRelabelings:
+        - sourceLabels:
+          - __metrics_path__
+          targetLabel: metrics_path
+        https: true
+        interval: ""
+        metricRelabelings: []
+        probes: true
+        probesMetricRelabelings: []
+        probesRelabelings:
+        - sourceLabels:
+          - __metrics_path__
+          targetLabel: metrics_path
+        relabelings:
+        - sourceLabels:
+          - __metrics_path__
+          targetLabel: metrics_path
+        resource: false
+        resourcePath: /metrics/resource/v1alpha1
+        resourceRelabelings:
+        - sourceLabels:
+          - __metrics_path__
+          targetLabel: metrics_path
+    nameOverride: ""
+    namespaceOverride: ""
+    nodeExporter:
+      enabled: true
+      jobLabel: jobLabel
+      serviceMonitor:
+        interval: ""
+        metricRelabelings: []
+        relabelings: []
+        scrapeTimeout: ""
+    prometheus:
+      additionalPodMonitors: []
+      additionalServiceMonitors:
+      - additionalLabels:
+          sumologic.com/app: fluentd-logs
+        endpoints:
+        - port: metrics
+        name: collection-sumologic-fluentd-logs
+        namespaceSelector:
+          matchNames:
+          - $(NAMESPACE)
+        selector:
+          matchLabels:
+            sumologic.com/app: fluentd-logs
+            sumologic.com/scrape: "true"
+      - additionalLabels:
+          sumologic.com/app: fluentd-metrics
+        endpoints:
+        - port: metrics
+        name: collection-sumologic-fluentd-metrics
+        namespaceSelector:
+          matchNames:
+          - $(NAMESPACE)
+        selector:
+          matchLabels:
+            sumologic.com/app: fluentd-metrics
+            sumologic.com/scrape: "true"
+      - additionalLabels:
+          sumologic.com/app: fluentd-events
+        endpoints:
+        - port: metrics
+        name: collection-sumologic-fluentd-events
+        namespaceSelector:
+          matchNames:
+          - $(NAMESPACE)
+        selector:
+          matchLabels:
+            sumologic.com/app: fluentd-events
+            sumologic.com/scrape: "true"
+      - additionalLabels:
+          app: collection-fluent-bit
+        endpoints:
+        - path: /api/v1/metrics/prometheus
+          port: http
+        name: collection-fluent-bit
+        namespaceSelector:
+          matchNames:
+          - $(NAMESPACE)
+        selector:
+          matchLabels:
+            app.kubernetes.io/name: fluent-bit
+            sumologic.com/scrape: "true"
+      - additionalLabels:
+          sumologic.com/app: otelcol
+        endpoints:
+        - port: metrics
+        name: collection-sumologic-otelcol
+        namespaceSelector:
+          matchNames:
+          - $(NAMESPACE)
+        selector:
+          matchLabels:
+            sumologic.com/app: otelcol
+            sumologic.com/scrape: "true"
+      annotations: {}
+      enabled: true
+      ingress:
+        annotations: {}
+        enabled: false
+        hosts: []
+        labels: {}
+        paths: []
+        tls: []
+      ingressPerReplica:
+        annotations: {}
+        enabled: false
+        hostDomain: ""
+        hostPrefix: ""
+        labels: {}
+        paths: []
+        tlsSecretName: ""
+        tlsSecretPerReplica:
+          enabled: false
+          prefix: prometheus
+      podDisruptionBudget:
+        enabled: false
+        maxUnavailable: ""
+        minAvailable: 1
+      podSecurityPolicy:
+        allowedCapabilities: []
+      prometheusSpec:
+        additionalAlertManagerConfigs: []
+        additionalAlertRelabelConfigs: []
+        additionalPrometheusSecretsAnnotations: {}
+        additionalScrapeConfigs:
+        - job_name: kubernetes-pods
+          kubernetes_sd_configs:
+          - role: pod
+          relabel_configs:
+          - action: keep
+            regex: true
+            source_labels:
+            - __meta_kubernetes_pod_annotation_prometheus_io_scrape
+          - action: replace
+            regex: (.+)
+            source_labels:
+            - __meta_kubernetes_pod_annotation_prometheus_io_path
+            target_label: __metrics_path__
+          - action: replace
+            regex: ([^:]+)(?::\d+)?;(\d+)
+            replacement: $1:$2
+            source_labels:
+            - __address__
+            - __meta_kubernetes_pod_annotation_prometheus_io_port
+            target_label: __address__
+          - action: replace
+            regex: Node;(.*)
+            replacement: ${1}
+            separator: ;
+            source_labels:
+            - __meta_kubernetes_endpoint_address_target_kind
+            - __meta_kubernetes_endpoint_address_target_name
+            target_label: node
+          - action: replace
+            regex: Pod;(.*)
+            replacement: ${1}
+            separator: ;
+            source_labels:
+            - __meta_kubernetes_endpoint_address_target_kind
+            - __meta_kubernetes_endpoint_address_target_name
+            target_label: pod
+          - action: replace
+            regex: (.*)
+            replacement: $1
+            separator: ;
+            source_labels:
+            - __metrics_path__
+            target_label: endpoint
+          - action: replace
+            source_labels:
+            - __meta_kubernetes_namespace
+            target_label: namespace
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_(.+)
+          - action: replace
+            regex: (.*)
+            replacement: $1
+            separator: ;
+            source_labels:
+            - __meta_kubernetes_service_name
+            target_label: service
+          - action: replace
+            regex: (.*)
+            replacement: $1
+            separator: ;
+            source_labels:
+            - __meta_kubernetes_pod_name
+            target_label: pod
+          - action: replace
+            regex: (.*)
+            replacement: ${1}
+            separator: ;
+            source_labels:
+            - __meta_kubernetes_service_name
+            target_label: job
+        additionalScrapeConfigsSecret: {}
+        affinity: {}
+        alertingEndpoints: []
+        apiserverConfig: {}
+        configMaps: []
+        containers:
+        - env:
+          - name: FLUENTD_METRICS_SVC
+            valueFrom:
+              configMapKeyRef:
+                key: fluentdMetrics
+                name: sumologic-configmap
+          - name: NAMESPACE
+            valueFrom:
+              configMapKeyRef:
+                key: fluentdNamespace
+                name: sumologic-configmap
+          name: config-reloader
+        disableCompaction: false
+        enableAdminAPI: false
+        evaluationInterval: ""
+        externalLabels: {}
+        externalUrl: ""
+        image:
+          repository: quay.io/prometheus/prometheus
+          sha: ""
+          tag: v2.22.1
+        initContainers: []
+        listenLocal: false
+        logFormat: logfmt
+        logLevel: info
+        nodeSelector: {}
+        paused: false
+        podAntiAffinity: ""
+        podAntiAffinityTopologyKey: kubernetes.io/hostname
+        podMetadata:
+          annotations: {}
+          labels: {}
+        podMonitorNamespaceSelector: {}
+        podMonitorSelector: {}
+        podMonitorSelectorNilUsesHelmValues: true
+        portName: web
+        priorityClassName: ""
+        probeNamespaceSelector: {}
+        probeSelector: {}
+        probeSelectorNilUsesHelmValues: true
+        prometheusExternalLabelName: ""
+        prometheusExternalLabelNameClear: false
+        query: {}
+        remoteRead: []
+        remoteWrite:
+        - remoteTimeout: 5s
+          url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.state
+          writeRelabelConfigs:
+          - action: keep
+            regex: kube-state-metrics;(?:kube_statefulset_status_observed_generation|kube_statefulset_status_replicas|kube_statefulset_replicas|kube_statefulset_metadata_generation|kube_daemonset_status_current_number_scheduled|kube_daemonset_status_desired_number_scheduled|kube_daemonset_status_number_misscheduled|kube_daemonset_status_number_unavailable|kube_deployment_spec_replicas|kube_deployment_status_replicas_available|kube_deployment_status_replicas_unavailable|kube_node_info|kube_node_status_allocatable|kube_node_status_capacity|kube_node_status_condition|kube_hpa_spec_max_replicas|kube_hpa_spec_min_replicas|kube_hpa_status_current_replicas|kube_hpa_status_desired_replicas)
+            sourceLabels:
+            - job
+            - __name__
+          - action: labelmap
+            regex: (pod|service)
+            replacement: service_discovery_${1}
+          - action: labeldrop
+            regex: (pod|service)
+        - remoteTimeout: 5s
+          url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.state
+          writeRelabelConfigs:
+          - action: keep
+            regex: kube-state-metrics;(?:kube_pod_container_info|kube_pod_container_resource_requests|kube_pod_container_resource_limits|kube_pod_container_status_ready|kube_pod_container_status_terminated_reason|kube_pod_container_status_waiting_reason|kube_pod_container_status_restarts_total|kube_pod_status_phase)
+            sourceLabels:
+            - job
+            - __name__
+        - remoteTimeout: 5s
+          url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.controller-manager
+          writeRelabelConfigs:
+          - action: keep
+            regex: kubelet;cloudprovider_.*_api_request_duration_seconds.*
+            sourceLabels:
+            - job
+            - __name__
+        - remoteTimeout: 5s
+          url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.scheduler
+          writeRelabelConfigs:
+          - action: keep
+            regex: kube-scheduler;scheduler_(?:e2e_scheduling|binding|scheduling_algorithm)_duration_seconds.*
+            sourceLabels:
+            - job
+            - __name__
+        - remoteTimeout: 5s
+          url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.apiserver
+          writeRelabelConfigs:
+          - action: keep
+            regex: apiserver;(?:apiserver_request_(?:count|total)|apiserver_request_(?:duration_seconds|latencies)_(?:count|sum)|apiserver_request_latencies_summary(?:|_count|_sum)|etcd_request_cache_(?:add|get)_(?:duration_seconds|latencies_summary)_(?:count|sum)|etcd_helper_cache_(?:hit|miss)_(?:count|total))
+            sourceLabels:
+            - job
+            - __name__
+        - remoteTimeout: 5s
+          url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.kubelet
+          writeRelabelConfigs:
+          - action: keep
+            regex: kubelet;(?:kubelet_docker_operations_errors(?:|_total)|kubelet_(?:docker|runtime)_operations_duration_seconds_(?:count|sum)|kubelet_running_(?:container|pod)(?:_count|s)|kubelet_(:?docker|runtime)_operations_latency_microseconds(?:|_count|_sum))
+            sourceLabels:
+            - job
+            - __name__
+        - remoteTimeout: 5s
+          url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.container
+          writeRelabelConfigs:
+          - action: labelmap
+            regex: container_name
+            replacement: container
+          - action: drop
+            regex: POD
+            sourceLabels:
+            - container
+          - action: keep
+            regex: kubelet;.+;(?:container_cpu_usage_seconds_total|container_memory_working_set_bytes|container_fs_usage_bytes|container_fs_limit_bytes|container_cpu_cfs_throttled_seconds_total)
+            sourceLabels:
+            - job
+            - container
+            - __name__
+        - remoteTimeout: 5s
+          url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.container
+          writeRelabelConfigs:
+          - action: keep
+            regex: kubelet;(?:container_network_receive_bytes_total|container_network_transmit_bytes_total)
+            sourceLabels:
+            - job
+            - __name__
+          - action: labeldrop
+            regex: container
+        - remoteTimeout: 5s
+          url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.node
+          writeRelabelConfigs:
+          - action: keep
+            regex: node-exporter;(?:node_load1|node_load5|node_load15|node_cpu_seconds_total)
+            sourceLabels:
+            - job
+            - __name__
+        - remoteTimeout: 5s
+          url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.operator.rule
+          writeRelabelConfigs:
+          - action: keep
+            regex: 'cluster_quantile:apiserver_request_duration_seconds:histogram_quantile|instance:node_filesystem_usage:sum|instance:node_network_receive_bytes:rate:sum|cluster_quantile:scheduler_e2e_scheduling_duration_seconds:histogram_quantile|cluster_quantile:scheduler_scheduling_algorithm_duration_seconds:histogram_quantile|cluster_quantile:scheduler_binding_duration_seconds:histogram_quantile|node_namespace_pod:kube_pod_info:|:kube_pod_info_node_count:|node:node_num_cpu:sum|:node_cpu_utilisation:avg1m|node:node_cpu_utilisation:avg1m|node:cluster_cpu_utilisation:ratio|:node_cpu_saturation_load1:|node:node_cpu_saturation_load1:|:node_memory_utilisation:|node:node_memory_bytes_total:sum|node:node_memory_utilisation:ratio|node:cluster_memory_utilisation:ratio|:node_memory_swap_io_bytes:sum_rate|node:node_memory_utilisation:|node:node_memory_utilisation_2:|node:node_memory_swap_io_bytes:sum_rate|:node_disk_utilisation:avg_irate|node:node_disk_utilisation:avg_irate|:node_disk_saturation:avg_irate|node:node_disk_saturation:avg_irate|node:node_filesystem_usage:|node:node_filesystem_avail:|:node_net_utilisation:sum_irate|node:node_net_utilisation:sum_irate|:node_net_saturation:sum_irate|node:node_net_saturation:sum_irate|node:node_inodes_total:|node:node_inodes_free:'
+            sourceLabels:
+            - __name__
+        - remoteTimeout: 5s
+          url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics
+          writeRelabelConfigs:
+          - action: keep
+            regex: (?:up|prometheus_remote_storage_.*|fluentd_.*|fluentbit.*|otelcol.*)
+            sourceLabels:
+            - __name__
+        - remoteTimeout: 5s
+          url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.control-plane.coredns
+          writeRelabelConfigs:
+          - action: keep
+            regex: coredns;(?:coredns_cache_(size|entries|(hits|misses)_total)|coredns_dns_request_duration_seconds_(count|sum)|coredns_(dns_request|dns_response_rcode|forward_request)_count_total|coredns_(forward_requests|dns_requests|dns_responses)_total|process_(cpu_seconds_total|open_fds|resident_memory_bytes))
+            sourceLabels:
+            - job
+            - __name__
+        - remoteTimeout: 5s
+          url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.control-plane.kube-etcd
+          writeRelabelConfigs:
+          - action: keep
+            regex: kube-etcd;(?:etcd_debugging_(mvcc_db_total_size_in_bytes|store_(expires_total|watchers))|etcd_disk_(backend_commit|wal_fsync)_duration_seconds_bucket|etcd_grpc_proxy_cache_(hits|misses)_total|etcd_network_client_grpc_(received|sent)_bytes_total|etcd_server_(has_leader|leader_changes_seen_total)|etcd_server_proposals_(pending|(applied|committed|failed)_total)|process_(cpu_seconds_total|open_fds|resident_memory_bytes))
+            sourceLabels:
+            - job
+            - __name__
+        - remoteTimeout: 5s
+          url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.nginx-ingress
+          writeRelabelConfigs:
+          - action: keep
+            regex: (?:nginx_ingress_controller_ingress_resources_total|nginx_ingress_controller_nginx_(last_reload_(milliseconds|status)|reload(s|_errors)_total)|nginx_ingress_controller_virtualserver(|route)_resources_total|nginx_ingress_nginx_connections_(accepted|active|handled|reading|waiting|writing)|nginx_ingress_nginx_http_requests_total)
+            sourceLabels:
+            - __name__
+        - remoteTimeout: 5s
+          url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.nginx
+          writeRelabelConfigs:
+          - action: keep
+            regex: (?:nginx_(accepts|active|handled|reading|requests|waiting|writing))
+            sourceLabels:
+            - __name__
+        - remoteTimeout: 5s
+          url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.redis
+          writeRelabelConfigs:
+          - action: keep
+            regex: (?:redis_((blocked_|)clients|cluster_enabled|cmdstat_calls|connected_slaves|(evicted|expired|tracking_total)_keys|instantaneous_ops_per_sec|keyspace_(hitrate|hits|misses)|(master|slave)_repl_offset|maxmemory|mem_fragmentation_(bytes|ratio)|rdb_changes_since_last_save|rejected_connections|total_commands_processed|total_net_(input|output)_bytes|uptime|used_(cpu_(sys|user)|memory(_overhead|_rss|_startup|))))
+            sourceLabels:
+            - __name__
+        - remoteTimeout: 5s
+          url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.jmx
+          writeRelabelConfigs:
+          - action: keep
+            regex: (?:java_lang_(ClassLoading_(TotalL|Unl|L)oadedClassCount|Compilation_TotalCompilationTime|GarbageCollector_(Collection(Count|Time)|LastGcInfo_(GcThreadCount|duration|(memoryU|u)sage(After|Before)Gc_.*_used))|MemoryPool_(CollectionUsage(ThresholdSupported|_committed|_max|_used)|(Peak|)Usage_(committed|max|used)|UsageThresholdSupported)|Memory_((Non|)HeapMemoryUsage_(committed|max|used)|ObjectPendingFinalizationCount)|OperatingSystem_(AvailableProcessors|(CommittedVirtual|(Free|Total)(Physical|))MemorySize|(Free|Total)SwapSpaceSize|(Max|Open)FileDescriptorCount|ProcessCpu(Load|Time)|System(CpuLoad|LoadAverage))|Runtime_(BootClassPathSupported|Pid|Uptime|StartTime)|Threading_(CurrentThread(AllocatedBytes|(Cpu|User)Time)|(Daemon|Peak|TotalStarted|)ThreadCount|(ObjectMonitor|Synchronizer)UsageSupported|Thread(AllocatedMemory.*|ContentionMonitoring.*|CpuTime.*))))
+            sourceLabels:
+            - __name__
+        remoteWriteDashboards: false
+        replicaExternalLabelName: ""
+        replicaExternalLabelNameClear: false
+        replicas: 1
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 8Gi
+          requests:
+            cpu: 500m
+            memory: 1Gi
+        retention: 1d
+        retentionSize: ""
+        routePrefix: /
+        ruleNamespaceSelector: {}
+        ruleSelector: {}
+        ruleSelectorNilUsesHelmValues: true
+        scrapeInterval: 30s
+        scrapeTimeout: ""
+        secrets: []
+        securityContext:
+          fsGroup: 2000
+          runAsGroup: 2000
+          runAsNonRoot: true
+          runAsUser: 1000
+        serviceMonitorNamespaceSelector: {}
+        serviceMonitorSelector: {}
+        serviceMonitorSelectorNilUsesHelmValues: true
+        storageSpec: {}
+        thanos:
+          baseImage: quay.io/thanos/thanos
+          resources:
+            limits:
+              cpu: 10m
+              memory: 32Mi
+            requests:
+              cpu: 1m
+              memory: 8Mi
+          version: v0.10.0
+        tolerations: []
+        volumeMounts: []
+        volumes: []
+        walCompression: true
+      service:
+        annotations: {}
+        clusterIP: ""
+        externalIPs: []
+        labels: {}
+        loadBalancerIP: ""
+        loadBalancerSourceRanges: []
+        nodePort: 30090
+        port: 9090
+        sessionAffinity: ""
+        targetPort: 9090
+        type: ClusterIP
+      serviceAccount:
+        create: true
+        name: ""
+      serviceMonitor:
+        interval: ""
+        metricRelabelings: []
+        relabelings: []
+        scheme: ""
+        selfMonitor: true
+        tlsConfig: {}
+      servicePerReplica:
+        annotations: {}
+        enabled: false
+        loadBalancerSourceRanges: []
+        nodePort: 30091
+        port: 9090
+        targetPort: 9090
+        type: ClusterIP
+      thanosIngress:
+        annotations: {}
+        enabled: false
+        hosts: []
+        labels: {}
+        paths: []
+        servicePort: 10901
+        tls: []
+    prometheus-node-exporter:
+      affinity: {}
+      configmaps: []
+      endpoints: []
+      extraArgs:
+      - --collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+)($|/)
+      - --collector.filesystem.ignored-fs-types=^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs)$
+      extraHostVolumeMounts: []
+      global:
+        imagePullSecrets: []
+        rbac:
+          create: true
+          pspAnnotations: {}
+          pspEnabled: true
+      hostNetwork: true
+      image:
+        pullPolicy: IfNotPresent
+        repository: quay.io/prometheus/node-exporter
+        tag: v1.0.1
+      namespaceOverride: ""
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels:
+        jobLabel: node-exporter
+      prometheus:
+        monitor:
+          additionalLabels: {}
+          enabled: false
+          namespace: ""
+          relabelings: []
+          scrapeTimeout: 10s
+      rbac:
+        create: true
+        pspEnabled: true
+      resources: {}
+      securityContext:
+        fsGroup: 65534
+        runAsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+      service:
+        annotations:
+          prometheus.io/scrape: "true"
+        listenOnAllInterfaces: true
+        port: 9100
+        targetPort: 9100
+        type: ClusterIP
+      serviceAccount:
+        create: true
+        imagePullSecrets: []
+      sidecarVolumeMount: []
+      sidecars: []
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      updateStrategy:
+        rollingUpdate:
+          maxUnavailable: 1
+        type: RollingUpdate
+    prometheusOperator:
+      admissionWebhooks:
+        enabled: false
+        failurePolicy: Fail
+        patch:
+          affinity: {}
+          enabled: true
+          image:
+            pullPolicy: IfNotPresent
+            repository: jettech/kube-webhook-certgen
+            sha: ""
+            tag: v1.5.0
+          nodeSelector: {}
+          podAnnotations: {}
+          priorityClassName: ""
+          resources: {}
+          tolerations: []
+      affinity: {}
+      alertmanagerInstanceNamespaces: []
+      configReloaderCpu: 100m
+      configReloaderMemory: 25Mi
+      configmapReloadImage:
+        repository: docker.io/jimmidyson/configmap-reload
+        sha: ""
+        tag: v0.4.0
+      denyNamespaces: []
+      enabled: true
+      hostNetwork: false
+      image:
+        pullPolicy: IfNotPresent
+        repository: quay.io/prometheus-operator/prometheus-operator
+        sha: ""
+        tag: v0.43.2
+      kubeletService:
+        enabled: true
+        namespace: kube-system
+      namespaces: {}
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels: {}
+      prometheusConfigReloaderImage:
+        repository: quay.io/prometheus-operator/prometheus-config-reloader
+        sha: ""
+        tag: v0.43.2
+      prometheusInstanceNamespaces: []
+      resources: {}
+      secretFieldSelector: ""
+      securityContext:
+        fsGroup: 65534
+        runAsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+      service:
+        additionalPorts: []
+        annotations: {}
+        clusterIP: ""
+        externalIPs: []
+        labels: {}
+        loadBalancerIP: ""
+        loadBalancerSourceRanges: []
+        nodePort: 30080
+        nodePortTls: 30443
+        type: ClusterIP
+      serviceAccount:
+        create: true
+        name: ""
+      serviceMonitor:
+        interval: ""
+        metricRelabelings: []
+        relabelings: []
+        scrapeTimeout: ""
+        selfMonitor: true
+      thanosRulerInstanceNamespaces: []
+      tls:
+        enabled: false
+        tlsMinVersion: VersionTLS13
+      tolerations: []
+  metrics-server:
+    affinity: {}
+    apiService:
+      create: true
+    command:
+    - metrics-server
+    common:
+      exampleValue: common-chart
+      global: {}
+    containerSecurityContext:
+      enabled: true
+      readOnlyRootFilesystem: false
+      runAsNonRoot: true
+    customLivenessProbe: {}
+    customReadinessProbe: {}
+    enabled: false
+    extraArgs:
+      kubelet-insecure-tls: true
+      kubelet-preferred-address-types: InternalIP,ExternalIP,Hostname
+    global: {}
+    hostAliases: []
+    hostNetwork: false
+    image:
+      pullPolicy: IfNotPresent
+      registry: docker.io
+      repository: bitnami/metrics-server
+      tag: 0.4.2-debian-10-r30
+    livenessProbe:
+      enabled: true
+      failureThreshold: 3
+      httpGet:
+        path: /livez
+        port: https
+        scheme: HTTPS
+      periodSeconds: 10
+    nodeAffinityPreset:
+      key: ""
+      type: ""
+      values: []
+    nodeSelector: {}
+    podAffinityPreset: ""
+    podAnnotations: {}
+    podAntiAffinityPreset: soft
+    podDisruptionBudget:
+      enabled: false
+      maxUnavailable: null
+      minAvailable: null
+    podLabels: {}
+    podSecurityContext:
+      enabled: false
+    rbac:
+      create: true
+    readinessProbe:
+      enabled: true
+      failureThreshold: 3
+      httpGet:
+        path: /readyz
+        port: https
+        scheme: HTTPS
+      periodSeconds: 10
+    replicas: 1
+    resources:
+      limits: {}
+      requests: {}
+    securePort: 8443
+    service:
+      annotations: {}
+      labels: {}
+      port: 443
+      type: ClusterIP
+    serviceAccount:
+      create: true
+    tolerations: []
+    topologySpreadConstraints: []
+  nameOverride: ""
+  otelagent:
+    config:
+      exporters:
+        otlp:
+          endpoint: exporters.otlp.endpoint.replace:4317
+          insecure: true
+      extensions:
+        health_check: {}
+      processors:
+        batch:
+          send_batch_size: 256
+          timeout: 5s
+        k8s_tagger:
+          passthrough: true
+        memory_limiter:
+          check_interval: 5s
+          limit_mib: 1900
+      receivers:
+        jaeger:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:14250
+            thrift_binary:
+              endpoint: 0.0.0.0:6832
+            thrift_compact:
+              endpoint: 0.0.0.0:6831
+            thrift_http:
+              endpoint: 0.0.0.0:14268
+        opencensus:
+          endpoint: 0.0.0.0:55678
+        otlp:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:4317
+            http:
+              endpoint: 0.0.0.0:55681
+        zipkin:
+          endpoint: 0.0.0.0:9411
+      service:
+        extensions:
+        - health_check
+        pipelines:
+          traces:
+            exporters:
+            - otlp
+            processors:
+            - memory_limiter
+            - k8s_tagger
+            - batch
+            receivers:
+            - jaeger
+            - opencensus
+            - otlp
+            - zipkin
+    daemonset:
+      image:
+        pullPolicy: IfNotPresent
+        repository: public.ecr.aws/sumologic/opentelemetry-collector
+        tag: 0.22.0-sumo
+      memBallastSizeMib: "250"
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels: {}
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 2Gi
+        requests:
+          cpu: 50m
+          memory: 196Mi
+      tolerations: {}
+    enabled: false
+  otelcol:
+    config:
+      exporters:
+        otlphttp:
+          compression: gzip
+          traces_endpoint: ${SUMO_ENDPOINT_DEFAULT_TRACES_SOURCE}
+        zipkin:
+          endpoint: ${SUMO_ENDPOINT_DEFAULT_TRACES_SOURCE}
+      extensions:
+        health_check: {}
+      processors:
+        batch:
+          send_batch_max_size: 512
+          send_batch_size: 256
+          timeout: 5s
+        cascading_filter:
+          decision_wait: 30s
+          expected_new_traces_per_sec: 100
+          num_traces: 90000
+          policies:
+          - name: extended-duration
+            properties:
+              min_duration: 5s
+            spans_per_second: 500
+          - name: everything-else
+            spans_per_second: -1
+          probabilistic_filtering_ratio: 0.2
+          spans_per_second: 1660
+        k8s_tagger:
+          extract:
+            annotations:
+            - key: '*'
+              tag_name: k8s.pod.annotation.%s
+            labels:
+            - key: '*'
+              tag_name: k8s.pod.label.%s
+            metadata:
+            - containerId
+            - containerName
+            - clusterName
+            - daemonSetName
+            - deploymentName
+            - hostName
+            - namespace
+            - nodeName
+            - podId
+            - podName
+            - replicaSetName
+            - serviceName
+            - statefulSetName
+            namespace_labels:
+            - key: '*'
+              tag_name: k8s.namespace.label.%s
+          owner_lookup_enabled: true
+          passthrough: false
+        memory_limiter:
+          check_interval: 5s
+          limit_mib: 1900
+        resource:
+          attributes:
+          - action: upsert
+            key: k8s.cluster.name
+            value: processors.resource.cluster.replace
+        source:
+          annotation_prefix: k8s.pod.annotation.
+          collector: processors.source.collector.replace
+          container_key: k8s.container.name
+          exclude_container_regex: processors.source.exclude_container_regex.replace
+          exclude_host_regex: processors.source.exclude_host_regex.replace
+          exclude_namespace_regex: processors.source.exclude_namespace_regex.replace
+          exclude_pod_regex: processors.source.exclude_pod_regex.replace
+          namespace_key: k8s.namespace.name
+          pod_key: k8s.pod.name
+          pod_name_key: k8s.pod.pod_name
+          pod_template_hash_key: k8s.pod.label.pod-template-hash
+          source_category: processors.source.category.replace
+          source_category_prefix: processors.source.category_prefix.replace
+          source_category_replace_dash: processors.source.category_replace_dash.replace
+          source_host_key: k8s.pod.hostname
+          source_name: processors.source.name.replace
+      receivers:
+        jaeger:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:14250
+            thrift_binary:
+              endpoint: 0.0.0.0:6832
+            thrift_compact:
+              endpoint: 0.0.0.0:6831
+            thrift_http:
+              endpoint: 0.0.0.0:14268
+        opencensus:
+          endpoint: 0.0.0.0:55678
+        otlp:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:4317
+            http:
+              endpoint: 0.0.0.0:55681
+        zipkin:
+          endpoint: 0.0.0.0:9411
+      service:
+        extensions:
+        - health_check
+        pipelines:
+          traces:
+            exporters:
+            - otlphttp
+            processors:
+            - memory_limiter
+            - k8s_tagger
+            - source
+            - resource
+            - batch
+            receivers:
+            - jaeger
+            - opencensus
+            - otlp
+            - zipkin
+    deployment:
+      image:
+        pullPolicy: IfNotPresent
+        repository: public.ecr.aws/sumologic/opentelemetry-collector
+        tag: 0.22.0-sumo
+      memBallastSizeMib: "683"
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels: {}
+      priorityClassName: null
+      replicas: 1
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 2Gi
+        requests:
+          cpu: 200m
+          memory: 384Mi
+      tolerations: {}
+    logLevelFilter: true
+    metrics:
+      enabled: true
+  sumologic:
+    cleanupEnabled: false
+    cluster:
+      cluster_ca_certificate: ${file("/var/run/secrets/kubernetes.io/serviceaccount/ca.crt")}
+      host: https://kubernetes.default.svc
+      load_config_file: false
+      token: ${file("/var/run/secrets/kubernetes.io/serviceaccount/token")}
+    clusterName: kubernetes
+    collectionMonitoring: true
+    collector:
+      fields: {}
+      sources:
+        events:
+          default:
+            category: true
+            config-name: endpoint-events
+            name: events
+        logs:
+          default:
+            config-name: endpoint-logs
+            name: logs
+        metrics:
+          apiserver:
+            config-name: endpoint-metrics-apiserver
+            name: apiserver-metrics
+          control-plane:
+            name: control-plane-metrics
+          controller:
+            config-name: endpoint-metrics-kube-controller-manager
+            name: kube-controller-manager-metrics
+          default:
+            config-name: endpoint-metrics
+            name: (default-metrics)
+          kubelet:
+            config-name: endpoint-metrics-kubelet
+            name: kubelet-metrics
+          node:
+            config-name: endpoint-metrics-node-exporter
+            name: node-exporter-metrics
+          scheduler:
+            config-name: endpoint-metrics-kube-scheduler
+            name: kube-scheduler-metrics
+          state:
+            config-name: endpoint-metrics-kube-state
+            name: kube-state-metrics
+        traces:
+          default:
+            config-name: endpoint-traces
+            name: traces
+            properties:
+              content_type: Zipkin
+    endpoint: ""
+    httpProxy: ""
+    httpsProxy: ""
+    logs:
+      enabled: true
+      fields:
+      - cluster
+      - container
+      - deployment
+      - host
+      - namespace
+      - node
+      - pod
+      - service
+    metrics:
+      enabled: true
+    noProxy: kubernetes.default.svc
+    podAnnotations: {}
+    podLabels: {}
+    scc:
+      create: false
+    setup:
+      job:
+        image:
+          pullPolicy: IfNotPresent
+          repository: public.ecr.aws/sumologic/kubernetes-setup
+          tag: 3.0.0
+        nodeSelector: {}
+        podAnnotations: {}
+        podLabels: {}
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 256Mi
+          requests:
+            cpu: 200m
+            memory: 64Mi
+    setupEnabled: true
+    traces:
+      enabled: false
+      spans_per_request: 100
+  tailing-sidecar-operator:
+    certManager:
+      enabled: false
+    enabled: false
+    fullnameOverride: ""
+    global: {}
+    nameOverride: ""
+    operator:
+      image:
+        pullPolicy: IfNotPresent
+        repository: ghcr.io/sumologic/tailing-sidecar-operator
+        tag: 0.3.0
+      resources:
+        limits:
+          cpu: 100m
+          memory: 30Mi
+        requests:
+          cpu: 100m
+          memory: 20Mi
+    sidecar:
+      image:
+        repository: ghcr.io/sumologic/tailing-sidecar
+        tag: 0.3.0
+    webhook:
+      failurePolicy: Ignore
+      namespaceSelector: {}
+      objectSelector: {}
+      reinvocationPolicy: IfNeeded
+  telegraf-operator:
+    affinity: {}
+    certManager:
+      enable: false
+    classes:
+      data:
+        infra: |
+          [[outputs.influxdb]]
+            urls = ["http://influxdb.influxdb:8086"]
+          [global_tags]
+            env = "ci"
+            hostname = "$HOSTNAME"
+            nodename = "$NODENAME"
+            type = "infra"
+        sumologic-prometheus: |
+          [[outputs.prometheus_client]]
+            ## Configuration details:
+            ## https://github.com/influxdata/telegraf/tree/master/plugins/outputs/prometheus_client#configuration
+            listen = ":9273"
+            metric_version = 2
+      default: sumologic-prometheus
+      secretName: telegraf-operator-classes
+    enabled: false
+    fullnameOverride: ""
+    global: {}
+    image:
+      pullPolicy: IfNotPresent
+      repository: quay.io/influxdb/telegraf-operator
+      sidecarImage: public.ecr.aws/sumologic/telegraf:1.14.4
+    imagePullSecrets: []
+    nameOverride: ""
+    nodeSelector: {}
+    podSecurityContext: {}
+    replicaCount: 1
+    requireAnnotationsForSecret: false
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
+    securityContext: {}
+    serviceAccount:
+      annotations: {}
+    tolerations: []
+  
+  
