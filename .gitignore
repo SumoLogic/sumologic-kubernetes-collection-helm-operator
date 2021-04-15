@@ -12,3 +12,8 @@ bin
 *.swp
 *.swo
 *~
+
+.kube-config
+config.yaml
+ubuntu-bionic-18.04-cloudimg-console.log
+.vagrant/
