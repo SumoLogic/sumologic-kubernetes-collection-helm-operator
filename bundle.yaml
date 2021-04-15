@@ -1,0 +1,710 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    control-plane: controller-manager
+  name: sumologic-system
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: sumologiccollections.helm-operator.sumologic.com
+spec:
+  group: helm-operator.sumologic.com
+  names:
+    kind: SumologicCollection
+    listKind: SumologicCollectionList
+    plural: sumologiccollections
+    singular: sumologiccollection
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: SumologicCollection is the Schema for the sumologiccollections
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec defines the desired state of SumologicCollection
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+          status:
+            description: Status defines the observed state of SumologicCollection
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sumologic-controller-manager
+  namespace: sumologic-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: sumologic-leader-election-role
+  namespace: sumologic-system
+rules:
+- apiGroups:
+  - ""
+  - coordination.k8s.io
+  resources:
+  - configmaps
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sumologic-manager-role
+rules:
+- apiGroups:
+  - apps
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - events.k8s.io
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - events.k8s.io
+  resources:
+  - daemonsets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - events.k8s.io
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - endpoints
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - events
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - nodes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - daemonsets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - replicasets
+  - lists
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - statefulsets
+  - limitranges
+  - resourcequotas
+  - replicationcontrollers
+  - nodes/metrics
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - statefulsets
+  - limitranges
+  - resourcequotas
+  - replicationcontrollers
+  - nodes/metrics
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  - cronjobs
+  verbs:
+  - get
+  - create
+  - describe
+  - patch
+  - list
+  - delete
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  - namespaces
+  verbs:
+  - get
+  - create
+  - describe
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - helm-operator.sumologic.com
+  resources:
+  - sumologiccollections
+  - sumologiccollections/status
+  - sumologiccollections/finalizers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - route.openshift.io
+  resources:
+  - routes
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumeclaims
+  - persistentvolumes
+  - nodes
+  - events
+  - secrets
+  - secrets/finalizers
+  - pods
+  - pods/finalizers
+  - serviceaccounts
+  - services
+  - configmaps
+  verbs:
+  - '*'
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - daemonsets
+  - replicasets
+  - statefulsets
+  verbs:
+  - '*'
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - '*'
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - networkpolicies
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - security.openshift.io
+  resources:
+  - securitycontextconstraints
+  verbs:
+  - use
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  - secrets/finalizers
+  - pods
+  - pods/finalizers
+  - pods/exec
+  - pods/log
+  - services
+  - services/finalizers
+  - endpoints
+  - persistentvolumeclaims
+  - persistentvolumes
+  - persistentvolumeclaims/finalizers
+  - persistentvolumes/finalizers
+  - nodes
+  - events
+  - configmaps
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  - podsecuritypolicies
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+  - use
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - clusterrolebindings
+  - clusterroles
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  - apps
+  - extensions
+  - events.k8s.io
+  resources:
+  - configmaps
+  - daemonsets
+  - deployments
+  - endpoints
+  - events
+  - namespaces
+  - nodes
+  - pods
+  - replicasets
+  - services
+  - statefulsets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - policy
+  resourceNames:
+  - '*'
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - describe
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - describe
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - alertmanagerconfigs
+  - alertmanagers
+  - alertmanagers/finalizers
+  - podmonitors
+  - probes
+  - prometheuses
+  - prometheuses/finalizers
+  - prometheusrules
+  - servicemonitors
+  - thanosrulers
+  - thanosrulers/finalizers
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - describe
+- apiGroups:
+  - admissionregistration.k8s.io
+  resources:
+  - mutatingwebhookconfigurations
+  - validatingwebhookconfigurations
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - autoscaling
+  resources:
+  - horizontalpodautoscalers
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - certificates.k8s.io
+  resources:
+  - certificatesigningrequests
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - storage.k8s.io
+  resources:
+  - storageclasses
+  verbs:
+  - watch
+- apiGroups:
+  - storage.k8s.io
+  resources:
+  - volumeattachments
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - extensions
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use
+- nonResourceURLs:
+  - /metrics/cadvisor
+  - /metrics
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sumologic-metrics-reader
+rules:
+- nonResourceURLs:
+  - /metrics
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sumologic-proxy-role
+rules:
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: sumologic-leader-election-rolebinding
+  namespace: sumologic-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: sumologic-leader-election-role
+subjects:
+- kind: ServiceAccount
+  name: sumologic-controller-manager
+  namespace: sumologic-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: sumologic-manager-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: sumologic-manager-role
+subjects:
+- kind: ServiceAccount
+  name: sumologic-controller-manager
+  namespace: sumologic-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: sumologic-proxy-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: sumologic-proxy-role
+subjects:
+- kind: ServiceAccount
+  name: sumologic-controller-manager
+  namespace: sumologic-system
+---
+apiVersion: v1
+data:
+  controller_manager_config.yaml: |
+    apiVersion: controller-runtime.sigs.k8s.io/v1alpha1
+    kind: ControllerManagerConfig
+    health:
+      healthProbeBindAddress: :8081
+    metrics:
+      bindAddress: 127.0.0.1:8080
+
+    leaderElection:
+      leaderElect: true
+      resourceName: 811c9dc5.sumologic.com
+kind: ConfigMap
+metadata:
+  name: sumologic-manager-config
+  namespace: sumologic-system
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    control-plane: controller-manager
+  name: sumologic-controller-manager-metrics-service
+  namespace: sumologic-system
+spec:
+  ports:
+  - name: https
+    port: 8443
+    targetPort: https
+  selector:
+    control-plane: controller-manager
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    control-plane: controller-manager
+  name: sumologic-controller-manager
+  namespace: sumologic-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      control-plane: controller-manager
+  template:
+    metadata:
+      labels:
+        control-plane: controller-manager
+    spec:
+      containers:
+      - args:
+        - --secure-listen-address=0.0.0.0:8443
+        - --upstream=http://127.0.0.1:8080/
+        - --logtostderr=true
+        - --v=10
+        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0
+        name: kube-rbac-proxy
+        ports:
+        - containerPort: 8443
+          name: https
+      - args:
+        - --health-probe-bind-address=:8081
+        - --metrics-bind-address=127.0.0.1:8080
+        - --leader-elect
+        - --leader-election-id=operator
+        image: controller:latest
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        name: manager
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            memory: 100Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+      securityContext:
+        runAsNonRoot: true
+      serviceAccountName: sumologic-controller-manager
+      terminationGracePeriodSeconds: 10
