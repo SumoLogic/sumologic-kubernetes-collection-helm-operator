@@ -3,7 +3,6 @@ kind: SumologicCollection
 metadata:
   name: sumologiccollection-sample
 spec:
-  # Default values copied from <project_dir>/helm-charts/sumologic/values.yaml
   falco:
     addKernelDevel: true
     affinity: {}
