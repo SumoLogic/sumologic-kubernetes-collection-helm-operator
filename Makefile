@@ -62,6 +62,7 @@ run: helm-operator ## Run against the configured Kubernetes cluster in ~/.kube/c
 	$(HELM_OPERATOR) run
 
 docker-build: ## Build docker image with the manager.
+	helm dependency update helm-charts/sumologic-kubernetes-collection/deploy/helm/sumologic
 	docker build -t ${IMG} .
 
 docker-push: ## Push docker image with the manager.
