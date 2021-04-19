@@ -35,7 +35,7 @@ usermod -a -G microk8s vagrant
 snap install kubectl --classic
 
 # Install go
-GO_VERSION="1.15.7"
+GO_VERSION="1.16"
 wget "https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz"
 tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz
 rm go${GO_VERSION}.linux-amd64.tar.gz
