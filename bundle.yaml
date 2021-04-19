@@ -92,135 +92,33 @@ rules:
 - apiGroups:
   - apps
   resources:
-  - pods
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - apps
-  resources:
-  - services
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - events.k8s.io
-  resources:
   - configmaps
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - events.k8s.io
-  resources:
-  - daemonsets
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - events.k8s.io
-  resources:
   - deployments
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - apps
-  resources:
-  - configmaps
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - apps
-  resources:
+  - daemonsets
   - endpoints
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - apps
-  resources:
   - events
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - apps
-  resources:
   - namespaces
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - apps
-  resources:
   - nodes
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - daemonsets
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - deployments
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - namespaces
-  verbs:
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
+  - pods
   - replicasets
-  - lists
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
+  - services
   - statefulsets
-  - limitranges
-  - resourcequotas
-  - replicationcontrollers
-  - nodes/metrics
   verbs:
-  - get
-  - list
-  - watch
+  - '*'
 - apiGroups:
-  - ""
+  - events.k8s.io
   resources:
+  - configmaps
+  - daemonsets
+  - deployments
+  - endpoints
+  - events
+  - namespaces
+  - nodes
+  - pods
+  - replicasets
+  - services
   - statefulsets
-  - limitranges
-  - resourcequotas
-  - replicationcontrollers
-  - nodes/metrics
   verbs:
   - get
   - list
@@ -231,54 +129,7 @@ rules:
   - jobs
   - cronjobs
   verbs:
-  - get
-  - create
-  - describe
-  - patch
-  - list
-  - delete
-  - update
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  - namespaces
-  verbs:
-  - get
-  - create
-  - describe
-  - patch
-- apiGroups:
-  - ""
-  resources:
-  - namespaces
-  verbs:
-  - get
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
   - '*'
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-- apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
 - apiGroups:
   - helm-operator.sumologic.com
   resources:
@@ -302,25 +153,33 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - persistentvolumeclaims
-  - persistentvolumes
-  - nodes
-  - events
-  - secrets
-  - secrets/finalizers
-  - pods
-  - pods/finalizers
-  - serviceaccounts
-  - services
   - configmaps
-  verbs:
-  - '*'
-- apiGroups:
-  - apps
-  resources:
   - deployments
   - daemonsets
+  - endpoints
+  - events
+  - limitranges
+  - lists
+  - namespaces
+  - nodes
+  - nodes/metrics
+  - nodes/stats
+  - persistentvolumeclaims
+  - persistentvolumes
+  - persistentvolumeclaims/finalizers
+  - persistentvolumes/finalizers
+  - pods
+  - pods/finalizers
+  - pods/exec
+  - pods/log
+  - resourcequotas
   - replicasets
+  - replicationcontrollers
+  - serviceaccounts
+  - secrets
+  - secrets/finalizers
+  - services
+  - secrets/finalizers
   - statefulsets
   verbs:
   - '*'
@@ -342,95 +201,43 @@ rules:
   resources:
   - securitycontextconstraints
   verbs:
-  - use
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
+  - '*'
 - apiGroups:
   - apiextensions.k8s.io
   resources:
   - customresourcedefinitions
   verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  - secrets/finalizers
-  - pods
-  - pods/finalizers
-  - pods/exec
-  - pods/log
-  - services
-  - services/finalizers
-  - endpoints
-  - persistentvolumeclaims
-  - persistentvolumes
-  - persistentvolumeclaims/finalizers
-  - persistentvolumes/finalizers
-  - nodes
-  - events
-  - configmaps
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
+  - '*'
 - apiGroups:
   - policy
   resources:
   - poddisruptionbudgets
   - podsecuritypolicies
   verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-  - use
+  - '*'
 - apiGroups:
   - rbac.authorization.k8s.io
   resources:
   - clusterrolebindings
   - clusterroles
+  - roles
+  - rolebindings
   verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
+  - '*'
 - apiGroups:
-  - ""
-  - apps
   - extensions
-  - events.k8s.io
   resources:
   - configmaps
   - daemonsets
   - deployments
   - endpoints
   - events
+  - ingresses
   - namespaces
   - nodes
   - pods
   - replicasets
+  - replicationcontrollers
   - services
   - statefulsets
   verbs:
@@ -438,37 +245,11 @@ rules:
   - list
   - watch
 - apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - create
-  - patch
-- apiGroups:
-  - policy
-  resourceNames:
-  - '*'
+  - extensions
   resources:
   - podsecuritypolicies
   verbs:
   - use
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-  - list
-  - describe
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - namespaces
-  verbs:
-  - get
-  - list
-  - describe
 - apiGroups:
   - monitoring.coreos.com
   resources:
@@ -486,21 +267,12 @@ rules:
   verbs:
   - '*'
 - apiGroups:
-  - ""
-  resources:
-  - namespaces
-  verbs:
-  - get
-  - list
-  - describe
-- apiGroups:
   - admissionregistration.k8s.io
   resources:
   - mutatingwebhookconfigurations
   - validatingwebhookconfigurations
   verbs:
-  - list
-  - watch
+  - '*'
 - apiGroups:
   - autoscaling
   resources:
@@ -513,39 +285,43 @@ rules:
   resources:
   - certificatesigningrequests
   verbs:
-  - list
-  - watch
-- apiGroups:
-  - extensions
-  resources:
-  - ingresses
-  verbs:
-  - list
-  - watch
+  - '*'
 - apiGroups:
   - storage.k8s.io
   resources:
   - storageclasses
-  verbs:
-  - watch
-- apiGroups:
-  - storage.k8s.io
-  resources:
   - volumeattachments
   verbs:
   - list
   - watch
-- apiGroups:
-  - extensions
-  resources:
-  - podsecuritypolicies
-  verbs:
-  - use
 - nonResourceURLs:
   - /metrics/cadvisor
   - /metrics
   verbs:
   - get
+- nonResourceURLs:
+  - /healthz/*
+  verbs:
+  - get
+- apiGroups:
+  - apiregistration.k8s.io
+  resources:
+  - apiservices
+  verbs:
+  - get
+- apiGroups:
+  - machineconfiguration.openshift.io
+  resources:
+  - machineconfigs
+  verbs:
+  - '*'
+- apiGroups:
+  - tailing-sidecar.sumologic.com
+  resources:
+  - tailingsidecars
+  - tailingsidecars/status
+  verbs:
+  - '*'
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -681,7 +457,7 @@ spec:
         - --metrics-bind-address=127.0.0.1:8080
         - --leader-elect
         - --leader-election-id=operator
-        image: controller:latest
+        image: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:0.0.0
         livenessProbe:
           httpGet:
             path: /healthz
