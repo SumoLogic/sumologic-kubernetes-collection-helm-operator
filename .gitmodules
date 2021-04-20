@@ -1,0 +1,3 @@
+[submodule "helm-charts/sumologic-kubernetes-collection"]
+	path = helm-charts/sumologic-kubernetes-collection
+	url = https://github.com/SumoLogic/sumologic-kubernetes-collection

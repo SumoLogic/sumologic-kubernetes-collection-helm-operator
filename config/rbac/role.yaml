@@ -1,0 +1,240 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: manager-role
+rules:
+- apiGroups:
+  - apps
+  verbs:
+  - '*'
+  resources:
+  - configmaps
+  - deployments
+  - daemonsets
+  - endpoints
+  - events
+  - namespaces
+  - nodes
+  - pods
+  - replicasets
+  - services
+  - statefulsets
+- apiGroups:
+  - events.k8s.io
+  verbs:
+  - get
+  - list
+  - watch
+  resources:
+  - configmaps
+  - daemonsets
+  - deployments
+  - endpoints
+  - events
+  - namespaces
+  - nodes
+  - pods
+  - replicasets
+  - services
+  - statefulsets
+- apiGroups:
+  - batch
+  verbs:
+  - '*'
+  resources:
+  - jobs
+  - cronjobs
+- apiGroups:
+  - helm-operator.sumologic.com
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+  resources:
+  - sumologiccollections
+  - sumologiccollections/status
+  - sumologiccollections/finalizers
+- apiGroups:
+  - route.openshift.io
+  verbs:
+  - '*'
+  resources:
+  - routes
+- apiGroups:
+  - ''
+  verbs:
+  - '*'
+  resources:
+  - configmaps
+  - deployments
+  - daemonsets
+  - endpoints
+  - events
+  - limitranges
+  - lists
+  - namespaces
+  - nodes
+  - nodes/metrics
+  - nodes/stats
+  - persistentvolumeclaims
+  - persistentvolumes
+  - persistentvolumeclaims/finalizers
+  - persistentvolumes/finalizers
+  - pods
+  - pods/finalizers
+  - pods/exec
+  - pods/log
+  - resourcequotas
+  - replicasets
+  - replicationcontrollers
+  - serviceaccounts
+  - secrets
+  - secrets/finalizers
+  - services
+  - secrets/finalizers
+  - statefulsets
+- apiGroups:
+  - networking.k8s.io
+  verbs:
+  - '*'
+  resources:
+  - ingresses
+- apiGroups:
+  - networking.k8s.io
+  verbs:
+  - list
+  - watch
+  resources:
+  - networkpolicies
+- apiGroups:
+  - security.openshift.io
+  verbs:
+  - '*'
+  resources:
+  - securitycontextconstraints
+- apiGroups:
+  - apiextensions.k8s.io
+  verbs:
+  - '*'
+  resources:
+  - customresourcedefinitions
+- apiGroups:
+  - policy
+  verbs:
+  - '*'
+  resources:
+  - poddisruptionbudgets
+  - podsecuritypolicies
+- apiGroups:
+  - rbac.authorization.k8s.io
+  verbs:
+  - '*'
+  resources:
+  - clusterrolebindings
+  - clusterroles
+  - roles
+  - rolebindings
+- apiGroups:
+  - extensions
+  verbs:
+  - get
+  - list
+  - watch 
+  resources:
+  - configmaps
+  - daemonsets
+  - deployments
+  - endpoints
+  - events
+  - ingresses
+  - namespaces
+  - nodes
+  - pods
+  - replicasets
+  - replicationcontrollers
+  - services
+  - statefulsets
+- apiGroups:
+  - extensions
+  verbs:
+  - use
+  resources:
+  - podsecuritypolicies
+- apiGroups:
+  - monitoring.coreos.com
+  verbs:
+  - "*"
+  resources:
+  - alertmanagerconfigs
+  - alertmanagers
+  - alertmanagers/finalizers
+  - podmonitors
+  - probes
+  - prometheuses
+  - prometheuses/finalizers
+  - prometheusrules
+  - servicemonitors
+  - thanosrulers
+  - thanosrulers/finalizers
+- apiGroups:
+  - admissionregistration.k8s.io
+  verbs:
+  - '*'
+  resources:
+  - mutatingwebhookconfigurations
+  - validatingwebhookconfigurations
+- apiGroups:
+  - autoscaling
+  verbs:
+  - list
+  - watch
+  resources:
+  - horizontalpodautoscalers
+- apiGroups:
+  - certificates.k8s.io
+  verbs:
+  - '*'
+  resources:
+  - certificatesigningrequests
+- apiGroups:
+  - storage.k8s.io
+  verbs:
+  - list
+  - watch
+  resources:
+  - storageclasses
+  - volumeattachments
+- verbs:
+  - get
+  nonResourceURLs:
+  - "/metrics/cadvisor"
+  - "/metrics"
+- verbs:
+  - get
+  nonResourceURLs:
+  - "/healthz/*"
+- apiGroups:
+  - apiregistration.k8s.io
+  verbs:
+  - get
+  resources:
+  - apiservices
+- apiGroups:
+  - machineconfiguration.openshift.io
+  verbs:
+  - '*'
+  resources:
+  - machineconfigs
+- apiGroups:
+  - tailing-sidecar.sumologic.com
+  verbs:
+  - '*'
+  resources:
+  - tailingsidecars
+  - tailingsidecars/status
+
+#+kubebuilder:scaffold:rules

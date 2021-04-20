@@ -1,0 +1,6 @@
+# Use the 'create api' subcommand to add watches to this file.
+- group: helm-operator.sumologic.com
+  version: v1alpha1
+  kind: SumologicCollection
+  chart: helm-charts/sumologic
+#+kubebuilder:scaffold:watch

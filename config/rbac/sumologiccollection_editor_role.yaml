@@ -1,0 +1,24 @@
+# permissions for end users to edit sumologiccollections.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sumologiccollection-editor-role
+rules:
+- apiGroups:
+  - helm-operator.sumologic.com
+  resources:
+  - sumologiccollections
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - helm-operator.sumologic.com
+  resources:
+  - sumologiccollections/status
+  verbs:
+  - get
