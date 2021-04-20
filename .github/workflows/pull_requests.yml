@@ -1,0 +1,34 @@
+name: PRs checks
+
+on:
+  pull_request:
+    branches:
+      - main
+      - 'release-v[0-9]+.[0-9]+'
+
+jobs:
+  deploy-helm-operator:
+    name: Deploy helm operator
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+      - uses: imranismail/setup-kustomize@v1
+      - uses: AbsaOSS/k3d-action@v1.4.0
+        id: single-cluster
+        name: Create single k3d Cluster with Registry
+        with:
+          cluster-name: "test-cluster"
+          use-default-registry: true
+          args: >-
+            --agents 1
+            --no-lb
+            --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
+      - name: Checkout submodules
+        run: git submodule update --init
+      - name: Build helm operator image
+        run: make docker-build IMG=registry.localhost:5000/sumologic/sumologic-collection-helm-operator:latest
+      - name: Push helm operator image to local registry
+        run: make docker-push IMG=registry.localhost:5000/sumologic/sumologic-collection-helm-operator:latest
+      - name: Deploy helm operator
+        run: make deploy IMG=registry.localhost:5000/sumologic/sumologic-collection-helm-operator:latest
