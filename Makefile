@@ -5,6 +5,9 @@
 # - use environment variables to overwrite this value (e.g export VERSION=0.0.2)
 VERSION ?= 0.0.1
 
+# Helm operator release number
+RELEASE_NUMBER ?= 0
+
 # CHANNELS define the bundle channels used in the bundle.
 # Add a new line here if you would like to change its default config. (E.g CHANNELS = "preview,fast,stable")
 # To re-generate a bundle for other specific channels without changing the standard setup, you can:
@@ -63,7 +66,7 @@ run: helm-operator ## Run against the configured Kubernetes cluster in ~/.kube/c
 
 docker-build: ## Build docker image with the manager.
 	helm dependency update helm-charts/sumologic-kubernetes-collection/deploy/helm/sumologic
-	docker build -t ${IMG} .
+	docker build -t ${IMG} --build-arg VERSION=${VERSION}  --build-arg RELEASE_NUMBER=${RELEASE_NUMBER} .
 
 docker-push: ## Push docker image with the manager.
 	docker push ${IMG}
