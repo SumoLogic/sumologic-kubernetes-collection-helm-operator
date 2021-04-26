@@ -204,7 +204,7 @@ spec:
   fluentd:
     image:
       repository: public.ecr.aws/sumologic/kubernetes-fluentd
-      tag: 1.12.1-sumo-0
+      tag: 1.12.2-sumo-0
       pullPolicy: IfNotPresent
 
     ## Specifies whether a PodSecurityPolicy should be created
@@ -332,7 +332,7 @@ spec:
       enabled: true
       statefulset:
         nodeSelector: {}
-        tolerations: {}
+        tolerations: []
         affinity: {}
         ## Acceptable values for podAntiAffinity:
         ## soft: specifies preferences that the scheduler will try to enforce but will not guarantee (Default)
@@ -437,6 +437,13 @@ spec:
         ## A regular expression for pods.
         ## Matching pods will be excluded from Sumo. The logs will still be sent to FluentD.
         excludePodRegex: ""
+
+        ## Defines whether container-level pod annotations are enabled. Setting this to `true` might slightly affect Fluentd performance.
+        ## ref: https://github.com/SumoLogic/sumologic-kubernetes-fluentd/tree/v1.12.1-sumo-2/fluent-plugin-kubernetes-sumologic#container-level-pod-annotations
+        perContainerAnnotationsEnabled: false
+        ## Defines the list of prefixes of container-level pod annotations.
+        ## ref: https://github.com/SumoLogic/sumologic-kubernetes-fluentd/tree/v1.12.1-sumo-2/fluent-plugin-kubernetes-sumologic#container-level-pod-annotations
+        perContainerAnnotationPrefixes: []
 
         ## ref: https://github.com/fabric8io/fluent-plugin-kubernetes_metadata_filter#configuration
         k8sMetadataFilter:
@@ -595,7 +602,7 @@ spec:
       enabled: true
       statefulset:
         nodeSelector: {}
-        tolerations: {}
+        tolerations: []
         affinity: {}
         ## Acceptable values for podAntiAffinity:
         ## soft: specifies preferences that the scheduler will try to enforce but will not guarantee (Default)
@@ -725,7 +732,7 @@ spec:
 
       statefulset:
         nodeSelector: {}
-        tolerations: {}
+        tolerations: []
         resources:
           limits:
             memory: 512Mi
@@ -1933,7 +1940,7 @@ spec:
     enabled: false
     daemonset:
       nodeSelector: {}
-      tolerations: {}
+      tolerations: []
       resources:
         limits:
           memory: 2Gi
@@ -2035,7 +2042,7 @@ spec:
   otelcol:
     deployment:
       nodeSelector: {}
-      tolerations: {}
+      tolerations: []
       replicas: 1
       resources:
         limits:
