@@ -7,8 +7,7 @@ function wait_for_resource() {
 
   for i in $(seq 0 "${time}")
   do
-    kubectl get -n "${namespace}" "${resource}"
-    if [[ $? -ne 0 ]]; then
+    if ! kubectl get -n "${namespace}" "${resource}" ; then
       echo "Waiting for ${resource} in ${i} iteration"
       sleep 1
     else
@@ -24,8 +23,7 @@ function wait_for_ns_termination() {
 
   for i in $(seq 0 "${time}")
   do
-    kubectl get ns "${namespace}"
-    if [[ $? -eq 0 ]]; then
+    if kubectl get ns "${namespace}" ; then
       echo "Waiting for \"${namespace}\" termination in ${i} iteration"
       sleep 1
     else
