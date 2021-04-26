@@ -7,7 +7,7 @@ readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
 # shellcheck disable=SC1090
 source "${ROOT_DIR}/tests/functions.sh"
 
-readonly IMG="public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:0.0.0"
+readonly IMG="public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:0.0.1"
 readonly NAMESPACE="sumologic-system"
 readonly TIME=900
 
@@ -32,7 +32,7 @@ helm install test-openshift sumologic/sumologic \
   --set telegraf-operator.enabled=true \
   --set falco.enabled=true \
   --set tailing-sidecar-operator.enabled=true \
-  --version 2.1.0 \
+  --version 2.1.1 \
   -n sumologic-system \
   --create-namespace
 
