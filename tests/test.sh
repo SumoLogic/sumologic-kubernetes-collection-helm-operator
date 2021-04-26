@@ -11,8 +11,7 @@ readonly IMG="public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-oper
 readonly NAMESPACE="sumologic-system"
 readonly TIME=900
 
-wget https://raw.githubusercontent.com/SumoLogic/sumologic-kubernetes-collection/main/vagrant/k8s/receiver-mock.yaml
-kubectl apply -f receiver-mock.yaml
+kubectl apply -f https://raw.githubusercontent.com/SumoLogic/sumologic-kubernetes-collection/main/vagrant/k8s/receiver-mock.yaml
 
 helm repo add sumologic https://sumologic.github.io/sumologic-kubernetes-collection
 helm repo update
