@@ -4,13 +4,11 @@ function wait_for_resource() {
   local namespace="${1}"
   local time="${2}"
   local resource="${3}"
-  
-  local substring="AGE"
 
   for i in $(seq 0 "${time}")
   do
-    get="$(kubectl get -n "${namespace}" "${resource}")"
-    if [[ ! ${get} =~ ${substring} ]]; then
+    kubectl get -n "${namespace}" "${resource}"
+    if [[ $? -ne 0 ]]; then
       echo "Waiting for ${resource} in ${i} iteration"
       sleep 1
     else
@@ -23,13 +21,11 @@ function wait_for_resource() {
 function wait_for_ns_termination() {
   local namespace="${1}"
   local time="${2}"
-  
-  local substring="AGE"
 
   for i in $(seq 0 "${time}")
   do
-    get="$(kubectl get ns  \""${namespace}"\")"
-    if [[ ${get} =~ ${substring} ]]; then
+    kubectl get ns "${namespace}"
+    if [[ $? -eq 0 ]]; then
       echo "Waiting for \"${namespace}\" termination in ${i} iteration"
       sleep 1
     else
