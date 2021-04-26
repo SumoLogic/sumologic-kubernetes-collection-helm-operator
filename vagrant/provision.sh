@@ -58,3 +58,8 @@ mkdir /opt/helm3
 curl "https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz" | tar -xz -C /opt/helm3
 ln -s /opt/helm3/linux-amd64/helm /usr/bin/helm3
 ln -s /usr/bin/helm3 /usr/bin/helm
+
+SHELLCHECK_VERSION=v0.7.1
+curl -Lo- "https://github.com/koalaman/shellcheck/releases/download/${SHELLCHECK_VERSION}/shellcheck-${SHELLCHECK_VERSION}.linux.x86_64.tar.xz" | tar -xJf -
+cp "shellcheck-${SHELLCHECK_VERSION}/shellcheck" /usr/local/bin
+rm -rf "shellcheck-${SHELLCHECK_VERSION}/"
