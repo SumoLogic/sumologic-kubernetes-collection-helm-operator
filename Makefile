@@ -62,6 +62,9 @@ help: ## Display this help.
 test:
 	tests/test.sh
 
+shellcheck:
+	tests/shellcheck.sh
+
 ##@ Build
 
 run: helm-operator ## Run against the configured Kubernetes cluster in ~/.kube/config
