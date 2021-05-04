@@ -12,6 +12,10 @@ LABEL release=${RELEASE_NUMBER}
 LABEL summary="Sumologic Kubernetes Collection Helm Operator for the Sumo Logic Kubernetes Collection Helm Chart"
 LABEL description="Sumologic Kubernetes Collection Helm Operator deploys https://github.com/SumoLogic/sumologic-kubernetes-collection"
 
+USER root
+RUN microdnf --setopt=install_weak_deps=0 install yum && yum -y update
+USER ${USER_UID}
+
 ENV HOME=/opt/helm
 COPY licenses /licenses
 COPY watches.yaml ${HOME}/watches.yaml
