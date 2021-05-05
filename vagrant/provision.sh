@@ -63,3 +63,7 @@ SHELLCHECK_VERSION=v0.7.1
 curl -Lo- "https://github.com/koalaman/shellcheck/releases/download/${SHELLCHECK_VERSION}/shellcheck-${SHELLCHECK_VERSION}.linux.x86_64.tar.xz" | tar -xJf -
 cp "shellcheck-${SHELLCHECK_VERSION}/shellcheck" /usr/local/bin
 rm -rf "shellcheck-${SHELLCHECK_VERSION}/"
+
+YQ_VERSION=v4.7.1
+wget "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64" -O /usr/bin/yq &&\
+    chmod +x /usr/bin/yq
