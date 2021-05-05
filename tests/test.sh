@@ -7,6 +7,8 @@ readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
 # shellcheck disable=SC1090
 source "${ROOT_DIR}/tests/functions.sh"
 
+check_yq_version
+
 readonly IMG="public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:0.0.4"
 readonly NAMESPACE="sumologic-system"
 readonly TIME=900
@@ -94,5 +96,5 @@ sed -i.bak '/caBundle:/d' helm_operator_templates.yaml
 sed -i.bak '/caBundle:/d' helm_chart_templates.yaml
 
 
-DIFF="$(diff helm_operator_templates.yaml helm_chart_templates.yaml)"
+DIFF="$(diff <(yq e -P helm_operator_templates.yaml) <(yq e -P helm_chart_templates.yaml) )"
 check_diff "${DIFF}"

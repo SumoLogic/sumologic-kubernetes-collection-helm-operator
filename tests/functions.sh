@@ -43,3 +43,13 @@ function check_diff(){
         exit 1
     fi
 }
+
+function check_yq_version() {
+  readonly yq_version="$(yq --version | grep -oE '[^[:space:]]+$')"
+  readonly yq_major_version="${yq_version:0:1}"
+  readonly yq_min_version=4
+  if [[ "${yq_major_version}" < "${yq_min_version}" ]]; then
+    echo "Please install yq in version ${yq_min_version}.0 or higher"
+    exit 1
+  fi
+}
