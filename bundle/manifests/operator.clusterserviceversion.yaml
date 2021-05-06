@@ -3630,4 +3630,4 @@ spec:
   provider:
     name: Sumo Logic
     url: https://www.sumologic.com/
-  version: 0.0.1
+  version: 0.0.4
