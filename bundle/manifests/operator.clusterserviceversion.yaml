@@ -3263,7 +3263,7 @@ metadata:
     support: Sumo Logic
     operators.operatorframework.io/builder: operator-sdk-v1.6.1+git
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
-  name: operator.v0.0.1
+  name: sumologic-helm-operator.v0.0.4
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
