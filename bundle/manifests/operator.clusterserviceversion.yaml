@@ -1670,6 +1670,11 @@ spec:
           path: sumologic.accessKey
           x-descriptors:
           - urn:alm:descriptor:com.tectonic.ui:text
+        - description: Identifier for the Kubernetes cluster
+          displayName: Cluster name
+          path: sumologic.clusterName
+          x-descriptors:
+          - urn:alm:descriptor:com.tectonic.ui:text
   description: Helm Operator for the Sumo Logic Kubernetes Collection Chart
   displayName: Sumo Logic Kubernetes Collection Helm Operator
   icon:
