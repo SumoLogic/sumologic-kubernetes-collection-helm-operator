@@ -23,10 +23,10 @@ spec:
     # envFromSecret: sumo-api-secret
 
     ## Sumo access ID
-    # accessId: ""
+    accessId: ""
 
     ## Sumo access key
-    # accessKey: ""
+    accessKey: ""
 
     ## Sumo API endpoint; Leave blank for automatic endpoint discovery and redirection
     ## ref: https://help.sumologic.com/APIs/General-API-Information/Sumo-Logic-Endpoints-and-Firewall-Security
