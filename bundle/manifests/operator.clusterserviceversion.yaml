@@ -1657,6 +1657,17 @@ spec:
       - kind: SumologicCollection
         name: sumologiccollections.helm-operator.sumologic.com
         version: v1alpha1
+        specDescriptors:
+        - description: Sumo access ID
+          displayName: Access ID
+          path: sumologic.accessId
+          x-descriptors:
+          - urn:alm:descriptor:com.tectonic.ui:text
+        - description: Sumo access key
+          displayName: Access key
+          path: sumologic.accessKey
+          x-descriptors:
+          - urn:alm:descriptor:com.tectonic.ui:text
   description: Helm Operator for the Sumo Logic Kubernetes Collection Chart
   displayName: Sumo Logic Helm Operator
   icon:
