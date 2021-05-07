@@ -2013,6 +2013,9 @@ spec:
   links:
     - name: Sumo Logic Kubernetes Collection Helm Operator
       url: https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator
+  maintainers:
+  - email: collection@sumologic.com
+    name: Sumo Logic
   maturity: alpha
   provider:
     name: Sumo Logic
