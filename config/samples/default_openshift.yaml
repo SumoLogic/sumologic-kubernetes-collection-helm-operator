@@ -1,7 +1,7 @@
 apiVersion: helm-operator.sumologic.com/v1alpha1
 kind: SumologicCollection
 metadata:
-  name: default-openshift
+  name: collection
 spec:
   ## Sumo Logic Kubernetes Collection configuration file
   ## All the comments start with two or more # characters
