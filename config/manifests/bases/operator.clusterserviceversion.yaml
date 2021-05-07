@@ -4,13 +4,13 @@ metadata:
   annotations:
     alm-examples: '[]'
     capabilities: Basic Install
-  name: operator.v0.0.0
+  name: sumologic-kubernetes-collection-helm-operator
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
   customresourcedefinitions: {}
   description: Helm Operator for the Sumo Logic Kubernetes Collection Chart
-  displayName: Sumo Logic Helm Operator
+  displayName: Sumo Logic Kubernetes Collection Helm Operator
   icon:
   - base64data: ""
     mediatype: ""
@@ -33,8 +33,8 @@ spec:
   - metrics
   - monitoring
   links:
-  - name: Operator
-    url: https://operator.domain
+  - name: Sumo Logic Kubernetes Collection Helm Operator
+    url: https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator
   maturity: alpha
   provider:
     name: Sumo Logic
