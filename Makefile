@@ -132,6 +132,8 @@ bundle: kustomize ## Generate bundle manifests and metadata, then validate gener
 	operator-sdk generate kustomize manifests -q
 	cd config/manager && $(KUSTOMIZE) edit set image controller=$(IMG)
 	$(KUSTOMIZE) build config/manifests | operator-sdk generate bundle -q --overwrite --version $(VERSION) $(BUNDLE_METADATA_OPTS)
+	cat config/samples/default_openshift.yaml | python3 -c 'import sys, yaml, json; json.dump([yaml.safe_load(sys.stdin)], sys.stdout, indent=4)' > config/samples/default_openshift.json
+	EXAMPLE=$(cat config/samples/default_openshift.json) yq eval '.metadata.annotations.alm-examples |= strenv(EXAMPLE)' -i bundle/manifests/operator.clusterserviceversion.yaml
 	operator-sdk bundle validate ./bundle
 
 .PHONY: bundle-build
