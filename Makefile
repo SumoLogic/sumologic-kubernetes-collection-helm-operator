@@ -68,10 +68,15 @@ deploy-helm-chart:
 deploy-helm-operator:
 	tests/deploy_helm_operator.sh
 
+deploy-helm-operator-using-public-images:
+	tests/tests/deploy_helm_operator-public-images.sh
+
 compare_manifests:
 	tests/compare_manifests.sh
 
 test: deploy-receiver-mock deploy-helm-chart deploy-helm-operator compare_manifests
+
+test-using-public-images: deploy-receiver-mock deploy-helm-chart deploy-helm-operator-using-public-images compare_manifests
 
 shellcheck:
 	tests/shellcheck.sh
