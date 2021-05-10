@@ -35,4 +35,4 @@ jobs:
       - name: Push helm operator image to local registry
         run: make docker-push IMG=registry.localhost:5000/sumologic/sumologic-collection-helm-operator:latest
       - name: Test Helm operator
-        run: make test-quick-using-public-images
+        run: make test-using-public-images
