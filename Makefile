@@ -76,7 +76,11 @@ compare_manifests:
 
 test: deploy-receiver-mock deploy-helm-chart deploy-helm-operator compare_manifests
 
+test-quick: deploy-receiver-mock deploy-helm-operator compare_manifests
+
 test-using-public-images: deploy-receiver-mock deploy-helm-chart deploy-helm-operator-using-public-images compare_manifests
+
+test-quick-using-public-images: deploy-receiver-mock deploy-helm-operator-using-public-images compare_manifests
 
 shellcheck:
 	tests/shellcheck.sh
