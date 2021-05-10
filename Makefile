@@ -59,8 +59,19 @@ all: docker-build
 help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-test:
-	tests/test.sh
+deploy-receiver-mock:
+	kubectl apply -f https://raw.githubusercontent.com/SumoLogic/sumologic-kubernetes-collection/main/vagrant/k8s/receiver-mock.yaml
+
+deploy-helm-chart:
+	tests/deploy_helm_chart.sh
+
+deploy-helm-operator:
+	tests/deploy_helm_operator.sh
+
+compare_manifests:
+	tests/compare_manifests.sh
+
+test: deploy-receiver-mock deploy-helm-chart deploy-helm-operator compare_manifests
 
 shellcheck:
 	tests/shellcheck.sh
