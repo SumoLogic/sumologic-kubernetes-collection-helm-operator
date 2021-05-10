@@ -69,7 +69,7 @@ deploy-helm-operator:
 	tests/deploy_helm_operator.sh
 
 deploy-helm-operator-using-public-images:
-	tests/tests/deploy_helm_operator-public-images.sh
+	tests/deploy_helm_operator-public-images.sh
 
 compare_manifests:
 	tests/compare_manifests.sh
