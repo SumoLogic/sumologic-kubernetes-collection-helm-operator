@@ -63,7 +63,7 @@ help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
 deploy-receiver-mock:
-	kubectl apply -f https://raw.githubusercontent.com/SumoLogic/sumologic-kubernetes-collection/${COLLECTION_BRANCH}/vagrant/k8s/receiver-mock.yaml
+	kubectl apply -f "https://raw.githubusercontent.com/SumoLogic/sumologic-kubernetes-collection/${COLLECTION_BRANCH}/vagrant/k8s/receiver-mock.yaml"
 
 deploy-helm-chart:
 	tests/deploy_helm_chart.sh
@@ -115,8 +115,8 @@ deploy: kustomize ## Deploy controller to the K8s cluster specified in ~/.kube/c
 
 # Deploy Helm operator using container images from public container registries
 deploy-using-public-images: kustomize ## Deploy controller to the K8s cluster specified in ~/.kube/config.
-	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
-	$(KUSTOMIZE) build config/public_images| kubectl apply -f -
+	cd config/manager && "$(KUSTOMIZE)" edit set image controller="${IMG}"
+	"$(KUSTOMIZE)" build config/public_images| kubectl apply -f -
 
 undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config.
 	$(KUSTOMIZE) build config/default | kubectl delete -f -
