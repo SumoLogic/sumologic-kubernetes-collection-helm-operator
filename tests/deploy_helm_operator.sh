@@ -7,7 +7,7 @@ readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
 # shellcheck disable=SC1090
 source "${ROOT_DIR}/tests/functions.sh"
 
-readonly IMG="public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:0.0.4"
+readonly IMG="${IMG:=public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:0.0.4}"
 readonly NAMESPACE="sumologic-system"
 readonly TIME=900
 
