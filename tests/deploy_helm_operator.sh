@@ -7,11 +7,17 @@ readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
 # shellcheck disable=SC1090
 source "${ROOT_DIR}/tests/functions.sh"
 
+readonly DEPLOYMENT_TYPE="${DEPLOYMENT_TYPE:=default}"
 readonly IMG="${IMG:=public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:0.0.4}"
 readonly NAMESPACE="sumologic-system"
 readonly TIME=900
 
-make deploy-using-public-images IMG="${IMG}"
+if [[ ${DEPLOYMENT_TYPE} == "default" ]]; then
+    make deploy IMG="${IMG}"
+else
+    make deploy-using-public-images IMG="${IMG}"
+fi
+
 wait_for_resource "${NAMESPACE}" "${TIME}" deployment.apps/sumologic-controller-manager
 kubectl wait --for=condition=ready --timeout 300s pod -l control-plane=controller-manager -n sumologic-system
 

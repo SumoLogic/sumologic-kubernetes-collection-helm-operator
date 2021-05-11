@@ -72,7 +72,7 @@ deploy-helm-operator:
 	tests/deploy_helm_operator.sh
 
 deploy-helm-operator-using-public-images:
-	tests/deploy_helm_operator-public-images.sh
+	export DEPLOYMENT_TYPE="public_images" && tests/deploy_helm_operator.sh
 
 compare_manifests:
 	tests/compare_manifests.sh
