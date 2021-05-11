@@ -113,7 +113,7 @@ deploy: kustomize ## Deploy controller to the K8s cluster specified in ~/.kube/c
 # Deploy Helm operator using container images from public container registries
 deploy-using-public-images: kustomize ## Deploy controller to the K8s cluster specified in ~/.kube/config.
 	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
-	$(KUSTOMIZE) build config/default | kubectl apply -f -
+	$(KUSTOMIZE) build config/public_images| kubectl apply -f -
 
 undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config.
 	$(KUSTOMIZE) build config/default | kubectl delete -f -
