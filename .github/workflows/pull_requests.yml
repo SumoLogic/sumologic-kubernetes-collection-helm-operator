@@ -7,10 +7,10 @@ on:
       - 'release-v[0-9]+.[0-9]+'
 
 jobs:
-  deploy-helm-operator:
-    name: Deploy helm operator
+  test-helm-operator:
+    name: Test Helm operator
     runs-on: ubuntu-20.04
-    timeout-minutes: 15
+    timeout-minutes: 25
     env:
       IMG: registry.localhost:5000/sumologic/sumologic-collection-helm-operator:latest
     steps:
@@ -33,8 +33,8 @@ jobs:
       - name: Checkout submodules
         run: git submodule update --init
       - name: Build helm operator image
-        run: make docker-build IMG=$IMG
+        run: make docker-build IMG="${IMG}"
       - name: Push helm operator image to local registry
-        run: make docker-push IMG=$IMG
+        run: make docker-push IMG="${IMG}"
       - name: Test Helm operator
-        run: make test-using-public-images IMG=$IMG
+        run: make test-using-public-images IMG="${IMG}"
