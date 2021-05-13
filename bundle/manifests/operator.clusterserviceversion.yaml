@@ -1643,7 +1643,7 @@ metadata:
                       "extraInitContainers": [
                           {
                               "name": "init-falco",
-                              "image": "busybox",
+                              "image": "busybox:1.33.0",
                               "command": [
                                   "sh",
                                   "-c",

@@ -2276,7 +2276,7 @@ spec:
     extraInitContainers:
       ## Add initContainer to wait until kernel-devel is installed on host
       - name: init-falco
-        image: busybox
+        image: busybox:1.33.0
         command:
           - 'sh'
           - '-c'
