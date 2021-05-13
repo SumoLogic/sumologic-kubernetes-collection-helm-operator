@@ -13,4 +13,4 @@ data:
       resourceName: 811c9dc5.sumologic.com
 kind: ConfigMap
 metadata:
-  name: sumologic-manager-config
+  name: sumologic-operator-config
