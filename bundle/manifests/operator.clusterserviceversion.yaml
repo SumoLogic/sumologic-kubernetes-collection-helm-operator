@@ -1975,12 +1975,12 @@ spec:
             replicas: 1
             selector:
               matchLabels:
-                control-plane: controller-manager
+                control-plane: sumologic-kubernetes-collection-helm-operator
             strategy: {}
             template:
               metadata:
                 labels:
-                  control-plane: controller-manager
+                  control-plane: sumologic-kubernetes-collection-helm-operator
               spec:
                 containers:
                   - args:
