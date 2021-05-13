@@ -1,0 +1,40 @@
+kube-prometheus-stack:
+  prometheusOperator:
+    denyNamespaces:
+    - openshift-apiserver
+    - openshift-apiserver-operator
+    - openshift-authentication
+    - openshift-authentication-operator
+    - openshift-cloud-credential-operator
+    - openshift-cluster-machine-approver
+    - openshift-cluster-samples-operator
+    - openshift-cluster-storage-operator
+    - openshift-cluster-version
+    - openshift-config-operator
+    - openshift-console-operator
+    - openshift-controller-manager
+    - openshift-controller-manager-operator
+    - openshift-dns,openshift-dns-operator
+    - openshift-etcd-operator
+    - openshift-image-registry
+    - openshift-ingress
+    - openshift-ingress-operator
+    - openshift-insights
+    - openshift-kube-apiserver
+    - openshift-kube-apiserver-operator
+    - openshift-kube-controller-manager
+    - openshift-kube-controller-manager-operator
+    - openshift-kube-scheduler
+    - openshift-kube-scheduler-operator
+    - openshift-kube-storage-version-migrator
+    - openshift-kube-storage-version-migrator-operator
+    - openshift-machine-api
+    - openshift-machine-config-operator
+    - openshift-marketplace
+    - openshift-monitoring
+    - openshift-multus
+    - openshift-oauth-apiserver
+    - openshift-operator-lifecycle-manager
+    - openshift-sdn
+    - openshift-service-ca-operator
+    - openshift-user-workload-monitoring
