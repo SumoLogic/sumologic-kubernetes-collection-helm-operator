@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    control-plane: controller-manager
+    control-plane: sumologic-kubernetes-collection-helm-operator
   name: sumologic-system
 ---
 apiVersion: apiextensions.k8s.io/v1
@@ -413,7 +413,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    control-plane: controller-manager
+    control-plane: sumologic-kubernetes-collection-helm-operator
   name: sumologic-controller-manager-metrics-service
   namespace: sumologic-system
 spec:
@@ -422,24 +422,24 @@ spec:
     port: 8443
     targetPort: https
   selector:
-    control-plane: controller-manager
+    control-plane: sumologic-kubernetes-collection-helm-operator
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    control-plane: controller-manager
+    control-plane: sumologic-kubernetes-collection-helm-operator
   name: sumologic-controller-manager
   namespace: sumologic-system
 spec:
   replicas: 1
   selector:
     matchLabels:
-      control-plane: controller-manager
+      control-plane: sumologic-kubernetes-collection-helm-operator
   template:
     metadata:
       labels:
-        control-plane: controller-manager
+        control-plane: sumologic-kubernetes-collection-helm-operator
     spec:
       containers:
       - args:
