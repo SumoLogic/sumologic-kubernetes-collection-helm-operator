@@ -87,7 +87,17 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: sumologic-manager-role
+  name: sumologic-metrics-reader
+rules:
+- nonResourceURLs:
+  - /metrics
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sumologic-operator-role
 rules:
 - apiGroups:
   - apps
@@ -326,16 +336,6 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: sumologic-metrics-reader
-rules:
-- nonResourceURLs:
-  - /metrics
-  verbs:
-  - get
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
   name: sumologic-proxy-role
 rules:
 - apiGroups:
@@ -368,11 +368,11 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: sumologic-manager-rolebinding
+  name: sumologic-operator-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: sumologic-manager-role
+  name: sumologic-operator-role
 subjects:
 - kind: ServiceAccount
   name: sumologic-helm-operator
@@ -406,7 +406,7 @@ data:
       resourceName: 811c9dc5.sumologic.com
 kind: ConfigMap
 metadata:
-  name: sumologic-manager-config
+  name: sumologic-operator-config
   namespace: sumologic-system
 ---
 apiVersion: v1
