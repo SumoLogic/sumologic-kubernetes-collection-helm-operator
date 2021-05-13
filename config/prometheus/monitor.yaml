@@ -5,7 +5,7 @@ kind: ServiceMonitor
 metadata:
   labels:
     control-plane: sumologic-kubernetes-collection-helm-operator
-  name: controller-manager-metrics-monitor
+  name: helm-operator-metrics-monitor
   namespace: system
 spec:
   endpoints:

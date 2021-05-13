@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     control-plane: sumologic-kubernetes-collection-helm-operator
-  name: sumologic-controller-manager-metrics-service
+  name: sumologic-helm-operator-metrics-service
 spec:
   ports:
   - name: https

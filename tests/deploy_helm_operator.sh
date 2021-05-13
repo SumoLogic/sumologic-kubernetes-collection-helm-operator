@@ -18,8 +18,8 @@ else
     make deploy-using-public-images IMG="${IMG}"
 fi
 
-wait_for_resource "${NAMESPACE}" "${TIME}" deployment.apps/sumologic-controller-manager
-kubectl wait --for=condition=ready --timeout 300s pod -l control-plane=controller-manager -n sumologic-system
+wait_for_resource "${NAMESPACE}" "${TIME}" deployment.apps/sumologic-helm-operator
+kubectl wait --for=condition=ready --timeout 300s pod -l control-plane=sumologic-kubernetes-collection-helm-operator -n sumologic-system
 
 kubectl apply -f tests/test_openshift.yaml -n sumologic-system
 

@@ -1968,9 +1968,9 @@ spec:
                 - subjectaccessreviews
               verbs:
                 - create
-          serviceAccountName: sumologic-controller-manager
+          serviceAccountName: sumologic-helm-operator
       deployments:
-        - name: sumologic-controller-manager
+        - name: sumologic-helm-operator
           spec:
             replicas: 1
             selector:
@@ -2024,7 +2024,7 @@ spec:
                       allowPrivilegeEscalation: false
                 securityContext:
                   runAsNonRoot: true
-                serviceAccountName: sumologic-controller-manager
+                serviceAccountName: sumologic-helm-operator
                 terminationGracePeriodSeconds: 10
       permissions:
         - rules:
@@ -2049,7 +2049,7 @@ spec:
               verbs:
                 - create
                 - patch
-          serviceAccountName: sumologic-controller-manager
+          serviceAccountName: sumologic-helm-operator
     strategy: deployment
   installModes:
     - supported: true

@@ -53,7 +53,7 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: sumologic-controller-manager
+  name: sumologic-helm-operator
   namespace: sumologic-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -362,7 +362,7 @@ roleRef:
   name: sumologic-leader-election-role
 subjects:
 - kind: ServiceAccount
-  name: sumologic-controller-manager
+  name: sumologic-helm-operator
   namespace: sumologic-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -375,7 +375,7 @@ roleRef:
   name: sumologic-manager-role
 subjects:
 - kind: ServiceAccount
-  name: sumologic-controller-manager
+  name: sumologic-helm-operator
   namespace: sumologic-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -388,7 +388,7 @@ roleRef:
   name: sumologic-proxy-role
 subjects:
 - kind: ServiceAccount
-  name: sumologic-controller-manager
+  name: sumologic-helm-operator
   namespace: sumologic-system
 ---
 apiVersion: v1
@@ -414,7 +414,7 @@ kind: Service
 metadata:
   labels:
     control-plane: sumologic-kubernetes-collection-helm-operator
-  name: sumologic-controller-manager-metrics-service
+  name: sumologic-helm-operator-metrics-service
   namespace: sumologic-system
 spec:
   ports:
@@ -429,7 +429,7 @@ kind: Deployment
 metadata:
   labels:
     control-plane: sumologic-kubernetes-collection-helm-operator
-  name: sumologic-controller-manager
+  name: sumologic-helm-operator
   namespace: sumologic-system
 spec:
   replicas: 1
@@ -482,5 +482,5 @@ spec:
           allowPrivilegeEscalation: false
       securityContext:
         runAsNonRoot: true
-      serviceAccountName: sumologic-controller-manager
+      serviceAccountName: sumologic-helm-operator
       terminationGracePeriodSeconds: 10

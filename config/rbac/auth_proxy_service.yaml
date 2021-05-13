@@ -3,7 +3,7 @@ kind: Service
 metadata:
   labels:
     control-plane: sumologic-kubernetes-collection-helm-operator
-  name: controller-manager-metrics-service
+  name: helm-operator-metrics-service
   namespace: system
 spec:
   ports:

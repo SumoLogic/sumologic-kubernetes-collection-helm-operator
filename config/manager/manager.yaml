@@ -8,7 +8,7 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: controller-manager
+  name: helm-operator
   namespace: system
   labels:
     control-plane: sumologic-kubernetes-collection-helm-operator
@@ -51,5 +51,5 @@ spec:
           requests:
             cpu: 500m
             memory: 100Mi
-      serviceAccountName: controller-manager
+      serviceAccountName: helm-operator
       terminationGracePeriodSeconds: 10
