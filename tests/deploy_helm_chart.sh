@@ -31,7 +31,7 @@ helm install test-openshift sumologic/sumologic \
   --set tailing-sidecar-operator.enabled=true \
   --version 2.1.1 \
   -n sumologic-system \
-  --create-namespace -f values.yaml
+  --create-namespace -f "${ROOT_DIR}/tests/values.yaml"
 
 wait_for_collection_resources "${NAMESPACE}" "${TIME}"
 
