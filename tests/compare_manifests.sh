@@ -15,6 +15,8 @@ sed -i.bak '/checksum\/config:/d' helm_chart_templates.yaml
 sed -i.bak '/caBundle:/d' helm_operator_templates.yaml
 sed -i.bak '/caBundle:/d' helm_chart_templates.yaml
 
+# busybox image has not tag set in collection
+sed -i.bak 's/busybox:1.33.0/busybox/g' helm_operator_templates.yaml
 
 DIFF="$(diff <(yq e -P helm_operator_templates.yaml) <(yq e -P helm_chart_templates.yaml) )"
 check_diff "${DIFF}"
