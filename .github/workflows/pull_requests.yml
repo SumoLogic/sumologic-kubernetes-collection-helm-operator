@@ -18,6 +18,14 @@ jobs:
       - name: shellcheck
         run: make shellcheck
 
+  test-bundle-status:
+    name: Test whether bundle.yaml is up to date
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check bundle.yaml
+        run: make test-bundle-status
+
   test-helm-operator:
     name: Test Helm operator
     runs-on: ubuntu-20.04

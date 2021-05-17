@@ -42,7 +42,7 @@ IMAGE_TAG_BASE ?= sumologic.com/operator
 BUNDLE_IMG ?= $(IMAGE_TAG_BASE)-bundle:v$(VERSION)
 
 # Image URL to use all building/pushing image targets
-IMG ?= controller:latest
+IMG ?= public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:0.0.4
 
 all: docker-build
 
@@ -84,6 +84,9 @@ test-quick: deploy-receiver-mock deploy-helm-operator compare_manifests
 test-using-public-images: deploy-receiver-mock deploy-helm-chart deploy-helm-operator-using-public-images compare_manifests
 
 test-quick-using-public-images: deploy-receiver-mock deploy-helm-operator-using-public-images compare_manifests
+
+test-bundle-status:
+	tests/check_bundle_status.sh
 
 shellcheck:
 	tests/shellcheck.sh
