@@ -10,7 +10,8 @@ source "${ROOT_DIR}/tests/functions.sh"
 readonly NAMESPACE="sumologic-system"
 readonly TIME=900
 
-helm repo add sumologic https://sumologic.github.io/sumologic-kubernetes-collection
+#helm repo add sumologic https://sumologic.github.io/sumologic-kubernetes-collection
+helm repo add sumologic-dev https://sumologic.github.io/sumologic-kubernetes-collection/dev
 helm repo update
 
 helm install test-openshift sumologic/sumologic \
@@ -29,7 +30,7 @@ helm install test-openshift sumologic/sumologic \
   --set telegraf-operator.enabled=true \
   --set falco.enabled=true \
   --set tailing-sidecar-operator.enabled=true \
-  --version 2.1.1 \
+  --version 2.1.1-7-gffd1a78700 \
   -n sumologic-system \
   --create-namespace -f "${ROOT_DIR}/tests/values.yaml"
 
