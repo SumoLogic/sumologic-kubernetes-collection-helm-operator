@@ -2075,4 +2075,4 @@ spec:
   provider:
     name: Sumo Logic
     url: https://www.sumologic.com/
-  version: 0.0.6
+  version: gffd1a78700
