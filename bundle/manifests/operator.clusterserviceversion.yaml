@@ -160,6 +160,7 @@ metadata:
                       },
                       "podLabels": {},
                       "podAnnotations": {},
+                      "pvcLabels": {},
                       "persistence": {
                           "enabled": true,
                           "accessMode": "ReadWriteOnce",
