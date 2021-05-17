@@ -39,9 +39,9 @@ echo "export KUBECONFIG=/var/snap/microk8s/current/credentials/kubelet.config" >
 # Install go
 GO_VERSION="1.16"
 wget "https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz"
-tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz
-rm go${GO_VERSION}.linux-amd64.tar.gz
-echo "export PATH=$PATH:/usr/local/go/bin" >> /home/vagrant/.bashrc
+tar -C /usr/local -xzf "go${GO_VERSION}.linux-amd64.tar.gz"
+rm "go${GO_VERSION}.linux-amd64.tar.gz"
+echo "export PATH=${PATH}:/usr/local/go/bin" >> /home/vagrant/.bashrc
 
 # Install operator SDK
 curl -LO "https://github.com/operator-framework/operator-sdk/releases/latest/download/operator-sdk_linux_amd64"
