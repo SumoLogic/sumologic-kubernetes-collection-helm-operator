@@ -1681,7 +1681,7 @@ metadata:
       ]
     capabilities: Basic Install
     categories: Logging & Tracing,Monitoring
-    containerImage: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:0.0.4
+    containerImage: ghcr.io/kkujawa-sumo/sumologic-kubernetes-collection-helm-operator:gffd1a78700
     createdAt: "2021-05-07T14:10:11.766467319Z"
     repository: https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator.git
     support: Sumo Logic
@@ -1999,7 +1999,7 @@ spec:
                       - --metrics-bind-address=127.0.0.1:8080
                       - --leader-elect
                       - --leader-election-id=operator
-                    image: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:0.0.4
+                    image: ghcr.io/kkujawa-sumo/sumologic-kubernetes-collection-helm-operator:gffd1a78700
                     livenessProbe:
                       httpGet:
                         path: /healthz
