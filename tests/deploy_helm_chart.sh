@@ -14,7 +14,7 @@ readonly TIME=900
 helm repo add sumologic-dev https://sumologic.github.io/sumologic-kubernetes-collection/dev
 helm repo update
 
-helm install test-openshift sumologic/sumologic \
+helm install test-openshift sumologic-dev/sumologic \
   --set sumologic.accessId="dummy" \
   --set sumologic.accessKey="dummy" \
   --set sumologic.endpoint="http://receiver-mock.receiver-mock:3000/terraform/api/" \
