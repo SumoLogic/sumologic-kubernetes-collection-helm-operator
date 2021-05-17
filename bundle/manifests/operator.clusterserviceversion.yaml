@@ -1680,7 +1680,6 @@ metadata:
       ]
     capabilities: Basic Install
     categories: Logging & Tracing,Monitoring
-    certified: "false"
     containerImage: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:0.0.4
     createdAt: "2021-05-07T14:10:11.766467319Z"
     repository: https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator.git
