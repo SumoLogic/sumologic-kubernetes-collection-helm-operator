@@ -1686,7 +1686,7 @@ metadata:
     support: Sumo Logic
     operators.operatorframework.io/builder: operator-sdk-v1.6.1+git
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
-  name: sumologic-kubernetes-collection-helm-operator
+  name: sumologic-kubernetes-collection-helm-operator.v2.1.1-0-rc.0
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -2074,4 +2074,4 @@ spec:
   provider:
     name: Sumo Logic
     url: https://www.sumologic.com/
-  version: 0.0.6
+  version: 2.1.1-0-rc.0
