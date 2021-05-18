@@ -32,7 +32,7 @@ microk8s.kubectl config view --raw > /operator/.kube-config
 
 usermod -a -G microk8s vagrant
 
-snap install kubectl --classic
+snap install kubectl --classic --channel=1.19/stable
 
 echo "export KUBECONFIG=/var/snap/microk8s/current/credentials/kubelet.config" >> /home/vagrant/.bashrc
 
