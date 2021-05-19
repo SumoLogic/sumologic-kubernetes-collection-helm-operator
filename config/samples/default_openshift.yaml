@@ -886,8 +886,7 @@ spec:
         [INPUT]
             Name                tail
             Path                /var/log/containers/*.log
-            Docker_Mode         On
-            Docker_Mode_Parser  multi_line
+            Parser              crio
             Tag                 containers.*
             Refresh_Interval    1
             Rotate_Wait         60
