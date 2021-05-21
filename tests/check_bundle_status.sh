@@ -8,6 +8,6 @@ readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
 # shellcheck disable=SC1090
 source "${ROOT_DIR}/tests/functions.sh"
 
-kustomize build config/default > generated_bundle.yaml
+make generate-bundle
 DIFF="$(diff generated_bundle.yaml bundle.yaml)"
 check_diff "${DIFF}"
