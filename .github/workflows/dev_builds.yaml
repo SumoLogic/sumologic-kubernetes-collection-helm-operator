@@ -18,6 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.4
 
+      - name: Checkout submodules
+        run: git submodule update --init
+
       - name: Extract tag
         id: extract_tag
         run: echo "::set-output name=tag::$(echo $(git describe --tags --always))"
@@ -38,13 +41,13 @@ jobs:
 
       - name: Build and push operator image to public ECR
         run: make docker-build docker-push \
-          IMG=$(ECR_URL)/$(OPERATOR_IMAGE_NAME):${{ steps.extract_tag.outputs.tag }} \
+          IMG=${ECR_URL}/${OPERATOR_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }} \
           VERSION=${{ steps.extract_tag.outputs.tag }} \
           RELEASE_NUMBER=${{ steps.extract_release_number.outputs.release_number }}
 
       - name: Build and push bundle image to public ECR
         run: make bundle-build bundle-push \
-          BUNDLE_IMG=$(ECR_URL)/$(BUNDLE_IMAGE_NAME):${{ steps.extract_tag.outputs.tag }}
+          BUNDLE_IMG=${ECR_URL}/${BUNDLE_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }}
 
       - name: Login to Open Source ECR to publish operator
         run: make login-opensource
@@ -54,7 +57,7 @@ jobs:
 
       - name: Build and push operator image to Open Source ECR
         run: make docker-build docker-push \
-          IMG=$(OPENSOURCE_ECR_URL)/$(OPERATOR_IMAGE_NAME):${{ steps.extract_tag.outputs.tag }} \
+          IMG=${OPENSOURCE_ECR_URL}/${OPERATOR_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }} \
           VERSION=${{ steps.extract_tag.outputs.tag }} \
           RELEASE_NUMBER=${{ steps.extract_release_number.outputs.release_number }}
 
@@ -66,4 +69,4 @@ jobs:
 
       - name: Build and push bundle image to Open Source ECR
         run: make bundle-build bundle-push \
-          BUNDLE_IMG=$(OPENSOURCE_ECR_URL)/$(BUNDLE_IMAGE_NAME):${{ steps.extract_tag.outputs.tag }}
+          BUNDLE_IMG=${OPENSOURCE_ECR_URL}/${BUNDLE_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }}
