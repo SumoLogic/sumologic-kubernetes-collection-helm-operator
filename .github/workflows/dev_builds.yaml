@@ -62,7 +62,7 @@ jobs:
           RELEASE_NUMBER=${{ steps.extract_release_number.outputs.release_number }}
 
       - name: Login to Open Source ECR to publish bundle
-        run: make login-opensource to publish bundle
+        run: make login-opensource
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_BUNDLE_DEV }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_BUNDLE_DEV }}
