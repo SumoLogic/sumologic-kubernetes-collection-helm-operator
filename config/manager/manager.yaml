@@ -28,7 +28,7 @@ spec:
       - args:
         - --leader-elect
         - --leader-election-id=sumologic-kubernetes-collection-helm-operator
-        image: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:0.0.4
+        image: controller
         name: operator
         securityContext:
           allowPrivilegeEscalation: false
