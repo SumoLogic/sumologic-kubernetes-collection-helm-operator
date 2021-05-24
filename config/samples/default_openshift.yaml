@@ -1247,9 +1247,17 @@ spec:
 
     alertmanager:
       enabled: false
+      ## Image of Alertmanager
+      ##
+      image:
+        repository: registry.redhat.io/openshift4/ose-prometheus-alertmanager
+        tag: v4.6
     grafana:
       enabled: false
       defaultDashboardsEnabled: false
+      image:
+        repository: registry.redhat.io/openshift4/ose-grafana
+        tag: v4.6
     prometheusOperator:
       ## Labels to add to the operator pod
       podLabels: {}
@@ -1305,8 +1313,22 @@ spec:
       - openshift-sdn
       - openshift-service-ca-operator
       - openshift-user-workload-monitoring
+      ## Prometheus-operator image
+      ##
+      image:
+        repository: registry.redhat.io/openshift4/ose-prometheus-operator
+        tag: v4.6
+      ## Prometheus-config-reloader image to use for config and rule reloading
+      ##
+      prometheusConfigReloaderImage:
+        repository: registry.redhat.io/openshift4/ose-prometheus-config-reloader
+        tag: v4.6
+
     ## Resource limits for kube-state-metrics
     kube-state-metrics:
+      image:
+        repository: registry.redhat.io/openshift4/ose-kube-state-metrics
+        tag: v4.6
       ## Custom labels to apply to service, deployment and pods
       customLabels: {}
       ## Additional annotations for pods in the DaemonSet
@@ -1320,6 +1342,9 @@ spec:
         #   memory: 32Mi
     ## Resource limits for prometheus node exporter
     prometheus-node-exporter:
+      image:
+        repository: registry.redhat.io/openshift4/ose-prometheus-node-exporter
+        tag: v4.6
       service:
         port: 9200
         targetPort: 9200
@@ -1402,6 +1427,11 @@ spec:
         ## NOTE changing the scrape interval to be >1m can result in metrics
         ## from recording rules to be missing and empty panels in Sumo Logic Kubernetes apps.
         scrapeInterval: "30s"
+        ## Image of Prometheus.
+        ##
+        image:
+          repository: registry.redhat.io/openshift4/ose-prometheus
+          tag: v4.6
         ## Prometheus data retention period
         retention: "1d"
         ## Add custom pod annotations and labels to prometheus pods
@@ -1417,8 +1447,8 @@ spec:
             cpu: 500m
             memory: 1Gi
         thanos:
-          baseImage: quay.io/thanos/thanos
-          version: v0.10.0
+          baseImage: registry.redhat.io/openshift4/ose-thanos-rhel8
+          version: v4.6
           ## Defines the resource requirements for the Thanos sidecar
           ## Setting those as there are no default values in the upstream chart
           resources:
