@@ -289,7 +289,7 @@ metadata:
                               "extraFilterPluginConf": "",
                               "extraOutputPluginConf": "",
                               "multiline": {
-                                  "enabled": true
+                                  "enabled": false
                               }
                           },
                           "kubelet": {
