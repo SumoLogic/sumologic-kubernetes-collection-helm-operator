@@ -67,3 +67,7 @@ rm -rf "shellcheck-${SHELLCHECK_VERSION}/"
 YQ_VERSION=v4.7.1
 wget "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64" -O /usr/bin/yq &&\
     chmod +x /usr/bin/yq
+
+OPM_VERSION=v1.14.3
+wget -q "https://github.com/operator-framework/operator-registry/releases/download/${OPM_VERSION}linux-amd64-opm" -O /usr/bin/opm &&\
+   chmod +x /usr/bin/opm
