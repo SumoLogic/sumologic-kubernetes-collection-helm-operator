@@ -69,5 +69,5 @@ wget "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_a
     chmod +x /usr/bin/yq
 
 OPM_VERSION=v1.14.3
-wget -q "https://github.com/operator-framework/operator-registry/releases/download/${OPM_VERSION}linux-amd64-opm" -O /usr/bin/opm &&\
+wget -q "https://github.com/operator-framework/operator-registry/releases/download/${OPM_VERSION}/linux-amd64-opm" -O /usr/bin/opm &&\
    chmod +x /usr/bin/opm
