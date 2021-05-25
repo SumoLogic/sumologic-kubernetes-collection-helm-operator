@@ -1,0 +1,13 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: sumologic-helm-operator-index
+  namespace: openshift-marketplace
+spec:
+  sourceType: grpc
+  image: index:latest
+  displayName: Sumo Logic Helm Operator
+  publisher: Sumo Logic
+  updateStrategy:
+    registryPoll:
+      interval: 1m
