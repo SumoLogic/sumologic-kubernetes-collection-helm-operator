@@ -789,6 +789,9 @@ spec:
     ## Set the enabled flag to true for enabling metrics-server.
     ## This is required before enabling fluentd autoscaling unless you have an existing metrics-server in the cluster.
     enabled: false
+    image:
+      repository: docker.io/bitnami/metrics-server
+      tag: 0.4.2-debian-10-r58
     apiService:
       create: true
     extraArgs:
@@ -808,6 +811,7 @@ spec:
   fluent-bit:
     image:
       repository: public.ecr.aws/sumologic/fluent-bit
+      tag: 1.6.10
       pullPolicy: IfNotPresent
       # If specified, use these secrets to access the image
       # pullSecrets:
@@ -1251,6 +1255,12 @@ spec:
       enabled: false
       defaultDashboardsEnabled: false
     prometheusOperator:
+      image:
+        repository: quay.io/prometheus-operator/prometheus-operator
+        tag: v0.43.2
+      prometheusConfigReloaderImage:
+        repository: quay.io/prometheus-operator/prometheus-config-reloader
+        tag: v0.43.2
       ## Labels to add to the operator pod
       podLabels: {}
       ## Annotations to add to the operator pod
@@ -1307,6 +1317,9 @@ spec:
       - openshift-user-workload-monitoring
     ## Resource limits for kube-state-metrics
     kube-state-metrics:
+      image:
+        repository: quay.io/coreos/kube-state-metrics
+        tag: v1.9.7
       ## Custom labels to apply to service, deployment and pods
       customLabels: {}
       ## Additional annotations for pods in the DaemonSet
@@ -1320,6 +1333,9 @@ spec:
         #   memory: 32Mi
     ## Resource limits for prometheus node exporter
     prometheus-node-exporter:
+      image:
+        repository: quay.io/prometheus/node-exporter
+        tag: v1.0.1
       service:
         port: 9200
         targetPort: 9200
@@ -1335,6 +1351,9 @@ spec:
         #   cpu: 100m
         #   memory: 30Mi
     prometheus:
+      image:
+        repository: quay.io/prometheus/prometheus
+        tag: v2.22.1
       additionalServiceMonitors:
         - name: collection-sumologic-fluentd-logs
           additionalLabels:
@@ -2287,6 +2306,7 @@ spec:
   telegraf-operator:
     enabled: false
     image:
+      repository: quay.io/influxdb/telegraf-operator
       sidecarImage: public.ecr.aws/sumologic/telegraf:1.14.4
     replicaCount: 1
     classes:
@@ -2309,6 +2329,7 @@ spec:
     image:
       registry: public.ecr.aws
       repository: sumologic/falco
+      tag: 0.27.0
 
     ## Add kernel-devel package through MachineConfig, required to enable building of missing falco modules (only for OpenShift)
     addKernelDevel: true
@@ -2372,3 +2393,15 @@ spec:
   ## ref: https://github.com/SumoLogic/tailing-sidecar/blob/main/helm/tailing-sidecar-operator/values.yaml
   tailing-sidecar-operator:
     enabled: false
+    operator:
+      image:
+        repository: ghcr.io/sumologic/tailing-sidecar-operator:0.3.0
+        tag: 0.3.0
+    sidecar:
+      image:
+        repository: ghcr.io/sumologic/tailing-sidecar:0.3.0
+        tag: 0.3.0
+    kubeRbacProxy:
+      image:
+        repository: gcr.io/kubebuilder/kube-rbac-proxy:v0.5.0
+        tag: v0.5.0
