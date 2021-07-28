@@ -789,6 +789,10 @@ spec:
     ## Set the enabled flag to true for enabling metrics-server.
     ## This is required before enabling fluentd autoscaling unless you have an existing metrics-server in the cluster.
     enabled: false
+    image:
+      registry: public.ecr.aws
+      repository: sumologic/metrics-server
+      tag: 0.4.2-debian-10-r58-ubi
     apiService:
       create: true
     extraArgs:
