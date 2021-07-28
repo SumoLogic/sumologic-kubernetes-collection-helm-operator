@@ -808,6 +808,7 @@ spec:
   fluent-bit:
     image:
       repository: public.ecr.aws/sumologic/fluent-bit
+      tag: 1.6.10-ubi
       pullPolicy: IfNotPresent
       # If specified, use these secrets to access the image
       # pullSecrets:
