@@ -2395,3 +2395,8 @@ spec:
       image:
         repository: ghcr.io/sumologic/tailing-sidecar-operator
         tag: 0.3.1-ubi
+
+    kubeRbacProxy:
+      image:
+        repository: public.ecr.aws/sumologic/kube-rbac-proxy
+        tag: v0.5.0-ubi
