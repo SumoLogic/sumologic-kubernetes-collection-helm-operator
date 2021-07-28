@@ -1252,6 +1252,12 @@ spec:
       enabled: false
       defaultDashboardsEnabled: false
     prometheusOperator:
+      image:
+        repository: public.ecr.aws/sumologic/prometheus-operator
+        tag: v0.43.2-ubi
+      prometheusConfigReloaderImage:
+        repository: public.ecr.aws/sumologic/prometheus-config-reloader
+        tag: v0.43.2-ubi
       ## Labels to add to the operator pod
       podLabels: {}
       ## Annotations to add to the operator pod
@@ -1308,6 +1314,9 @@ spec:
       - openshift-user-workload-monitoring
     ## Resource limits for kube-state-metrics
     kube-state-metrics:
+      image:
+        repository: public.ecr.aws/sumologic/kube-state-metrics
+        tag: v1.9.7-ubi
       ## Custom labels to apply to service, deployment and pods
       customLabels: {}
       ## Additional annotations for pods in the DaemonSet
@@ -1321,6 +1330,9 @@ spec:
         #   memory: 32Mi
     ## Resource limits for prometheus node exporter
     prometheus-node-exporter:
+      image:
+        repository: public.ecr.aws/sumologic/node-exporter
+        tag: v1.0.1-ubi
       service:
         port: 9200
         targetPort: 9200
@@ -1399,6 +1411,9 @@ spec:
               sumologic.com/app: otelcol
               sumologic.com/scrape: "true"
       prometheusSpec:
+        image:
+          repository: public.ecr.aws/sumologic/prometheus
+          tag: v2.22.1-ubi
         ## Prometheus default scrape interval, default from upstream Kube Prometheus Stack Helm chart
         ## NOTE changing the scrape interval to be >1m can result in metrics
         ## from recording rules to be missing and empty panels in Sumo Logic Kubernetes apps.
@@ -1418,8 +1433,7 @@ spec:
             cpu: 500m
             memory: 1Gi
         thanos:
-          baseImage: quay.io/thanos/thanos
-          version: v0.10.0
+          image: public.ecr.aws/sumologic/thanos:v0.10.0-ubi
           ## Defines the resource requirements for the Thanos sidecar
           ## Setting those as there are no default values in the upstream chart
           resources:
