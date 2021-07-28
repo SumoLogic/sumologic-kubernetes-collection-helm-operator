@@ -2373,3 +2373,7 @@ spec:
   ## ref: https://github.com/SumoLogic/tailing-sidecar/blob/main/helm/tailing-sidecar-operator/values.yaml
   tailing-sidecar-operator:
     enabled: false
+    operator:
+      image:
+        repository: ghcr.io/sumologic/tailing-sidecar-operator
+        tag: 0.3.1-ubi
