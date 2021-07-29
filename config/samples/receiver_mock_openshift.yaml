@@ -96,7 +96,7 @@ spec:
       job:
         image:
           repository: public.ecr.aws/sumologic/kubernetes-setup
-          tag: 3.0.0
+          tag: 3.0.0-ubi
           pullPolicy: IfNotPresent
         resources:
           limits:
@@ -2012,7 +2012,7 @@ spec:
       memBallastSizeMib: "250"
       image:
         repository: "public.ecr.aws/sumologic/opentelemetry-collector"
-        tag: "0.22.0-sumo"
+        tag: "0.22.0-sumo-ubi"
         pullPolicy: IfNotPresent
 
       ## Extra Environment Values - allows yaml definitions
@@ -2118,7 +2118,7 @@ spec:
       memBallastSizeMib: "683"
       image:
         repository: "public.ecr.aws/sumologic/opentelemetry-collector"
-        tag: "0.22.0-sumo"
+        tag: "0.22.0-sumo-ubi"
         pullPolicy: IfNotPresent
 
       ## Extra Environment Values - allows yaml definitions
@@ -2306,7 +2306,9 @@ spec:
   telegraf-operator:
     enabled: false
     image:
-      sidecarImage: public.ecr.aws/sumologic/telegraf:1.14.4
+      repository: public.ecr.aws/sumologic/telegraf-operator-ubi
+      tag: v1.1.1
+      sidecarImage: public.ecr.aws/sumologic/telegraf:1.14.4-ubi
     replicaCount: 1
     classes:
       secretName: "telegraf-operator-classes"
@@ -2335,7 +2337,7 @@ spec:
     extraInitContainers:
       ## Add initContainer to wait until kernel-devel is installed on host
       - name: init-falco
-        image: busybox:1.33.0
+        image: public.ecr.aws/sumologic/ubi-minimal:8.4
         command:
           - 'sh'
           - '-c'
@@ -2395,7 +2397,10 @@ spec:
       image:
         repository: ghcr.io/sumologic/tailing-sidecar-operator
         tag: 0.3.1-ubi
-
+    sidecar:
+      image:
+        repository: ghcr.io/sumologic/tailing-sidecar
+        tag: 0.3.1-ubi
     kubeRbacProxy:
       image:
         repository: public.ecr.aws/sumologic/kube-rbac-proxy
