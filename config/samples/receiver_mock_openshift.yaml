@@ -468,7 +468,7 @@ spec:
 
         ## To enable stiching multiline logs in fluentd when fluent-bit Multiline feature is On
         multiline:
-          enabled: true
+          enabled: false
 
       ## Kubelet log configuration
       kubelet:
