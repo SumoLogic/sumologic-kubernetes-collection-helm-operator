@@ -204,7 +204,7 @@ spec:
   fluentd:
     image:
       repository: public.ecr.aws/sumologic/kubernetes-fluentd
-      tag: 1.12.2-sumo-0
+      tag: 1.12.2-sumo-0-ubi
       pullPolicy: IfNotPresent
 
     ## Specifies whether a PodSecurityPolicy should be created
@@ -2337,7 +2337,7 @@ spec:
     extraInitContainers:
       ## Add initContainer to wait until kernel-devel is installed on host
       - name: init-falco
-        image: public.ecr.aws/sumologic/ubi-minimal:8.4
+        image: public.ecr.aws/sumologic/sumo-ubi-minimal:8.4
         command:
           - 'sh'
           - '-c'
