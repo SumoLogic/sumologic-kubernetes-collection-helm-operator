@@ -794,7 +794,7 @@ spec:
       repository: sumologic/metrics-server
       tag: 0.4.2-debian-10-r58-ubi
     apiService:
-      create: true
+      create: false
     extraArgs:
       kubelet-insecure-tls: true
       kubelet-preferred-address-types: InternalIP,ExternalIP,Hostname

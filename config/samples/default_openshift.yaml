@@ -267,8 +267,8 @@ spec:
       ## Increase number of http threads to Sumo. May be required in heavy logging/high DPM clusters
       numThreads: 8
       chunkLimitSize: "1m"
-      queueChunkLimitSize: 128
-      totalLimitSize: "128m"
+      queueChunkLimitSize: 256
+      totalLimitSize: "256m"
       retryMaxInterval: "10m"
       retryForever: true
       compress: gzip
@@ -794,7 +794,7 @@ spec:
       repository: sumologic/metrics-server
       tag: 0.4.2-debian-10-r58-ubi
     apiService:
-      create: true
+      create: false
     extraArgs:
       kubelet-insecure-tls: true
       kubelet-preferred-address-types: InternalIP,ExternalIP,Hostname
