@@ -72,7 +72,7 @@ spec:
     collectionMonitoring: true
 
     ## Optionally specify an array of pullSecrets.
-    ## They will be added to serviceaccount that is used for Sumo Logic's jobs,
+    ## They will be added to serviceaccount that is used for Sumo Logic's
     ## deployments and statefulsets.
     ## Secrets must be manually created in the namespace.
     ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
@@ -98,6 +98,14 @@ spec:
           repository: public.ecr.aws/sumologic/kubernetes-setup
           tag: 3.0.0-ubi
           pullPolicy: IfNotPresent
+        ## Optionally specify an array of pullSecrets.
+        ## They will be added to serviceaccount that is used for Sumo Logic's
+        ## setup job.
+        ## Secrets must be manually created in the namespace.
+        ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+        ##
+        # pullSecrets:
+        #   - name: myRegistryKeySecretName
         resources:
           limits:
             memory: 256Mi
@@ -238,6 +246,9 @@ spec:
 
     ## Add custom annotations to all fluentd sts pods(logs, metrics, events)
     podAnnotations: {}
+
+    ## Add custom labels to all fluentd statefulset PVC (logs, metrics, events)
+    pvcLabels: {}
 
     ## Persist data to a persistent volume; When enabled, fluentd uses the file buffer instead of memory buffer.
     persistence:
@@ -810,13 +821,13 @@ spec:
   ## Configure fluent-bit
   ## ref: https://github.com/fluent/helm-charts/blob/master/charts/fluent-bit/values.yaml
   fluent-bit:
+    ## If specified, use these secrets to access the image
+    # imagePullSecrets:
+    #   - name: "image-pull-secret"
     image:
       repository: public.ecr.aws/sumologic/fluent-bit
       tag: 1.6.10-ubi
       pullPolicy: IfNotPresent
-      # If specified, use these secrets to access the image
-      # pullSecrets:
-      #   - name: "image-pull-secret"
 
     ## Resource limits for fluent-bit
     resources: {}
@@ -1391,7 +1402,7 @@ spec:
               sumologic.com/scrape: "true"
         - name: collection-fluent-bit
           additionalLabels:
-            app: collection-fluent-bit
+            sumologic.com/app: collection-fluent-bit
           endpoints:
             - port: http
               path: /api/v1/metrics/prometheus
@@ -1864,11 +1875,64 @@ spec:
           ## nginx_ingress_nginx_connections_waiting
           ## nginx_ingress_nginx_connections_writing
           ## nginx_ingress_nginx_http_requests_total
+          ## nginx_ingress_nginxplus_connections_accepted
+          ## nginx_ingress_nginxplus_connections_active
+          ## nginx_ingress_nginxplus_connections_dropped
+          ## nginx_ingress_nginxplus_connections_idle
+          ## nginx_ingress_nginxplus_http_requests_current
+          ## nginx_ingress_nginxplus_http_requests_total
+          ## nginx_ingress_nginxplus_resolver_addr
+          ## nginx_ingress_nginxplus_resolver_formerr
+          ## nginx_ingress_nginxplus_resolver_name
+          ## nginx_ingress_nginxplus_resolver_noerror
+          ## nginx_ingress_nginxplus_resolver_notimp
+          ## nginx_ingress_nginxplus_resolver_nxdomain
+          ## nginx_ingress_nginxplus_resolver_refused
+          ## nginx_ingress_nginxplus_resolver_servfail
+          ## nginx_ingress_nginxplus_resolver_srv
+          ## nginx_ingress_nginxplus_resolver_timedout
+          ## nginx_ingress_nginxplus_resolver_unknown
+          ## nginx_ingress_nginxplus_ssl_handshakes_failed
+          ## nginx_ingress_nginxplus_ssl_session_reuses
+          ## nginx_ingress_nginxplus_stream_server_zone_connections
+          ## nginx_ingress_nginxplus_stream_server_zone_received
+          ## nginx_ingress_nginxplus_stream_server_zone_sent
+          ## nginx_ingress_nginxplus_stream_upstream_server_active
+          ## nginx_ingress_nginxplus_stream_upstream_server_connect_time
+          ## nginx_ingress_nginxplus_stream_upstream_server_fails
+          ## nginx_ingress_nginxplus_stream_upstream_server_health_checks_fails
+          ## nginx_ingress_nginxplus_stream_upstream_server_health_checks_unhealthy
+          ## nginx_ingress_nginxplus_stream_upstream_server_received
+          ## nginx_ingress_nginxplus_stream_upstream_server_response_time
+          ## nginx_ingress_nginxplus_stream_upstream_server_sent
+          ## nginx_ingress_nginxplus_stream_upstream_server_unavail
+          ## nginx_ingress_nginxplus_stream_upstream_server_state
+          ## nginx_ingress_nginxplus_location_zone_discarded
+          ## nginx_ingress_nginxplus_location_zone_received
+          ## nginx_ingress_nginxplus_location_zone_requests
+          ## nginx_ingress_nginxplus_location_zone_responses
+          ## nginx_ingress_nginxplus_location_zone_sent
+          ## nginx_ingress_nginxplus_server_zone_discarded
+          ## nginx_ingress_nginxplus_server_zone_processing
+          ## nginx_ingress_nginxplus_server_zone_received
+          ## nginx_ingress_nginxplus_server_zone_requests
+          ## nginx_ingress_nginxplus_server_zone_responses
+          ## nginx_ingress_nginxplus_server_zone_sent
+          ## nginx_ingress_nginxplus_upstream_server_fails
+          ## nginx_ingress_nginxplus_upstream_server_header_time
+          ## nginx_ingress_nginxplus_upstream_server_health_checks_fails
+          ## nginx_ingress_nginxplus_upstream_server_health_checks_unhealthy
+          ## nginx_ingress_nginxplus_upstream_server_received
+          ## nginx_ingress_nginxplus_upstream_server_sent
+          ## nginx_ingress_nginxplus_upstream_server_unavail
+          ## nginx_ingress_nginxplus_upstream_server_response_time
+          ## nginx_ingress_nginxplus_upstream_server_responses
+          ## nginx_ingress_nginxplus_upstream_server_requests
           - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.nginx-ingress
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
-                regex: (?:nginx_ingress_controller_ingress_resources_total|nginx_ingress_controller_nginx_(last_reload_(milliseconds|status)|reload(s|_errors)_total)|nginx_ingress_controller_virtualserver(|route)_resources_total|nginx_ingress_nginx_connections_(accepted|active|handled|reading|waiting|writing)|nginx_ingress_nginx_http_requests_total)
+                regex: (?:nginx_ingress_controller_ingress_resources_total|nginx_ingress_controller_nginx_(last_reload_(milliseconds|status)|reload(s|_errors)_total)|nginx_ingress_controller_virtualserver(|route)_resources_total|nginx_ingress_nginx_connections_(accepted|active|handled|reading|waiting|writing)|nginx_ingress_nginx_http_requests_total|nginx_ingress_nginxplus_(connections_(accepted|active|dropped|idle)|http_requests_(current|total)|resolver_(addr|formerr|name|noerror|notimp|nxdomain|refused|servfail|srv|timedout|unknown)|ssl_(handshakes_failed|session_reuses)|stream_server_zone_(connections|received|sent)|stream_upstream_server_(active|connect_time|fails|health_checks_fails|health_checks_unhealthy|received|response_time|sent|unavail|state)|(location|server)_zone_(discarded|received|requests|responses|sent|processing)|upstream_server_(fails|header_time|health_checks_fails|health_checks_unhealthy|received|sent|unavail|response_time|responses|requests)))
                 sourceLabels: [__name__]
 
           ## Nginx telegraf metrics
@@ -2360,6 +2424,17 @@ spec:
     #   enabled: true
     falco:
       jsonOutput: true
+      ## The location of the rules file(s). This can contain one or more paths to
+      ## separate rules files.
+      ## Explicitly add missing /etc/falco/rules.available/application_rules.yaml
+      ## before https://github.com/falcosecurity/charts/issues/230 gets resolved.
+      rulesFile:
+        - /etc/falco/falco_rules.yaml
+        - /etc/falco/falco_rules.local.yaml
+        - /etc/falco/k8s_audit_rules.yaml
+        - /etc/falco/rules.d
+        - /etc/falco/rules.available/application_rules.yaml
+
     # image:
     #   pullSecrets: []
     customRules:

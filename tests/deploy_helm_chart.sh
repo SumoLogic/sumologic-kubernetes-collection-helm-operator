@@ -30,7 +30,7 @@ helm install test-openshift sumologic/sumologic \
   --set telegraf-operator.enabled=true \
   --set falco.enabled=true \
   --set tailing-sidecar-operator.enabled=true \
-  --version 2.1.1 \
+  --version 2.1.4 \
   -n sumologic-system \
   --create-namespace -f "${ROOT_DIR}/tests/values.yaml"
 
