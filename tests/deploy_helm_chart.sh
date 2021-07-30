@@ -23,6 +23,7 @@ helm install test-openshift sumologic/sumologic \
   --set kube-prometheus-stack.prometheus-node-exporter.service.targetPort=9200 \
   --set fluentd.buffer.queueChunkLimitSize=256 \
   --set fluentd.buffer.totalLimitSize="256m" \
+  --set fluentd.logs.containers.multiline.enabled=false \
   --set metrics-server.enabled=true \
   --set metrics-server.apiService.create=false \
   --set otelagent.enabled=true \
