@@ -457,6 +457,53 @@ spec:
         - --metrics-bind-address=127.0.0.1:8080
         - --leader-elect
         - --leader-election-id=sumologic-kubernetes-collection-helm-operator
+        env:
+        - name: WATCH_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: OPERATOR_NAME
+          value: sumologic-kubernetes-collection-helm-operator
+        - name: RELATED_IMAGE_KUBERNETES_SETUP
+          value: public.ecr.aws/sumologic/kubernetes-setup@sha256:ca76893ae48cfc0e6ee4ef24ccbeb4a90aad738308feacdbd9eed205826406b9
+        - name: RELATED_IMAGE_NODE_EXPORTER
+          value: public.ecr.aws/sumologic/node-exporter@sha256:22694389170863ac60b6c5248310c1381cb145b6b9fa354a18ee664215c5375a
+        - name: RELATED_IMAGE_KUBE_STATE_METRICS
+          value: public.ecr.aws/sumologic/kube-state-metrics@sha256:bb1f73b2be45fa31dfd3fbe72df1d553e5c6cdaa81709bf628764f5969ce4fc2
+        - name: RELATED_IMAGE_PROMETHEUS_OPERATOR
+          value: public.ecr.aws/sumologic/prometheus-operator@sha256:8e29f9b5b7ae76aa9515d1ba20180511feb0c642bc61f782d8d1ea6f62f862aa
+        - name: RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER
+          value: public.ecr.aws/sumologic/prometheus-config-reloader@sha256:0309a748632654700e0d49f7ecd7ee61e6344f53107c9ce0c5cf1d301f943d37
+        - name: RELATED_IMAGE_PROMETHEUS
+          value: public.ecr.aws/sumologic/prometheus@sha256:716d5c7183affd306bee7c35c577e5da852d4dfe8da9bf37aff255cd96a0c9b3
+        - name: RELATED_IMAGE_THANOS
+          value: public.ecr.aws/sumologic/thanos@sha256:707e40ee919e4bc3c2edeecdc536acdf8cb67f9e5fc34eaad9d9e4c283438bb1
+        - name: RELATED_IMAGE_METRICS_SERVER
+          value: public.ecr.aws/sumologic/metrics-server@sha256:1f3c4554e2141e67600ffb2528d8745daf1e581330cb5f4fc75ee7c8aa2298c1
+        - name: RELATED_IMAGE_KUBE_RBAC_PROXY
+          value: public.ecr.aws/sumologic/kube-rbac-proxy@sha256:f92b5704d9d1290b1dd9cc8bfcc445e3e118794e8cf9531f439994ee4d2523a6
+        - name: RELATED_IMAGE_TAILING_SIDECAR_OPERATOR
+          value: ghcr.io/sumologic/tailing-sidecar-operator@sha256:1d9d902b165596e12a626f5dd2f9d512627b356c3773a04c96df24270a840724
+        - name: RELATED_IMAGE_TAILING_SIDECAR
+          value: ghcr.io/sumologic/tailing-sidecar@sha256:838401ab699ae1f4a581a62a6eea413bca1e2c30d60358acb16bd86be75fbca1
+        - name: RELATED_IMAGE_TELEGRAF_OPERATOR
+          value: public.ecr.aws/sumologic/telegraf-operator-ubi@sha256:3a63153408ff6bb5d6294fcdedfa30b07a5023ca5f72dd63c6e4de31f6bf1c68
+        - name: RELATED_IMAGE_TELEGRAF
+          value: public.ecr.aws/sumologic/telegraf@sha256:8d92cabdd8efbec83475a004209745cc14e877d361cae19ab80a622ebda57e24
+        - name: RELATED_IMAGE_KUBERNETES_FLUENTD
+          value: public.ecr.aws/sumologic/kubernetes-fluentd@sha256:362053ce1833aa51db31d36f97458f526d199bcd7efff53486b09e3a02a795ab
+        - name: RELATED_IMAGE_FLUENT_BIT
+          value: public.ecr.aws/sumologic/fluent-bit@sha256:faa802d22e41f8d67d487e40285fa2a7ea72f9cd49c32ddb80ea34f4d302e220
+        - name: RELATED_IMAGE_FALCO
+          value: public.ecr.aws/sumologic/falco@sha256:e70460e16bee5cfe3140d0e539a38769152d258339b48c8476f74238820746bb
+        - name: RELATED_IMAGE_SUMO_UBI_MINIMAL
+          value: public.ecr.aws/sumologic/sumo-ubi-minimal@sha256:5d468e602034fd84407429fe83c8cb5e4c9ee07e2073db3969aadc97496a958b
+        - name: RELATED_IMAGE_OPENTELEMETRY_COLLECTOR
+          value: public.ecr.aws/sumologic/opentelemetry-collector@sha256:6f07f96178dc26f97169e899c91bd151b64bba6854fcb9f70ccefdfadb48f17a
         image: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:2.1.4-0-rc.0
         livenessProbe:
           httpGet:
