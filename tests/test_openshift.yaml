@@ -96,7 +96,7 @@ spec:
       job:
         image:
           repository: public.ecr.aws/sumologic/kubernetes-setup
-          tag: 3.0.0
+          tag: 3.0.0-ubi
           pullPolicy: IfNotPresent
         ## Optionally specify an array of pullSecrets.
         ## They will be added to serviceaccount that is used for Sumo Logic's
@@ -212,7 +212,7 @@ spec:
   fluentd:
     image:
       repository: public.ecr.aws/sumologic/kubernetes-fluentd
-      tag: 1.12.2-sumo-0
+      tag: 1.12.2-sumo-0-ubi
       pullPolicy: IfNotPresent
 
     ## Specifies whether a PodSecurityPolicy should be created
@@ -800,6 +800,10 @@ spec:
     ## Set the enabled flag to true for enabling metrics-server.
     ## This is required before enabling fluentd autoscaling unless you have an existing metrics-server in the cluster.
     enabled: true
+    image:
+      registry: public.ecr.aws
+      repository: sumologic/metrics-server
+      tag: 0.4.2-debian-10-r58-ubi
     apiService:
       create: false
     extraArgs:
@@ -822,6 +826,7 @@ spec:
       #   - name: "image-pull-secret"
     image:
       repository: public.ecr.aws/sumologic/fluent-bit
+      tag: 1.6.10-ubi
       pullPolicy: IfNotPresent
 
     ## Resource limits for fluent-bit
@@ -1262,6 +1267,12 @@ spec:
       enabled: false
       defaultDashboardsEnabled: false
     prometheusOperator:
+      image:
+        repository: public.ecr.aws/sumologic/prometheus-operator
+        tag: v0.43.2-ubi
+      prometheusConfigReloaderImage:
+        repository: public.ecr.aws/sumologic/prometheus-config-reloader
+        tag: v0.43.2-ubi
       ## Labels to add to the operator pod
       podLabels: {}
       ## Annotations to add to the operator pod
@@ -1318,6 +1329,9 @@ spec:
       - openshift-user-workload-monitoring
     ## Resource limits for kube-state-metrics
     kube-state-metrics:
+      image:
+        repository: public.ecr.aws/sumologic/kube-state-metrics
+        tag: v1.9.7-ubi
       ## Custom labels to apply to service, deployment and pods
       customLabels: {}
       ## Additional annotations for pods in the DaemonSet
@@ -1331,6 +1345,9 @@ spec:
         #   memory: 32Mi
     ## Resource limits for prometheus node exporter
     prometheus-node-exporter:
+      image:
+        repository: public.ecr.aws/sumologic/node-exporter
+        tag: v1.0.1-ubi
       service:
         port: 9200
         targetPort: 9200
@@ -1409,6 +1426,9 @@ spec:
               sumologic.com/app: otelcol
               sumologic.com/scrape: "true"
       prometheusSpec:
+        image:
+          repository: public.ecr.aws/sumologic/prometheus
+          tag: v2.22.1-ubi
         ## Prometheus default scrape interval, default from upstream Kube Prometheus Stack Helm chart
         ## NOTE changing the scrape interval to be >1m can result in metrics
         ## from recording rules to be missing and empty panels in Sumo Logic Kubernetes apps.
@@ -1428,8 +1448,7 @@ spec:
             cpu: 500m
             memory: 1Gi
         thanos:
-          baseImage: quay.io/thanos/thanos
-          version: v0.10.0
+          image: public.ecr.aws/sumologic/thanos:v0.10.0-ubi
           ## Defines the resource requirements for the Thanos sidecar
           ## Setting those as there are no default values in the upstream chart
           resources:
@@ -2057,7 +2076,7 @@ spec:
       memBallastSizeMib: "250"
       image:
         repository: "public.ecr.aws/sumologic/opentelemetry-collector"
-        tag: "0.22.0-sumo"
+        tag: "0.22.0-sumo-ubi"
         pullPolicy: IfNotPresent
 
       ## Extra Environment Values - allows yaml definitions
@@ -2163,7 +2182,7 @@ spec:
       memBallastSizeMib: "683"
       image:
         repository: "public.ecr.aws/sumologic/opentelemetry-collector"
-        tag: "0.22.0-sumo"
+        tag: "0.22.0-sumo-ubi"
         pullPolicy: IfNotPresent
 
       ## Extra Environment Values - allows yaml definitions
@@ -2351,7 +2370,9 @@ spec:
   telegraf-operator:
     enabled: true
     image:
-      sidecarImage: public.ecr.aws/sumologic/telegraf:1.14.4
+      repository: public.ecr.aws/sumologic/telegraf-operator-ubi
+      tag: v1.1.1
+      sidecarImage: public.ecr.aws/sumologic/telegraf:1.14.4-ubi
     replicaCount: 1
     classes:
       secretName: "telegraf-operator-classes"
@@ -2447,3 +2468,15 @@ spec:
   ## ref: https://github.com/SumoLogic/tailing-sidecar/blob/main/helm/tailing-sidecar-operator/values.yaml
   tailing-sidecar-operator:
     enabled: true
+    operator:
+      image:
+        repository: ghcr.io/sumologic/tailing-sidecar-operator
+        tag: 0.3.1-ubi
+    sidecar:
+      image:
+        repository: ghcr.io/sumologic/tailing-sidecar
+        tag: 0.3.1-ubi
+    kubeRbacProxy:
+      image:
+        repository: public.ecr.aws/sumologic/kube-rbac-proxy
+        tag: v0.5.0-ubi
