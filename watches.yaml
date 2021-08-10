@@ -16,9 +16,9 @@
     kube-prometheus-stack.prometheusOperator.image.repository: '{{ ("$RELATED_IMAGE_PROMETHEUS_OPERATOR" | split "@")._0 }}'
     kube-prometheus-stack.prometheusOperator.image.tag: v0.43.2
     kube-prometheus-stack.prometheusOperator.image.sha: '{{ ("$RELATED_IMAGE_PROMETHEUS_OPERATOR" | split ":")._1 }}'
-    kube-prometheus-stack.prometheusConfigReloaderImage.repository: '{{ ("$RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER" | split "@")._0 }}'
-    kube-prometheus-stack.prometheusConfigReloaderImage.tag: v0.43.2-ubi
-    kube-prometheus-stack.prometheusConfigReloaderImage.sha: '{{ ("$RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER" | split ":")._1 }}'
+    kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.repository: '{{ ("$RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER" | split "@")._0 }}'
+    kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.tag: v0.43.2-ubi
+    kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.sha: '{{ ("$RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER" | split ":")._1 }}'
     kube-prometheus-stack.kube-state-metrics.image.repository: '{{ ("$RELATED_IMAGE_KUBE_STATE_METRICS" | split ":")._0 }}'
     kube-prometheus-stack.kube-state-metrics.image.tag: '{{ ("$RELATED_IMAGE_KUBE_STATE_METRICS" | split ":")._1 }}'
     kube-prometheus-stack.prometheus-node-exporter.image.repository: '{{ ("$RELATED_IMAGE_NODE_EXPORTER" | split ":")._0 }}'
