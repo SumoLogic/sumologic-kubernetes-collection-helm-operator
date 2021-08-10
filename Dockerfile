@@ -33,5 +33,8 @@ WORKDIR ${HOME}/helm-charts/sumologic
 RUN helm dependency update && cd charts && for subchart in *.tgz; do tar -xf "${subchart}" && rm -f "${subchart}"; done;
 RUN sed -i "s#{{ .Values.image.repository }}:{{ .Chart.AppVersion }}#{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}#g" charts/telegraf-operator/templates/deployment.yaml
 
+# patch for prometheus specification to use sha in image path
+COPY patches/kube-prometheus-stack/12.3.0/prometheus.yaml charts/kube-prometheus-stack/templates/prometheus/prometheus.yaml
+
 WORKDIR ${HOME}
 USER ${USER_UID}
