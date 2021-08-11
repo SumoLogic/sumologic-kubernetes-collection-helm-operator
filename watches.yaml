@@ -14,7 +14,7 @@
     fluent-bit.image.repository: '{{ ("$RELATED_IMAGE_FLUENT_BIT" | split ":")._0 }}'
     fluent-bit.image.tag: '{{ ("$RELATED_IMAGE_FLUENT_BIT" | split ":")._1 }}'
     kube-prometheus-stack.prometheusOperator.image.repository: '{{ ("$RELATED_IMAGE_PROMETHEUS_OPERATOR" | split "@")._0 }}'
-    kube-prometheus-stack.prometheusOperator.image.tag: v0.43.2
+    kube-prometheus-stack.prometheusOperator.image.tag: v0.43.2-ubi
     kube-prometheus-stack.prometheusOperator.image.sha: '{{ ("$RELATED_IMAGE_PROMETHEUS_OPERATOR" | split ":")._1 }}'
     kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.repository: '{{ ("$RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER" | split "@")._0 }}'
     kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.tag: v0.43.2-ubi
