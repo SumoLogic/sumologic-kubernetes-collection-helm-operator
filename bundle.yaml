@@ -504,7 +504,7 @@ spec:
           value: public.ecr.aws/sumologic/sumo-ubi-minimal@sha256:5d468e602034fd84407429fe83c8cb5e4c9ee07e2073db3969aadc97496a958b
         - name: RELATED_IMAGE_OPENTELEMETRY_COLLECTOR
           value: public.ecr.aws/sumologic/opentelemetry-collector@sha256:6f07f96178dc26f97169e899c91bd151b64bba6854fcb9f70ccefdfadb48f17a
-        image: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:2.1.4-0-rc.0
+        image: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:2.1.4-0-rc.1
         livenessProbe:
           httpGet:
             path: /healthz
