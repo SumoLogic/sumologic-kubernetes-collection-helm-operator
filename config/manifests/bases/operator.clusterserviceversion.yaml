@@ -9,7 +9,7 @@ metadata:
 spec:
   apiservicedefinitions: {}
   customresourcedefinitions: {}
-  description: Helm Operator for the Sumo Logic Kubernetes Collection Chart
+  description: Helm Operator for the Sumo Logic Kubernetes Collection Helm Chart
   displayName: Sumo Logic Kubernetes Collection Helm Operator
   icon:
   - base64data: ""
