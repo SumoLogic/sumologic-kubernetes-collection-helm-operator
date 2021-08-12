@@ -3,11 +3,6 @@ kind: SumologicCollection
 metadata:
   name: collection
 spec:
-  ## Sumo Logic Kubernetes Collection configuration file
-  ## All the comments start with two or more # characters
-
-  nameOverride: ""
-
   sumologic:
     ### Setup
 
@@ -39,6 +34,11 @@ spec:
           repository: public.ecr.aws/sumologic/kubernetes-setup
           tag: 3.0.0-ubi
 
+    ### Traces configuration
+    ## This is experimental feature and may be unavailable for your account
+    traces:
+      enabled: true
+
   fluentd:
     image:
       repository: public.ecr.aws/sumologic/kubernetes-fluentd
@@ -60,7 +60,7 @@ spec:
   metrics-server:
     ## Set the enabled flag to true for enabling metrics-server.
     ## This is required before enabling fluentd autoscaling unless you have an existing metrics-server in the cluster.
-    enabled: false
+    enabled: true
     image:
       registry: public.ecr.aws
       repository: sumologic/metrics-server
@@ -264,7 +264,7 @@ spec:
 
   ## Configure optional OpenTelemetry Collector in Agent mode
   otelagent:
-    enabled: false
+    enabled: true
     daemonset:
       image:
         repository: "public.ecr.aws/sumologic/opentelemetry-collector"
@@ -281,7 +281,7 @@ spec:
   ## This is an experimental configuration and shouldn't be used in production environment
   ## ref: https://github.com/influxdata/helm-charts/blob/master/charts/telegraf-operator/values.yaml
   telegraf-operator:
-    enabled: false
+    enabled: true
     image:
       repository: public.ecr.aws/sumologic/telegraf-operator-ubi
       tag: v1.1.1
@@ -291,7 +291,7 @@ spec:
   ## This is an experimental configuration and shouldn't be used in production environment
   ## https://github.com/falcosecurity/charts/tree/master/falco
   falco:
-    enabled: false
+    enabled: true
     image:
       registry: public.ecr.aws
       repository: sumologic/falco
@@ -323,7 +323,7 @@ spec:
   ## Configure Tailing Sidecar Operator
   ## ref: https://github.com/SumoLogic/tailing-sidecar/blob/main/helm/tailing-sidecar-operator/values.yaml
   tailing-sidecar-operator:
-    enabled: false
+    enabled: true
     operator:
       image:
         repository: ghcr.io/sumologic/tailing-sidecar-operator
