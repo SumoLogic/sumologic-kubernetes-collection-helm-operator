@@ -3,11 +3,6 @@ kind: SumologicCollection
 metadata:
   name: collection
 spec:
-  ## Sumo Logic Kubernetes Collection configuration file
-  ## All the comments start with two or more # characters
-
-  nameOverride: ""
-
   sumologic:
     ### Setup
 
@@ -31,24 +26,12 @@ spec:
     scc:
       create: true
 
-    setup:
-      ## uncomment to force collection installation (disables k8s version verification)
-      # force: true
-      job:
-        image:
-          repository: public.ecr.aws/sumologic/kubernetes-setup
-          tag: 3.0.0-ubi
-
     ### Traces configuration
     ## This is experimental feature and may be unavailable for your account
     traces:
       enabled: true
 
   fluentd:
-    image:
-      repository: public.ecr.aws/sumologic/kubernetes-fluentd
-      tag: 1.12.2-sumo-0-ubi
-
     buffer:
       queueChunkLimitSize: 256
       totalLimitSize: "256m"
@@ -66,20 +49,12 @@ spec:
     ## Set the enabled flag to true for enabling metrics-server.
     ## This is required before enabling fluentd autoscaling unless you have an existing metrics-server in the cluster.
     enabled: true
-    image:
-      registry: public.ecr.aws
-      repository: sumologic/metrics-server
-      tag: 0.4.2-debian-10-r58-ubi
     apiService:
       create: false
 
   ## Configure fluent-bit
   ## ref: https://github.com/fluent/helm-charts/blob/master/charts/fluent-bit/values.yaml
   fluent-bit:
-    image:
-      repository: public.ecr.aws/sumologic/fluent-bit
-      tag: 1.6.10-ubi
-
     ## Set securityContext of fluent-bit daemonset pods as privileged for running in Openshift
     securityContext:
       privileged: true
@@ -200,12 +175,6 @@ spec:
   ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
   kube-prometheus-stack:
     prometheusOperator:
-      image:
-        repository: public.ecr.aws/sumologic/prometheus-operator
-        tag: v0.43.2-ubi
-      prometheusConfigReloaderImage:
-        repository: public.ecr.aws/sumologic/prometheus-config-reloader
-        tag: v0.43.2-ubi
       denyNamespaces:
       - openshift-apiserver
       - openshift-apiserver-operator
@@ -245,99 +214,29 @@ spec:
       - openshift-service-ca-operator
       - openshift-user-workload-monitoring
 
-    kube-state-metrics:
-      image:
-        repository: public.ecr.aws/sumologic/kube-state-metrics
-        tag: v1.9.7-ubi
-
     prometheus-node-exporter:
-      image:
-        repository: public.ecr.aws/sumologic/node-exporter
-        tag: v1.0.1-ubi
       service:
         port: 9200
         targetPort: 9200
 
-    prometheus:
-      prometheusSpec:
-        image:
-          repository: public.ecr.aws/sumologic/prometheus
-          tag: v2.22.1-ubi
-
-        thanos:
-          image: public.ecr.aws/sumologic/thanos:v0.10.0-ubi
-
   ## Configure optional OpenTelemetry Collector in Agent mode
   otelagent:
     enabled: true
-    daemonset:
-      image:
-        repository: "public.ecr.aws/sumologic/opentelemetry-collector"
-        tag: "0.22.0-sumo-ubi"
-
-  ## Configure otelcol
-  otelcol:
-    deployment:
-      image:
-        repository: "public.ecr.aws/sumologic/opentelemetry-collector"
-        tag: "0.22.0-sumo-ubi"
 
   ## Configure telegraf-operator
   ## This is an experimental configuration and shouldn't be used in production environment
   ## ref: https://github.com/influxdata/helm-charts/blob/master/charts/telegraf-operator/values.yaml
   telegraf-operator:
     enabled: true
-    image:
-      repository: public.ecr.aws/sumologic/telegraf-operator-ubi
-      tag: v1.1.1
-      sidecarImage: public.ecr.aws/sumologic/telegraf:1.14.4-ubi
 
   ## Configure falco
   ## This is an experimental configuration and shouldn't be used in production environment
   ## https://github.com/falcosecurity/charts/tree/master/falco
   falco:
     enabled: true
-    image:
-      registry: public.ecr.aws
-      repository: sumologic/falco
-      tag: 0.27.0
-
-    ## Add kernel-devel package through MachineConfig, required to enable building of missing falco modules (only for OpenShift)
-    addKernelDevel: true
-    ## Add initContainers to Falco pod
-    extraInitContainers:
-      ## Add initContainer to wait until kernel-devel is installed on host
-      - name: init-falco
-        image: public.ecr.aws/sumologic/sumo-ubi-minimal:8.4
-        command:
-          - 'sh'
-          - '-c'
-          - |
-            while [ -f /host/etc/redhat-release ] && [ -z "$(ls /host/usr/src/kernels)" ] ; do
-            echo "waiting for kernel headers to be installed"
-            sleep 3
-            done
-        volumeMounts:
-          - mountPath: /host/usr
-            name: usr-fs
-            readOnly: true
-          - mountPath: /host/etc
-            name: etc-fs
-            readOnly: true
 
   ## Configure Tailing Sidecar Operator
   ## ref: https://github.com/SumoLogic/tailing-sidecar/blob/main/helm/tailing-sidecar-operator/values.yaml
   tailing-sidecar-operator:
     enabled: true
-    operator:
-      image:
-        repository: ghcr.io/sumologic/tailing-sidecar-operator
-        tag: 0.3.1-ubi
-    sidecar:
-      image:
-        repository: ghcr.io/sumologic/tailing-sidecar
-        tag: 0.3.1-ubi
-    kubeRbacProxy:
-      image:
-        repository: public.ecr.aws/sumologic/kube-rbac-proxy
-        tag: v0.5.0-ubi
+
