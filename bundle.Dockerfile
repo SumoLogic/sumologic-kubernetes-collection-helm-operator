@@ -15,7 +15,7 @@ LABEL operators.operatorframework.io.test.mediatype.v1=scorecard+v1
 LABEL operators.operatorframework.io.test.config.v1=tests/scorecard/
 
 # Red Hat labels.
-LABEL com.redhat.openshift.versions="v4.6"
+LABEL com.redhat.openshift.versions="v4.6,v4.7"
 LABEL com.redhat.delivery.operator.bundle=true
 LABEL operators.operatorframework.io.bundle.channel.default.v1=alpha
 
