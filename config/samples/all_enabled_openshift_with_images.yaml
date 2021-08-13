@@ -278,7 +278,6 @@ spec:
         tag: "0.22.0-sumo-ubi"
 
   ## Configure telegraf-operator
-  ## This is an experimental configuration and shouldn't be used in production environment
   ## ref: https://github.com/influxdata/helm-charts/blob/master/charts/telegraf-operator/values.yaml
   telegraf-operator:
     enabled: true
