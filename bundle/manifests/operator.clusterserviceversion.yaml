@@ -98,13 +98,13 @@ metadata:
       ]
     capabilities: Basic Install
     categories: Logging & Tracing,Monitoring
-    containerImage: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:2.1.4-0-rc.1
+    containerImage: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:2.1.4-0-rc.2
     createdAt: "2021-08-11T10:19:43.313683880Z"
     repository: https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator.git
     support: Sumo Logic
     operators.operatorframework.io/builder: operator-sdk-v1.6.1+git
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
-  name: sumologic-kubernetes-collection-helm-operator.v2.1.4-0-rc.1
+  name: sumologic-kubernetes-collection-helm-operator.v2.1.4-0-rc.2
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -463,7 +463,7 @@ spec:
                         value: public.ecr.aws/sumologic/sumo-ubi-minimal@sha256:5d468e602034fd84407429fe83c8cb5e4c9ee07e2073db3969aadc97496a958b
                       - name: RELATED_IMAGE_OPENTELEMETRY_COLLECTOR
                         value: public.ecr.aws/sumologic/opentelemetry-collector@sha256:6f07f96178dc26f97169e899c91bd151b64bba6854fcb9f70ccefdfadb48f17a
-                    image: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:2.1.4-0-rc.1
+                    image: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:2.1.4-0-rc.2
                     livenessProbe:
                       httpGet:
                         path: /healthz
@@ -539,4 +539,4 @@ spec:
   provider:
     name: Sumo Logic
     url: https://www.sumologic.com/
-  version: 2.1.4-0-rc.1
+  version: 2.1.4-0-rc.2
