@@ -282,7 +282,7 @@ spec:
   telegraf-operator:
     enabled: true
     image:
-      repository: registry.connect.redhat.com/sumologic/telegraf-operator-ubi
+      repository: registry.connect.redhat.com/sumologic/telegraf-operator
       tag: v1.1.1
       sidecarImage: registry.connect.redhat.com/sumologic/telegraf:1.14.4-ubi
 

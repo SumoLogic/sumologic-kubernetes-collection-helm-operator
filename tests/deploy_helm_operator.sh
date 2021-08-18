@@ -25,6 +25,7 @@ sed -i.bak "s#registry.connect.redhat.com/sumologic/metrics-server#public.ecr.aw
 sed -i.bak "s#registry.connect.redhat.com/sumologic/kube-rbac-proxy#public.ecr.aws/sumologic/kube-rbac-proxy#g" bundle.yaml
 sed -i.bak "s#registry.connect.redhat.com/sumologic/tailing-sidecar-operator#ghcr.io/sumologic/tailing-sidecar-operator#g" bundle.yaml
 sed -i.bak "s#registry.connect.redhat.com/sumologic/tailing-sidecar#ghcr.io/sumologic/tailing-sidecar#g" bundle.yaml
+sed -i.bak "s#registry.connect.redhat.com/sumologic/telegraf-operator#public.ecr.aws/sumologic/telegraf-operator-ubi#g" bundle.yaml
 sed -i.bak "s#registry.connect.redhat.com/sumologic/telegraf#public.ecr.aws/sumologic/telegraf#g" bundle.yaml
 sed -i.bak "s#registry.connect.redhat.com/sumologic/kubernetes-fluentd#public.ecr.aws/sumologic/kubernetes-fluentd#g" bundle.yaml
 sed -i.bak "s#registry.connect.redhat.com/sumologic/fluent-bit#public.ecr.aws/sumologic/fluent-bit#g" bundle.yaml

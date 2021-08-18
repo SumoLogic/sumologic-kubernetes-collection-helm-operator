@@ -64,7 +64,7 @@ spec:
           - name: RELATED_IMAGE_TAILING_SIDECAR
             value: registry.connect.redhat.com/sumologic/tailing-sidecar@sha256:838401ab699ae1f4a581a62a6eea413bca1e2c30d60358acb16bd86be75fbca1
           - name: RELATED_IMAGE_TELEGRAF_OPERATOR
-            value: registry.connect.redhat.com/sumologic/telegraf-operator-ubi@sha256:3a63153408ff6bb5d6294fcdedfa30b07a5023ca5f72dd63c6e4de31f6bf1c68
+            value: registry.connect.redhat.com/sumologic/telegraf-operator@sha256:3a63153408ff6bb5d6294fcdedfa30b07a5023ca5f72dd63c6e4de31f6bf1c68
           - name: RELATED_IMAGE_TELEGRAF
             value: registry.connect.redhat.com/sumologic/telegraf@sha256:8d92cabdd8efbec83475a004209745cc14e877d361cae19ab80a622ebda57e24
           - name: RELATED_IMAGE_KUBERNETES_FLUENTD
