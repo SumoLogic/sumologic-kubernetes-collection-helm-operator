@@ -27,8 +27,8 @@ sed -i.bak 's#registry.connect.redhat.com/sumologic/tailing-sidecar-operator#ghc
 sed -i.bak 's#registry.connect.redhat.com/sumologic/tailing-sidecar#ghcr.io/sumologic/tailing-sidecar#g' bundle.yaml
 sed -i.bak 's#registry.connect.redhat.com/sumologic/telegraf#public.ecr.aws/sumologic/telegraf#g' bundle.yaml
 sed -i.bak 's#registry.connect.redhat.com/sumologic/kubernetes-fluentd#public.ecr.aws/sumologic/kubernetes-fluentd#g' bundle.yaml
-sed -i.bak 's#registry.connect.redhat.com/sumologic/fluent-bit@#public.ecr.aws/sumologic/fluent-bit#g' bundle.yaml
-sed -i.bak 's#registry.connect.redhat.com/sumologic/falco@#public.ecr.aws/sumologic/falco#g' bundle.yaml
+sed -i.bak 's#registry.connect.redhat.com/sumologic/fluent-bit#public.ecr.aws/sumologic/fluent-bit#g' bundle.yaml
+sed -i.bak 's#registry.connect.redhat.com/sumologic/falco#public.ecr.aws/sumologic/falco#g' bundle.yaml
 sed -i.bak 's#registry.connect.redhat.com/sumologic/sumo-ubi-minimal@#public.ecr.aws/sumologic/sumo-ubi-minimal#g' bundle.yaml
 sed -i.bak 's#registry.connect.redhat.com/sumologic/opentelemetry-collector@#public.ecr.aws/sumologic/opentelemetry-collector#g' bundle.yaml
 
