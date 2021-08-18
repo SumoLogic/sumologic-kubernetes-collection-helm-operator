@@ -95,7 +95,7 @@ spec:
       # force: true
       job:
         image:
-          repository: public.ecr.aws/sumologic/kubernetes-setup
+          repository: registry.connect.redhat.com/sumologic/kubernetes-setup
           tag: 3.0.0-ubi
           pullPolicy: IfNotPresent
         resources:
@@ -203,7 +203,7 @@ spec:
 
   fluentd:
     image:
-      repository: public.ecr.aws/sumologic/kubernetes-fluentd
+      repository: registry.connect.redhat.com/sumologic/kubernetes-fluentd
       tag: 1.12.2-sumo-0-ubi
       pullPolicy: IfNotPresent
 
@@ -790,7 +790,7 @@ spec:
     ## This is required before enabling fluentd autoscaling unless you have an existing metrics-server in the cluster.
     enabled: false
     image:
-      registry: public.ecr.aws
+      registry: registry.connect.redhat.com
       repository: sumologic/metrics-server
       tag: 0.4.2-debian-10-r58-ubi
     apiService:
@@ -811,7 +811,7 @@ spec:
   ## ref: https://github.com/fluent/helm-charts/blob/master/charts/fluent-bit/values.yaml
   fluent-bit:
     image:
-      repository: public.ecr.aws/sumologic/fluent-bit
+      repository: registry.connect.redhat.com/sumologic/fluent-bit
       tag: 1.6.10-ubi
       pullPolicy: IfNotPresent
       # If specified, use these secrets to access the image
@@ -1257,10 +1257,10 @@ spec:
       defaultDashboardsEnabled: false
     prometheusOperator:
       image:
-        repository: public.ecr.aws/sumologic/prometheus-operator
+        repository: registry.connect.redhat.com/sumologic/prometheus-operator
         tag: v0.43.2-ubi
       prometheusConfigReloaderImage:
-        repository: public.ecr.aws/sumologic/prometheus-config-reloader
+        repository: registry.connect.redhat.com/sumologic/prometheus-config-reloader
         tag: v0.43.2-ubi
       ## Labels to add to the operator pod
       podLabels: {}
@@ -1319,7 +1319,7 @@ spec:
     ## Resource limits for kube-state-metrics
     kube-state-metrics:
       image:
-        repository: public.ecr.aws/sumologic/kube-state-metrics
+        repository: registry.connect.redhat.com/sumologic/kube-state-metrics
         tag: v1.9.7-ubi
       ## Custom labels to apply to service, deployment and pods
       customLabels: {}
@@ -1335,7 +1335,7 @@ spec:
     ## Resource limits for prometheus node exporter
     prometheus-node-exporter:
       image:
-        repository: public.ecr.aws/sumologic/node-exporter
+        repository: registry.connect.redhat.com/sumologic/node-exporter
         tag: v1.0.1-ubi
       service:
         port: 9200
@@ -1416,7 +1416,7 @@ spec:
               sumologic.com/scrape: "true"
       prometheusSpec:
         image:
-          repository: public.ecr.aws/sumologic/prometheus
+          repository: registry.connect.redhat.com/sumologic/prometheus
           tag: v2.22.1-ubi
         ## Prometheus default scrape interval, default from upstream Kube Prometheus Stack Helm chart
         ## NOTE changing the scrape interval to be >1m can result in metrics
@@ -1437,7 +1437,7 @@ spec:
             cpu: 500m
             memory: 1Gi
         thanos:
-          image: public.ecr.aws/sumologic/thanos:v0.10.0-ubi
+          image: registry.connect.redhat.com/sumologic/thanos:v0.10.0-ubi
           ## Defines the resource requirements for the Thanos sidecar
           ## Setting those as there are no default values in the upstream chart
           resources:
@@ -2011,7 +2011,7 @@ spec:
       ## Memory Ballast size should be max 1/3 to 1/2 of memory.
       memBallastSizeMib: "250"
       image:
-        repository: "public.ecr.aws/sumologic/opentelemetry-collector"
+        repository: "registry.connect.redhat.com/sumologic/opentelemetry-collector"
         tag: "0.22.0-sumo-ubi"
         pullPolicy: IfNotPresent
 
@@ -2117,7 +2117,7 @@ spec:
       ## Memory Ballast size should be max 1/3 to 1/2 of memory.
       memBallastSizeMib: "683"
       image:
-        repository: "public.ecr.aws/sumologic/opentelemetry-collector"
+        repository: "registry.connect.redhat.com/sumologic/opentelemetry-collector"
         tag: "0.22.0-sumo-ubi"
         pullPolicy: IfNotPresent
 
@@ -2306,9 +2306,9 @@ spec:
   telegraf-operator:
     enabled: false
     image:
-      repository: public.ecr.aws/sumologic/telegraf-operator-ubi
+      repository: registry.connect.redhat.com/sumologic/telegraf-operator-ubi
       tag: v1.1.1
-      sidecarImage: public.ecr.aws/sumologic/telegraf:1.14.4-ubi
+      sidecarImage: registry.connect.redhat.com/sumologic/telegraf:1.14.4-ubi
     replicaCount: 1
     classes:
       secretName: "telegraf-operator-classes"
@@ -2321,73 +2321,6 @@ spec:
             listen = ":9273"
             metric_version = 2
     # imagePullSecrets: []
-
-  ## Configure falco
-  ## This is an experimental configuration and shouldn't be used in production environment
-  ## https://github.com/falcosecurity/charts/tree/master/falco
-  falco:
-    enabled: false
-    image:
-      registry: public.ecr.aws
-      repository: sumologic/falco
-
-    ## Add kernel-devel package through MachineConfig, required to enable building of missing falco modules (only for OpenShift)
-    addKernelDevel: true
-    ## Add initContainers to Falco pod
-    extraInitContainers:
-      ## Add initContainer to wait until kernel-devel is installed on host
-      - name: init-falco
-        image: public.ecr.aws/sumologic/sumo-ubi-minimal:8.4
-        command:
-          - 'sh'
-          - '-c'
-          - |
-            while [ -f /host/etc/redhat-release ] && [ -z "$(ls /host/usr/src/kernels)" ] ; do
-            echo "waiting for kernel headers to be installed"
-            sleep 3
-            done
-        volumeMounts:
-          - mountPath: /host/usr
-            name: usr-fs
-            readOnly: true
-          - mountPath: /host/etc
-            name: etc-fs
-            readOnly: true
-    ## Enable eBPF support for Falco instead of falco-probe kernel module.
-    ## Set to true for GKE, for details see:
-    ## https://github.com/SumoLogic/sumologic-kubernetes-collection/blob/main/deploy/docs/Troubleshoot_Collection.md#falco-and-google-kubernetes-engine-gke
-    # ebpf:
-    #   enabled: true
-    falco:
-      jsonOutput: true
-    # image:
-    #   pullSecrets: []
-    customRules:
-      ## Mark the following as known k8s api callers:
-      ## * fluentd and its plugins from sumologic/kubernetes-fluentd image
-      ## * prometheus
-      ## * prometheus operator
-      ## * telegraf operator
-      ## * grafana sidecar
-      rules_user_known_k8s_api_callers.yaml: |-
-        - macro: user_known_contact_k8s_api_server_activities
-          condition: >
-            (container.image.repository = "sumologic/kubernetes-fluentd") or
-            (container.image.repository = "quay.io/prometheus/prometheus") or
-            (container.image.repository = "quay.io/coreos/prometheus-operator") or
-            (container.image.repository = "quay.io/influxdb/telegraf-operator") or
-            (container.image.repository = "kiwigrid/k8s-sidecar")
-      rules_user_sensitive_mount_containers.yaml: |-
-        - macro: user_sensitive_mount_containers
-          condition: >
-            (container.image.repository = "falcosecurity/falco") or
-            (container.image.repository = "quay.io/prometheus/node-exporter")
-      ## NOTE: kube-proxy not exact matching because of regional ecr e.g.
-      ## 602401143452.dkr.ecr.us-west-1.amazonaws.com/eks/kube-proxy
-      rules_user_privileged_containers.yaml: |-
-        - macro: user_privileged_containers
-          condition: >
-            (container.image.repository endswith ".amazonaws.com/eks/kube-proxy")
 
   ## Configure Tailing Sidecar Operator
   ## ref: https://github.com/SumoLogic/tailing-sidecar/blob/main/helm/tailing-sidecar-operator/values.yaml
@@ -2403,5 +2336,5 @@ spec:
         tag: 0.3.1-ubi
     kubeRbacProxy:
       image:
-        repository: public.ecr.aws/sumologic/kube-rbac-proxy
+        repository: registry.connect.redhat.com/sumologic/kube-rbac-proxy
         tag: v0.5.0-ubi

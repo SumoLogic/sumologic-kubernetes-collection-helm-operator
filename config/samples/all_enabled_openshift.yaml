@@ -228,12 +228,6 @@ spec:
   telegraf-operator:
     enabled: true
 
-  ## Configure falco
-  ## This is an experimental configuration and shouldn't be used in production environment
-  ## https://github.com/falcosecurity/charts/tree/master/falco
-  falco:
-    enabled: true
-
   ## Configure Tailing Sidecar Operator
   ## ref: https://github.com/SumoLogic/tailing-sidecar/blob/main/helm/tailing-sidecar-operator/values.yaml
   tailing-sidecar-operator:
