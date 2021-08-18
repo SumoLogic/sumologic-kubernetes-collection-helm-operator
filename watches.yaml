@@ -34,9 +34,6 @@
     telegraf-operator.image.repository: '{{ ("$RELATED_IMAGE_TELEGRAF_OPERATOR" | split ":")._0 }}'
     telegraf-operator.image.tag: '{{ ("$RELATED_IMAGE_TELEGRAF_OPERATOR" | split ":")._1 }}'
     telegraf-operator.image.sidecarImage: $RELATED_IMAGE_TELEGRAF
-    falco.image.registry: '{{ ("$RELATED_IMAGE_FALCO" | split "/")._0 }}'
-    falco.image.repository: '{{ (("$RELATED_IMAGE_FALCO" | split ":")._0 | split "/")._1 }}/{{ (("$RELATED_IMAGE_FALCO" | split ":")._0 | split "/")._2 }}'
-    falco.image.tag: '{{ ("$RELATED_IMAGE_FALCO" | split ":")._1 }}'
     tailing-sidecar-operator.operator.image.repository: '{{ ("$RELATED_IMAGE_TAILING_SIDECAR_OPERATOR" | split ":")._0 }}'
     tailing-sidecar-operator.operator.image.tag: '{{ ("$RELATED_IMAGE_TAILING_SIDECAR_OPERATOR" | split ":")._1 }}'
     tailing-sidecar-operator.sidecar.image.repository: '{{ ("$RELATED_IMAGE_TAILING_SIDECAR" | split ":")._0 }}'

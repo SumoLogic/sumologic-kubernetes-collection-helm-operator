@@ -53,9 +53,6 @@ helm install test-openshift sumologic/sumologic \
   --set kube-prometheus-stack.prometheus.prometheusSpec.thanos.image=public.ecr.aws/sumologic/thanos@sha256:707e40ee919e4bc3c2edeecdc536acdf8cb67f9e5fc34eaad9d9e4c283438bb1 \
   --set telegraf-operator.image.repository=public.ecr.aws/sumologic/telegraf-operator-ubi \
   --set telegraf-operator.image.sidecarImage=public.ecr.aws/sumologic/telegraf@sha256:8d92cabdd8efbec83475a004209745cc14e877d361cae19ab80a622ebda57e24 \
-  --set falco.image.registry=public.ecr.aws \
-  --set falco.image.repository=sumologic/falco@sha256 \
-  --set falco.image.tag=e70460e16bee5cfe3140d0e539a38769152d258339b48c8476f74238820746bb \
   --set tailing-sidecar-operator.operator.image.repository=ghcr.io/sumologic/tailing-sidecar-operator@sha256 \
   --set tailing-sidecar-operator.operator.image.tag=1d9d902b165596e12a626f5dd2f9d512627b356c3773a04c96df24270a840724 \
   --set tailing-sidecar-operator.sidecar.image.repository=ghcr.io/sumologic/tailing-sidecar@sha256 \

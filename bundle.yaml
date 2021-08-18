@@ -498,8 +498,6 @@ spec:
           value: registry.connect.redhat.com/sumologic/kubernetes-fluentd@sha256:362053ce1833aa51db31d36f97458f526d199bcd7efff53486b09e3a02a795ab
         - name: RELATED_IMAGE_FLUENT_BIT
           value: registry.connect.redhat.com/sumologic/fluent-bit@sha256:faa802d22e41f8d67d487e40285fa2a7ea72f9cd49c32ddb80ea34f4d302e220
-        - name: RELATED_IMAGE_FALCO
-          value: registry.connect.redhat.com/sumologic/falco@sha256:e70460e16bee5cfe3140d0e539a38769152d258339b48c8476f74238820746bb
         - name: RELATED_IMAGE_SUMO_UBI_MINIMAL
           value: registry.connect.redhat.com/sumologic/sumo-ubi-minimal@sha256:5d468e602034fd84407429fe83c8cb5e4c9ee07e2073db3969aadc97496a958b
         - name: RELATED_IMAGE_OPENTELEMETRY_COLLECTOR
