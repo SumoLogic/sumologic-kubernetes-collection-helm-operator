@@ -11,13 +11,12 @@ Sumo Logic Kubernetes Collection Helm Operator for the [Sumo Logic Kubernetes Co
 
 ### From OperatorHub
 
-- Install Sumo Logic Kubernetes Collection Helm Operator from Operator Hub
+- Go to OpenShift web console and install Sumo Logic Kubernetes Collection Helm Operator from OperatorHub
+  ![operator_hub_installation](images/operator_hub_installation.png)
 
-- Create `SumologicCollection` resource with proper configuration, see [Configuration](#configuration) section, e.g.
+- Create `SumologicCollection` resource with proper configuration, see [Configuration](#configuration) section
 
-  ```bash
-  kubeclt apply -f config/samples/default_openshift.yaml
-  ```
+  ![operator_hub_sumologiccollection](images/operator_hub_sumologiccollection.png)
 
 ### Using bundle.yaml
 
