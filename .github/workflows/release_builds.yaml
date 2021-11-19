@@ -16,12 +16,19 @@ jobs:
     env:
       OPERATOR_IMAGE_NAME: sumologic-kubernetes-collection-helm-operator
       BUNDLE_IMAGE_NAME: ${OPERATOR_IMAGE_NAME}-bundle
+      CATALOG_IMAGE_NAME: sumologic-kubernetes-collection-helm-operator-catalog
 
       ECR_URL: public.ecr.aws/u5z5f8z6
       OPENSOURCE_ECR_URL:  public.ecr.aws/a4t4y2n3
 
     steps:
       - uses: actions/checkout@v2.3.4
+
+      - name: Install Operator Package Manager (OPM)
+        run: wget -q "https://github.com/operator-framework/operator-registry/releases/download/${OPM_VERSION}/linux-amd64-opm" -O /usr/bin/opm && \
+          chmod +x /usr/bin/opm
+        env:
+          OPM_VERSION: v1.14.3
 
       - name: Checkout submodules
         run: git submodule update --init
@@ -54,6 +61,11 @@ jobs:
         run: make bundle-build bundle-push \
           BUNDLE_IMG=${ECR_URL}/${BUNDLE_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }}
 
+      - name: Build and push catalog image to public ECR
+        run: make catalog-build catalog-push \
+          CATALOG_IMG=${ECR_URL}/${CATALOG_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }} \
+          BUNDLE_IMGS=${ECR_URL}/${BUNDLE_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }}
+
       - name: Login to Open Source ECR to publish operator
         run: make login-opensource
         env:
@@ -75,3 +87,14 @@ jobs:
       - name: Build and push bundle image to Open Source ECR
         run: make bundle-build bundle-push \
           BUNDLE_IMG=${OPENSOURCE_ECR_URL}/${BUNDLE_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }}
+
+      - name: Login to Open Source ECR to publish catalog
+        run: make login-opensource
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_CATALOG }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_CATALOG }}
+
+      - name: Build and push catalog image to Open Source ECR
+        run: make catalog-build catalog-push \
+          CATALOG_IMG=${OPENSOURCE_ECR_URL}/${CATALOG_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }} \
+          BUNDLE_IMGS=${OPENSOURCE_ECR_URL}/${BUNDLE_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }}
