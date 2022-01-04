@@ -2,7 +2,10 @@
 
 ## Test Helm Operator using local instance of OperatorHub on OpenShift
 
-1. Build and push to container registry catalog image:
+1. (Optional) Build and push to container registry catalog image
+
+   This is an optional step, you can use also existing container images, please see information about
+   [official container images](../images.md) and [developer container images](images.md).
 
    ```bash
    make catalog-build catalog-push CATALOG_IMG=<CATALOG_IMAGE> BUNDLE_IMGS=<BUNDLE_IMAGE_1>,<BUNDLE_IMAGE_2>
@@ -19,13 +22,16 @@
     **Notice**: Operator Package Manager (OPM) is required to build catalog image,
     OPM is available in Vagrant environment for Helm Operator.
 
-2. Create `CatalogSource`:
+1. Create `CatalogSource` e.g.
 
    ```bash
    kubectl apply -f tests/catalogsource.yaml
    ```
 
-3. Check that `CatalogSource` was created e.g.
+   **Notice**: Example `CatalogSource` can be found as [tests/catalogsource.yaml](../../tests/catalogsource.yaml).
+   Please remember to update catalog image in definition of `CatalogSource`.
+
+1. Check that `CatalogSource` was created e.g.
 
    ```bash
    $ kubectl get CatalogSource -n openshift-marketplace
@@ -37,7 +43,7 @@
    sumologic-helm-operator-catalog   Sumo Logic Helm Operator   grpc   Sumo Logic   37s
    ```
 
-4. Check that Pod for `sumologic-helm-operator-catalog` was created in `openshift-marketplace`  namespace e.g.
+1. Check that Pod for `sumologic-helm-operator-catalog` was created in `openshift-marketplace`  namespace e.g.
 
    ```bash
    $ kubectl get pods -n openshift-marketplace
@@ -50,5 +56,5 @@
    sumologic-helm-operator-catalog-pd5t9     1/1     Running   0          11m
    ```
 
-5. Go to OpenShift web-console and install Sumo Logic Helm Operator from local instance of OperatorHub on OpenShift.
-6. Create instance of `SumologicCollection` with proper configuration, see [examples](../config/samples/).
+1. Go to OpenShift web-console and install Sumo Logic Helm Operator from local instance of OperatorHub on OpenShift.
+1. Create instance of `SumologicCollection` with proper configuration, see [examples](../config/samples/).
