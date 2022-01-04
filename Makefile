@@ -224,7 +224,7 @@ endif
 .PHONY: catalog-build
 catalog-build: opm ## Build a catalog image.
 	$(OPM) index add --container-tool docker --mode semver --tag $(CATALOG_IMG) --bundles $(BUNDLE_IMGS) $(FROM_INDEX_OPT)
-	sed -i.backup "s#index:latest#${CATALOG_IMG}#g" tests/catalogsource.yaml
+	sed -i.backup "s#public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator-catalog:latest#${CATALOG_IMG}#g" tests/catalogsource.yaml
 
 # Push the catalog image.
 .PHONY: catalog-push
