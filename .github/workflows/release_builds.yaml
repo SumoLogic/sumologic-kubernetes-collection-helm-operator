@@ -56,6 +56,12 @@ jobs:
           VERSION=${{ steps.extract_tag.outputs.tag }} \
           RELEASE_NUMBER=${{ steps.extract_release_number.outputs.release_number }}
 
+      - name: Set 'latest' tag for operator image
+        run: docker tag ${ECR_URL}/${OPERATOR_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }} ${ECR_URL}/${OPERATOR_IMAGE_NAME}:${LATEST_TAG}
+
+      - name: Push 'latest' tag for operator image
+        run: make docker-push IMG=${ECR_URL}/${OPERATOR_IMAGE_NAME}:${LATEST_TAG}
+
       - name: Log in to AWS Public ECR to publish bundle
         run: make login-ecr
         env:
@@ -65,6 +71,12 @@ jobs:
       - name: Build and push bundle image
         run: make bundle-build bundle-push \
           BUNDLE_IMG=${ECR_URL}/${BUNDLE_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }}
+
+      - name: Set 'latest' tag for bundle image
+        run: docker tag ${ECR_URL}/${BUNDLE_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }} ${ECR_URL}/${BUNDLE_IMAGE_NAME}:${LATEST_TAG}
+
+      - name: Push 'latest' tag for bundle image
+        run: make docker-push IMG=${ECR_URL}/${BUNDLE_IMAGE_NAME}:${LATEST_TAG}
 
       - name: Log in to AWS Public ECR to publish catalog
         run: make login-ecr
@@ -76,3 +88,9 @@ jobs:
         run: make catalog-build catalog-push \
           CATALOG_IMG=${ECR_URL}/${CATALOG_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }} \
           BUNDLE_IMGS=${ECR_URL}/${BUNDLE_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }}
+
+      - name: Set 'latest' tag for catalog image
+        run: docker tag ${ECR_URL}/${CATALOG_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }} ${ECR_URL}/${CATALOG_IMAGE_NAME}:${LATEST_TAG}
+
+      - name: Push 'latest' tag for catalog image
+        run: make docker-push IMG=${ECR_URL}/${CATALOG_IMAGE_NAME}:${LATEST_TAG}
