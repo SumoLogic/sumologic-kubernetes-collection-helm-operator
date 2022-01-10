@@ -5,7 +5,7 @@
 1. (Optional) Build and push to container registry catalog image
 
    This is an optional step, you can use also existing container images, please see information about
-   [official container images](../images.md) and [developer container images](images.md).
+   [official container images](../container_images.md) and [developer container images](container_images.md).
 
    ```bash
    make catalog-build catalog-push CATALOG_IMG=<CATALOG_IMAGE> BUNDLE_IMGS=<BUNDLE_IMAGE_1>,<BUNDLE_IMAGE_2>
@@ -57,4 +57,9 @@
    ```
 
 1. Go to OpenShift web-console and install Sumo Logic Helm Operator from local instance of OperatorHub on OpenShift.
-1. Create instance of `SumologicCollection` with proper configuration, see [examples](../config/samples/).
+
+ ![operator_hub_installation](../../images/operator_hub_installation.png)
+
+1. Create instance of `SumologicCollection` with proper configuration, please see [Configuration](../../README.md#configuration) section and [example configurations](../../config/samples/) for more details.
+
+  ![operator_hub_sumologiccollection](../../images/operator_hub_sumologiccollection.png)
