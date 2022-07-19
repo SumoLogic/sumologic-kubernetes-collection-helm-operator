@@ -68,7 +68,7 @@ spec:
           - name: RELATED_IMAGE_TELEGRAF
             value: registry.connect.redhat.com/sumologic/telegraf@sha256:8d92cabdd8efbec83475a004209745cc14e877d361cae19ab80a622ebda57e24
           - name: RELATED_IMAGE_KUBERNETES_FLUENTD
-            value: registry.connect.redhat.com/sumologic/kubernetes-fluentd@sha256:362053ce1833aa51db31d36f97458f526d199bcd7efff53486b09e3a02a795ab
+            value: public.ecr.aws/sumologic/kubernetes-fluentd@sha256:335728fa6711b8198ef814f60427f665f384965208baa91cf5cbafd278c1a9d8
           - name: RELATED_IMAGE_FLUENT_BIT
             value: registry.connect.redhat.com/sumologic/fluent-bit@sha256:faa802d22e41f8d67d487e40285fa2a7ea72f9cd49c32ddb80ea34f4d302e220
           - name: RELATED_IMAGE_SUMO_UBI_MINIMAL

@@ -37,6 +37,10 @@ spec:
         ## To enable stiching multiline logs in fluentd when fluent-bit Multiline feature is On
         multiline:
           enabled: false
+    metadata:
+      ## Option to specify K8s API groups
+      apiGroups:
+        - apps/v1
 
   ## Configure fluent-bit
   ## ref: https://github.com/fluent/helm-charts/blob/master/charts/fluent-bit/values.yaml
