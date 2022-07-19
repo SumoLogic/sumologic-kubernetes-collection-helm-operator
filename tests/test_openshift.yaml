@@ -799,7 +799,7 @@ spec:
   metrics-server:
     ## Set the enabled flag to true for enabling metrics-server.
     ## This is required before enabling fluentd autoscaling unless you have an existing metrics-server in the cluster.
-    enabled: true
+    enabled: false
     image:
       registry: public.ecr.aws
       repository: sumologic/metrics-server
