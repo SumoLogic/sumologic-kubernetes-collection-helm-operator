@@ -34,7 +34,7 @@ RUN helm dependency update && cd charts && for subchart in *.tgz; do tar -xf "${
 RUN sed -i "s#{{ .Values.image.repository }}:{{ .Chart.AppVersion }}#{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}#g" charts/telegraf-operator/templates/deployment.yaml
 
 # patch for prometheus specification to use sha in image path
-COPY patches/kube-prometheus-stack/12.3.0/prometheus.patch /tmp/prometheus.patch
+COPY patches/kube-prometheus-stack/12.10.0/prometheus.patch /tmp/prometheus.patch
 RUN patch charts/kube-prometheus-stack/templates/prometheus/prometheus.yaml /tmp/prometheus.patch && \
     rm /tmp/prometheus.patch
 
