@@ -59,7 +59,7 @@ helm install test-openshift sumologic/sumologic \
   --set tailing-sidecar-operator.sidecar.image.tag=838401ab699ae1f4a581a62a6eea413bca1e2c30d60358acb16bd86be75fbca1 \
   --set tailing-sidecar-operator.kubeRbacProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
   --set tailing-sidecar-operator.kubeRbacProxy.image.tag=f92b5704d9d1290b1dd9cc8bfcc445e3e118794e8cf9531f439994ee4d2523a6 \
-  --version 2.1.4 \
+  --version 2.14.1 \
   -n sumologic-system \
   --create-namespace -f "${ROOT_DIR}/tests/values.yaml"
 
