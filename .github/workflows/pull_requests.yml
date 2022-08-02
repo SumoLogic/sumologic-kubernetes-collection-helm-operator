@@ -29,7 +29,7 @@ jobs:
   test-helm-operator:
     name: Test Helm operator
     runs-on: ubuntu-20.04
-    timeout-minutes: 25
+    timeout-minutes: 45
     env:
       IMG: registry.localhost:5000/sumologic/sumologic-collection-helm-operator:latest
     steps:
