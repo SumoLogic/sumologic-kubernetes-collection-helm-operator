@@ -1042,8 +1042,8 @@ spec:
       capabilities:
         drop:
           - ALL
-    ## Set securityContext of fluent-bit daemonset containers as privileged for running in Openshift
-    #   privileged: true
+      ## Set securityContext of fluent-bit daemonset containers as privileged for running in Openshift
+      privileged: true
 
     env:
       - name: FLUENTD_LOGS_SVC
