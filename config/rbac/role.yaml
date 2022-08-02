@@ -236,5 +236,11 @@ rules:
   resources:
   - tailingsidecars
   - tailingsidecars/status
+- apiGroups:
+  - scheduling.k8s.io
+  resources:
+  - priorityclasses
+  verbs:
+  - '*'
 
 #+kubebuilder:scaffold:rules
