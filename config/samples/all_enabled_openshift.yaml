@@ -32,10 +32,6 @@ spec:
       enabled: true
 
   fluentd:
-    buffer:
-      queueChunkLimitSize: 256
-      totalLimitSize: "256m"
-
     logs:
       ## Container log configuration
       containers:
