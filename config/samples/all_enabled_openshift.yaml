@@ -47,6 +47,10 @@ spec:
     enabled: true
     apiService:
       create: false
+    extraArgs:
+      kubelet-insecure-tls: true
+      kubelet-preferred-address-types: InternalIP,ExternalIP,Hostname
+      metric-resolution: 120s
 
   ## Configure fluent-bit
   ## ref: https://github.com/fluent/helm-charts/blob/master/charts/fluent-bit/values.yaml
@@ -229,3 +233,7 @@ spec:
   tailing-sidecar-operator:
     enabled: true
 
+  ## Configure OpenTelemetry Operator - Tracing
+  ## ref: https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-operator
+  opentelemetry-operator:
+    enabled: true
