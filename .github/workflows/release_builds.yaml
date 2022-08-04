@@ -19,6 +19,7 @@ jobs:
       CATALOG_IMAGE_NAME: sumologic-kubernetes-collection-helm-operator-catalog
 
       ECR_URL: public.ecr.aws/sumologic
+      LATEST_TAG: "latest"
 
     steps:
       - uses: actions/checkout@v2.3.4
