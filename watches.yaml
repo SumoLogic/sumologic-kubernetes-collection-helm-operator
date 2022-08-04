@@ -40,4 +40,10 @@
     tailing-sidecar-operator.sidecar.image.tag: '{{ ("$RELATED_IMAGE_TAILING_SIDECAR" | split ":")._1 }}'
     tailing-sidecar-operator.kubeRbacProxy.image.repository: '{{ ("$RELATED_IMAGE_KUBE_RBAC_PROXY" | split ":")._0 }}'
     tailing-sidecar-operator.kubeRbacProxy.image.tag: '{{ ("$RELATED_IMAGE_KUBE_RBAC_PROXY" | split ":")._1 }}'
+    opentelemetry-operator.manager.image.repository: '{{ ("$RELATED_IMAGE_OPENTELEMETRY_OPERATOR" | split ":")._0 }}'
+    opentelemetry-operator.manager.image.tag: '{{ ("$RELATED_IMAGE_OPENTELEMETRY_OPERATOR" | split ":")._1 }}'
+    opentelemetry-operator.kubeRBACProxy.image.repository: '{{ ("$RELATED_IMAGE_KUBE_RBAC_PROXY" | split ":")._0 }}'
+    opentelemetry-operator.kubeRBACProxy.image.tag: '{{ ("$RELATED_IMAGE_KUBE_RBAC_PROXY" | split ":")._1 }}'
+    metadata.image.repository: '{{ ("$RELATED_IMAGE_OPENTELEMETRY_COLLECTOR" | split ":")._0 }}'
+    metadata.image.tag: '{{ ("$RELATED_IMAGE_OPENTELEMETRY_COLLECTOR" | split ":")._1 }}'
 #+kubebuilder:scaffold:watch
