@@ -14,6 +14,6 @@ annotations:
   operators.operatorframework.io.test.config.v1: tests/scorecard/
 
   # Red Hat annotations.
-  com.redhat.openshift.versions: v4.6-v4.7
+  com.redhat.openshift.versions: v4.6-v4.10
   com.redhat.delivery.operator.bundle: true
   operators.operatorframework.io.bundle.channel.default.v1: alpha
