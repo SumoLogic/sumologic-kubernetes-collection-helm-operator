@@ -21,10 +21,6 @@ metadata:
                       }
                   },
                   "fluentd": {
-                      "buffer": {
-                          "queueChunkLimitSize": 256,
-                          "totalLimitSize": "256m"
-                      },
                       "logs": {
                           "containers": {
                               "multiline": {
@@ -374,6 +370,12 @@ spec:
               verbs:
                 - '*'
             - apiGroups:
+                - scheduling.k8s.io
+              resources:
+                - priorityclasses
+              verbs:
+                - '*'
+            - apiGroups:
                 - authentication.k8s.io
               resources:
                 - tokenreviews
@@ -387,7 +389,9 @@ spec:
                 - create
           serviceAccountName: sumologic-helm-operator
       deployments:
-        - name: sumologic-helm-operator
+        - label:
+            control-plane: sumologic-kubernetes-collection-helm-operator
+          name: sumologic-helm-operator
           spec:
             replicas: 1
             selector:
