@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       OPERATOR_IMAGE_NAME: sumologic-kubernetes-collection-helm-operator
-      BUNDLE_IMAGE_NAME: ${OPERATOR_IMAGE_NAME}-bundle
+      BUNDLE_IMAGE_NAME: sumologic-kubernetes-collection-helm-operator-bundle
       CATALOG_IMAGE_NAME: sumologic-kubernetes-collection-helm-operator-catalog
 
       ECR_URL: public.ecr.aws/sumologic
