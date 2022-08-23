@@ -445,7 +445,7 @@ spec:
                       - name: RELATED_IMAGE_PROMETHEUS
                         value: registry.connect.redhat.com/sumologic/prometheus@sha256:f9fa9040c8e134a1e6be81dd6e14f1d1dee3e0651e4039cf9580e8e9cfbf8455
                       - name: RELATED_IMAGE_THANOS
-                        value: quay.io/thanos/thanos@sha256:43bfca02f322e4c719f4a373dd4618685fa806ce6d8094e1e2ff4a6ba4260cc2
+                        value: registry.connect.redhat.com/sumologic/thanos@sha256:9772a1f329596cc4f0934b044f63b2c4f6e93952a44f1c68cc09f1a61f7f309a
                       - name: RELATED_IMAGE_METRICS_SERVER
                         value: registry.connect.redhat.com/sumologic/metrics-server@sha256:4a60b5f706e4ae2b79c91a90dd4d23d8fd87408beed9f0a14a29d639bbcb8a35
                       - name: RELATED_IMAGE_KUBE_RBAC_PROXY
