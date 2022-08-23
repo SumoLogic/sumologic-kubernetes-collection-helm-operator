@@ -27,10 +27,10 @@
     kube-prometheus-stack.prometheus.prometheusSpec.image.tag: v2.22.1
     kube-prometheus-stack.prometheus.prometheusSpec.image.sha: '{{ ("$RELATED_IMAGE_PROMETHEUS" | split ":")._1 }}'
     kube-prometheus-stack.prometheus.prometheusSpec.thanos.image: $RELATED_IMAGE_THANOS
-    otelagent.daemonset.image.repository: '{{ ("$RELATED_IMAGE_OPENTELEMETRY_COLLECTOR" | split ":")._0 }}'
-    otelagent.daemonset.image.tag: '{{ ("$RELATED_IMAGE_OPENTELEMETRY_COLLECTOR" | split ":")._1 }}'
-    otelcol.deployment.image.repository: '{{ ("$RELATED_IMAGE_OPENTELEMETRY_COLLECTOR" | split ":")._0 }}'
-    otelcol.deployment.image.tag: '{{ ("$RELATED_IMAGE_OPENTELEMETRY_COLLECTOR" | split ":")._1 }}'
+    otelagent.daemonset.image.repository: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR" | split ":")._0 }}'
+    otelagent.daemonset.image.tag: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR" | split ":")._1 }}'
+    otelcol.deployment.image.repository: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR" | split ":")._0 }}'
+    otelcol.deployment.image.tag: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR" | split ":")._1 }}'
     telegraf-operator.image.repository: '{{ ("$RELATED_IMAGE_TELEGRAF_OPERATOR" | split ":")._0 }}'
     telegraf-operator.image.tag: '{{ ("$RELATED_IMAGE_TELEGRAF_OPERATOR" | split ":")._1 }}'
     telegraf-operator.image.sidecarImage: $RELATED_IMAGE_TELEGRAF
@@ -44,6 +44,6 @@
     opentelemetry-operator.manager.image.tag: '{{ ("$RELATED_IMAGE_OPENTELEMETRY_OPERATOR" | split ":")._1 }}'
     opentelemetry-operator.kubeRBACProxy.image.repository: '{{ ("$RELATED_IMAGE_KUBE_RBAC_PROXY" | split ":")._0 }}'
     opentelemetry-operator.kubeRBACProxy.image.tag: '{{ ("$RELATED_IMAGE_KUBE_RBAC_PROXY" | split ":")._1 }}'
-    metadata.image.repository: '{{ ("$RELATED_IMAGE_OPENTELEMETRY_COLLECTOR" | split ":")._0 }}'
-    metadata.image.tag: '{{ ("$RELATED_IMAGE_OPENTELEMETRY_COLLECTOR" | split ":")._1 }}'
+    metadata.image.repository: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR" | split ":")._0 }}'
+    metadata.image.tag: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR" | split ":")._1 }}'
 #+kubebuilder:scaffold:watch
