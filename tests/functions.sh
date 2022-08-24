@@ -9,6 +9,7 @@ function wait_for_resource() {
   do
     if ! kubectl get -n "${namespace}" "${resource}" ; then
       echo "Waiting for ${resource} in ${i} iteration"
+      kubectl get pods -n "${namespace}"
       sleep 1
     else
       echo "Found ${resource}"
