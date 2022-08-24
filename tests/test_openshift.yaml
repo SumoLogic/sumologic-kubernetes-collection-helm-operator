@@ -990,6 +990,8 @@ spec:
     extraArgs:
       kubelet-insecure-tls: true
       kubelet-preferred-address-types: InternalIP,ExternalIP,Hostname
+      metric-resolution: 120s
+      cert-dir: /tmp
     ## Optionally specify image options for metrics-server
     # image:
       ## Optionally specify an array of imagePullSecrets.

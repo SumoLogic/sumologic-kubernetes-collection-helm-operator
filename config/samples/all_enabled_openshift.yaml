@@ -51,6 +51,7 @@ spec:
       kubelet-insecure-tls: true
       kubelet-preferred-address-types: InternalIP,ExternalIP,Hostname
       metric-resolution: 120s
+      cert-dir: /tmp
 
   ## Configure fluent-bit
   ## ref: https://github.com/fluent/helm-charts/blob/master/charts/fluent-bit/values.yaml
