@@ -150,3 +150,10 @@ fluent-bit:
           Regex        ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<log>.*)$
           Time_Key     time
           Time_Format  %Y-%m-%dT%H:%M:%S.%LZ
+
+metrics-server:
+  extraArgs:
+    kubelet-insecure-tls: true
+    kubelet-preferred-address-types: InternalIP,ExternalIP,Hostname
+    metric-resolution: 120s
+    cert-dir: /tmp
