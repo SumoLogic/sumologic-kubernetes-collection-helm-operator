@@ -242,5 +242,11 @@ rules:
   - priorityclasses
   verbs:
   - '*'
+- apiGroups:
+  - opentelemetry.io
+  resources:
+  - instrumentations
+  verbs:
+  - '*'
 
 #+kubebuilder:scaffold:rules
