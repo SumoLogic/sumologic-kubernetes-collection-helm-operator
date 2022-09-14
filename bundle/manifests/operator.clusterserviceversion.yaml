@@ -461,7 +461,7 @@ spec:
                       - name: RELATED_IMAGE_KUBERNETES_FLUENTD
                         value: registry.connect.redhat.com/sumologic/kubernetes-fluentd@sha256:fdc41e366fa24046eb023ab76ca3bb571cdde5b35ea75ccdd9b9435091266562
                       - name: RELATED_IMAGE_FLUENT_BIT
-                        value: registry.connect.redhat.com/sumologic/fluent-bit@sha256:f0457d3247567eb0bed47ea25c4b7c98b2d7bfcb297b5a1f580ec223b6777e2c
+                        value: registry.connect.redhat.com/sumologic/fluent-bit@sha256:02f7a5821750ecea915b5207fb738909e70560f130809b0e1af3034174d3ef6c
                       - name: RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR
                         value: public.ecr.aws/sumologic/sumologic-otel-collector@sha256:33d464175a237818a798a3c9c0840eeb68c6d31f4c6f912f3b0ea67ae91790ce
                       - name: RELATED_IMAGE_OPENTELEMETRY_OPERATOR
