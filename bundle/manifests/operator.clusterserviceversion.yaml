@@ -463,7 +463,7 @@ spec:
                       - name: RELATED_IMAGE_FLUENT_BIT
                         value: registry.connect.redhat.com/sumologic/fluent-bit@sha256:02f7a5821750ecea915b5207fb738909e70560f130809b0e1af3034174d3ef6c
                       - name: RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR
-                        value: public.ecr.aws/sumologic/sumologic-otel-collector@sha256:33d464175a237818a798a3c9c0840eeb68c6d31f4c6f912f3b0ea67ae91790ce
+                        value: registry.connect.redhat.com/sumologic/sumologic-otel-collector@sha256:9e37f8f6244f82a4caa138d77f89a946f781e76c74326b771727843cd9f113a1
                       - name: RELATED_IMAGE_OPENTELEMETRY_OPERATOR
                         value: ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator@sha256:148960f590a96fb000b2ff2accb33d131e52649006ef24a0c572664b8d2c9644
                     image: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:2.14.1-0-rc.0
