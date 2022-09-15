@@ -74,6 +74,7 @@ spec:
     ## Optionally specify an array of pullSecrets.
     ## They will be added to serviceaccount that is used for Sumo Logic's
     ## deployments and statefulsets.
+
     ## Secrets must be manually created in the namespace.
     ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
     ##
@@ -100,7 +101,7 @@ spec:
       job:
         image:
           repository: public.ecr.aws/sumologic/kubernetes-setup
-          tag: 3.3.0
+          tag: 3.4.0
           pullPolicy: IfNotPresent
         ## Optionally specify an array of pullSecrets.
         ## They will be added to serviceaccount that is used for Sumo Logic's
@@ -221,6 +222,27 @@ spec:
       metadata:
         ## Set provider service (either fluentd or otelcol).
         provider: fluentd
+
+      collector:
+        otelcol:
+          enabled: false
+
+        ## Allow running otel and Fluent-Bit side by side. This will result in duplicated
+        ## logs being ingested. Only enabled this if you're **certain** it's what you want.
+        allowSideBySide: false
+
+      multiline:
+        enabled: true
+        first_line_regex: "^\\[?\\d{4}-\\d{1,2}-\\d{1,2}.\\d{2}:\\d{2}:\\d{2}"
+
+      container:
+        enabled: true
+
+      systemd:
+        enabled: true
+        # systemd units to collect logs from
+        # units:
+        #   - docker.service
 
       ## Fields to be created at Sumo Logic to ensure logs are tagged with
       ## relevant metadata.
@@ -1958,7 +1980,7 @@ spec:
           ## kube_service_spec_external_ip
           ## kube_service_spec_type
           ## kube_service_status_load_balancer_ingress
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.state
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.state
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -1971,7 +1993,7 @@ spec:
                 regex: (pod|service|container)
           ## kube pod state metrics
           ## kube_pod_status_phase
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.state
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.state
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -1987,7 +2009,7 @@ spec:
           ## kube_pod_container_status_restarts_total
           ## kube_pod_container_status_terminated_reason
           ## kube_pod_container_status_waiting_reason
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.state
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.state
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -1999,7 +2021,7 @@ spec:
           ## cloudprovider_aws_api_request_duration_seconds_bucket
           ## cloudprovider_aws_api_request_duration_seconds_count
           ## cloudprovider_aws_api_request_duration_seconds_sum
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.controller-manager
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.controller-manager
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2018,7 +2040,7 @@ spec:
           ## scheduler_scheduling_algorithm_duration_seconds_bucket
           ## scheduler_scheduling_algorithm_duration_seconds_count
           ## scheduler_scheduling_algorithm_duration_seconds_sum
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.scheduler
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.scheduler
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2046,7 +2068,7 @@ spec:
           ## etcd_helper_cache_hit_total
           ## etcd_helper_cache_miss_count
           ## etcd_helper_cache_miss_total
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.apiserver
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.apiserver
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2069,7 +2091,7 @@ spec:
           ## kubelet_runtime_operations_latency_microseconds
           ## kubelet_runtime_operations_latency_microseconds_count
           ## kubelet_runtime_operations_latency_microseconds_sum
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.kubelet
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.kubelet
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2081,7 +2103,7 @@ spec:
           ## container_fs_usage_bytes
           ## container_memory_working_set_bytes
           ## container_cpu_cfs_throttled_seconds_total
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.container
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.container
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: labelmap
@@ -2096,7 +2118,7 @@ spec:
           ## cadvisor aggregate container metrics
           ## container_network_receive_bytes_total
           ## container_network_transmit_bytes_total
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.container
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.container
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2109,7 +2131,7 @@ spec:
           ## node_load1
           ## node_load5
           ## node_load15
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.node
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.node
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2151,7 +2173,7 @@ spec:
           ## node:node_net_utilisation:sum_irate
           ## node:node_num_cpu:sum
           ## node_namespace_pod:kube_pod_info:
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.operator.rule
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.operator.rule
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2214,7 +2236,7 @@ spec:
           ## prometheus_remote_storage_string_interner_zero_reference_releases_total
           ## prometheus_remote_storage_succeeded_samples_total
           ## up
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2237,7 +2259,7 @@ spec:
           ## process_cpu_seconds_total
           ## process_open_fds
           ## process_resident_memory_bytes
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.control-plane.coredns
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.control-plane.coredns
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2262,7 +2284,7 @@ spec:
           ## process_cpu_seconds_total
           ## process_open_fds
           ## process_resident_memory_bytes
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.control-plane.kube-etcd
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.control-plane.kube-etcd
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2338,7 +2360,7 @@ spec:
           ## nginx_ingress_nginxplus_upstream_server_response_time
           ## nginx_ingress_nginxplus_upstream_server_responses
           ## nginx_ingress_nginxplus_upstream_server_requests
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.nginx-ingress
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.nginx-ingress
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2431,7 +2453,7 @@ spec:
           ## nginx_plus_api_stream_upstream_peers_sent
           ## nginx_plus_api_stream_upstream_peers_unavail
 
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.nginx
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.nginx
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2468,7 +2490,7 @@ spec:
           ## redis_used_memory_overhead
           ## redis_used_memory_rss
           ## redis_used_memory_startup
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.redis
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.redis
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2536,7 +2558,7 @@ spec:
           ## java_lang_Threading_ThreadCount
           ## java_lang_Threading_ThreadCpuTime*
           ## java_lang_Threading_TotalStartedThreadCount
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.jmx
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.jmx
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2558,7 +2580,7 @@ spec:
           # kafka_topic_*
           # kafka_topics_*
           # kafka_zookeeper_*
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.kafka
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.kafka
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2599,7 +2621,7 @@ spec:
           ## mysql_perf_schema_index_io_waits_*
           ## mysql_perf_schema_read*
           ## mysql_perf_schema_write*
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.mysql
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.mysql
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2655,7 +2677,7 @@ spec:
           ## postgresql_toast_blks_hit
           ## postgresql_tidx_blks_read
           ## postgresql_tidx_blks_hit
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.postgresql
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.postgresql
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2698,7 +2720,7 @@ spec:
           ## apache_scboard_sending
           ## apache_scboard_starting
           ## apache_scboard_waiting
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.apache
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.apache
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2719,7 +2741,7 @@ spec:
           ## sqlserver_server_properties_server_memory
           ## sqlserver_volume_space_total_space_bytes
           ## sqlserver_volume_space_used_space_bytes
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.sqlserver
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.sqlserver
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2754,7 +2776,7 @@ spec:
           ## haproxy_weight
           ## haproxy_wredis
           ## haproxy_wretr
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.haproxy
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.haproxy
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2823,7 +2845,7 @@ spec:
           ## cassandra_ThreadPoolMetrics_request_Value
           ## cassandra_ThreadPoolMetrics_transport_Count
           ## cassandra_ThreadPoolMetrics_transport_Value
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.cassandra
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.cassandra
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2865,7 +2887,7 @@ spec:
           ## mongodb_uptime_ns
           ## mongodb_vsize_megabytes
           ## mongodb_wtcache_bytes_read_into
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.mongodb
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.mongodb
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2905,7 +2927,7 @@ spec:
           ## rabbitmq_queue_messages_publish_rate
           ## rabbitmq_queue_messages_unack
           ## rabbitmq_queue_slave_nodes
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.rabbitmq
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.rabbitmq
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -2950,7 +2972,7 @@ spec:
           ## tomcat_jvm_memorypool_processing_time
           ## tomcat_jvm_memorypool_request_count
           ## tomcat_jvm_memorypool_used
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.tomcat
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.tomcat
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -3023,7 +3045,7 @@ spec:
           ## varnish_threads_limited
           ## varnish_uptime
           ## varnish_vmods
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.varnish
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.varnish
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -3066,7 +3088,7 @@ spec:
           ## memcached_total_connections
           ## memcached_total_items
           ## memcached_uptime
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.memcached
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.memcached
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -3153,7 +3175,7 @@ spec:
           ## elasticsearch_thread_pool_search_queue
           ## elasticsearch_transport_rx_size_in_bytes
           ## elasticsearch_transport_tx_size_in_bytes
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.elasticsearch
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.elasticsearch
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -3185,7 +3207,7 @@ spec:
           ## activemq_OperatingSystem_FreePhysicalMemorySize
           ## activemq_OperatingSystem_SystemCpuLoad
           ## activemq_OperatingSystem_TotalPhysicalMemorySize
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.activemq
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.activemq
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -3252,7 +3274,7 @@ spec:
           ## couchbase_bucket_vb_pending_num
           ## couchbase_bucket_vb_pending_curr_items
           ## couchbase_bucket_vb_active_resident_items_ratio
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.couchbase
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.couchbase
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -3293,7 +3315,7 @@ spec:
           ## squid_cacheProtoClientHttpRequests
           ## squid_cacheClients
           ## squid_uptime
-          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local:9888/prometheus.metrics.applications.squidproxy
+          - url: http://$(FLUENTD_METRICS_SVC).$(NAMESPACE).svc.cluster.local.:9888/prometheus.metrics.applications.squidproxy
             remoteTimeout: 5s
             writeRelabelConfigs:
               - action: keep
@@ -3673,7 +3695,7 @@ spec:
     ## Configure image for Opentelemetry Collector (for logs and metrics)
     image:
       repository: public.ecr.aws/sumologic/sumologic-otel-collector
-      tag: 0.54.0-sumo-0
+      tag: 0.57.2-sumo-1
       pullPolicy: IfNotPresent
 
     securityContext:
@@ -3762,6 +3784,11 @@ spec:
           file_storage:
             directory: /var/lib/storage/otc
             timeout: 10s
+            compaction:
+              on_start: true
+              on_rebound: true
+              # Can't be /tmp yet, see https://github.com/open-telemetry/opentelemetry-collector-contrib/issues/13449
+              directory: /var/lib/storage/otc
           pprof: {}
         exporters:
           ## Configuration for Sumo Logic Exporter
@@ -3777,7 +3804,7 @@ spec:
               num_consumers: 10
               ## setting queue_size a high number, so we always use maximum space of the storage
               ## minimal alert non-triggering queue size (if only one exporter is being used): 10GB/16MB = 640
-              queue_size: 50_000
+              queue_size: 10_000
             max_request_body_size: 16_777_216  # 16 MB before compression
             ## set timeout to 30s due to big requests
             timeout: 30s
@@ -3788,7 +3815,7 @@ spec:
               enabled: true
               persistent_storage_enabled: '{{ .Values.metadata.persistence.enabled }}'
               num_consumers: 10
-              queue_size: 50_000
+              queue_size: 10_000
             max_request_body_size: 16_777_216  # 16 MB before compression
             ## set timeout to 30s due to big requests
             timeout: 30s
@@ -3799,7 +3826,7 @@ spec:
               enabled: true
               persistent_storage_enabled: '{{ .Values.metadata.persistence.enabled }}'
               num_consumers: 10
-              queue_size: 50_000
+              queue_size: 10_000
             max_request_body_size: 16_777_216  # 16 MB before compression
             ## set timeout to 30s due to big requests
             timeout: 30s
@@ -3810,7 +3837,7 @@ spec:
               enabled: true
               persistent_storage_enabled: '{{ .Values.metadata.persistence.enabled }}'
               num_consumers: 10
-              queue_size: 50_000
+              queue_size: 10_000
             max_request_body_size: 16_777_216  # 16 MB before compression
             ## set timeout to 30s due to big requests
             timeout: 30s
@@ -3821,7 +3848,7 @@ spec:
               enabled: true
               persistent_storage_enabled: '{{ .Values.metadata.persistence.enabled }}'
               num_consumers: 10
-              queue_size: 50_000
+              queue_size: 10_000
             max_request_body_size: 16_777_216  # 16 MB before compression
             ## set timeout to 30s due to big requests
             timeout: 30s
@@ -3832,7 +3859,7 @@ spec:
               enabled: true
               persistent_storage_enabled: '{{ .Values.metadata.persistence.enabled }}'
               num_consumers: 10
-              queue_size: 50_000
+              queue_size: 10_000
             max_request_body_size: 16_777_216  # 16 MB before compression
             ## set timeout to 30s due to big requests
             timeout: 30s
@@ -3843,7 +3870,7 @@ spec:
               enabled: true
               persistent_storage_enabled: '{{ .Values.metadata.persistence.enabled }}'
               num_consumers: 10
-              queue_size: 50_000
+              queue_size: 10_000
             max_request_body_size: 16_777_216  # 16 MB before compression
             ## set timeout to 30s due to big requests
             timeout: 30s
@@ -3854,7 +3881,7 @@ spec:
               enabled: true
               persistent_storage_enabled: '{{ .Values.metadata.persistence.enabled }}'
               num_consumers: 10
-              queue_size: 50_000
+              queue_size: 10_000
             max_request_body_size: 16_777_216  # 16 MB before compression
             ## set timeout to 30s due to big requests
             timeout: 30s
@@ -3977,14 +4004,17 @@ spec:
             ## Spike limit (calculated from available memory). Must be less than limit_percentage.
             spike_limit_percentage: 20
 
+          sumologic_schema:
+            add_cloud_namespace: false
+
           ## Configuration for Batch Processor
           ## The batch processor accepts spans and places them into batches grouped by node and resource
           ## ref: https://github.com/SumoLogic/opentelemetry-collector/blob/main/processor/batchprocessor
           batch:
             ## Number of spans after which a batch will be sent regardless of time
-            send_batch_size: 16_384
+            send_batch_size: 1_024
             ## Time duration after which a batch will be sent regardless of size
-            timeout: 30s
+            timeout: 1s
           ## Configuration for Kubernetes Processor
           ## ref: https://github.com/SumoLogic/sumologic-otel-collector/tree/main/pkg/processor/k8sprocessor
           k8s_tagger:
@@ -4031,6 +4061,7 @@ spec:
                 - source
                 - resource/remove_k8s_pod_pod_name
                 - resource/delete_source_metadata
+                - sumologic_schema
                 - batch
                 - routing
               exporters:
@@ -4140,6 +4171,11 @@ spec:
           file_storage:
             directory: /var/lib/storage/otc
             timeout: 10s
+            compaction:
+              on_start: true
+              on_rebound: true
+              # Can't be /tmp yet, see https://github.com/open-telemetry/opentelemetry-collector-contrib/issues/13449
+              directory: /var/lib/storage/otc
           pprof: {}
         exporters:
           sumologic/containers:
@@ -4156,6 +4192,8 @@ spec:
             sending_queue:
               enabled: true
               persistent_storage_enabled: '{{ .Values.metadata.persistence.enabled }}'
+              num_consumers: 10
+              queue_size: 10_000
           sumologic/systemd:
             log_format: json
             json_logs:
@@ -4174,6 +4212,8 @@ spec:
             sending_queue:
               enabled: true
               persistent_storage_enabled: '{{ .Values.metadata.persistence.enabled }}'
+              num_consumers: 10
+              queue_size: 10_000
 
         processors:
           ## Common processors
@@ -4197,9 +4237,9 @@ spec:
           ## The batch processor accepts spans and places them into batches grouped by node and resource
           batch:
             ## Number of spans after which a batch will be sent regardless of time
-            send_batch_size: 256
+            send_batch_size: 1_024
             ## Time duration after which a batch will be sent regardless of size
-            timeout: 5s
+            timeout: 1s
 
           ## Containers related processors
           filter/include_fluent_tag_containers:
@@ -4434,6 +4474,9 @@ spec:
             source_category_prefix: '{{ .Values.fluentd.logs.kubelet.sourceCategoryPrefix | quote }}'
             source_category_replace_dash: '{{ .Values.fluentd.logs.kubelet.sourceCategoryReplaceDash | quote }}'
 
+          sumologic_schema:
+            add_cloud_namespace: false
+
         service:
           telemetry:
             logs:
@@ -4457,6 +4500,7 @@ spec:
                 - resource/drop_annotations
                 - attributes/remove_fluent_tag
                 - resource/containers_copy_node_to_host
+                - sumologic_schema
                 - batch
               exporters:
                 - sumologic/containers
@@ -4478,6 +4522,7 @@ spec:
             #     - source/containers
             #     - resource/drop_annotations
             #     - resource/containers_copy_node_to_host
+            #     - sumologic_schema
             #     - batch
             #   exporters:
             #     - sumologic/containers
@@ -4794,7 +4839,7 @@ spec:
     ## Configure image for Opentelemetry Collector
     image:
       repository: public.ecr.aws/sumologic/sumologic-otel-collector
-      tag: 0.54.0-sumo-0
+      tag: 0.56.0-sumo-0
       pullPolicy: IfNotPresent
 
     logLevel: info
@@ -4887,9 +4932,6 @@ spec:
   ## which is consistent with CRI, but may possibly cause issues on older K8s versions.
   ## This is an alpha feature, and may change in the near future.
   otellogs:
-    ## In order to enable this feature, a configuration block under metadata.logs.config.service.pipelines.logs/otlp/containers
-    ## needs to be uncommented
-    enabled: false
 
     ## Metrics from Collector
     metrics:
@@ -4905,294 +4947,10 @@ spec:
       pullPolicy: IfNotPresent
 
     logLevel: info
+
     config:
-      extensions:
-        health_check: {}
-        ## Configuration for File Storage extension
-        ## ref: https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/release/v0.37.x/extension/storage/filestorage
-        file_storage:
-          directory: /var/lib/storage/otc
-          timeout: 10s
-        pprof: {}
-      service:
-        telemetry:
-          logs:
-            level: '{{ .Values.otellogs.logLevel }}'
-        extensions:
-          - health_check
-          - file_storage
-          - pprof
-        pipelines:
-          logs/containers:
-            receivers:
-              - filelog/containers
-            processors:
-              - batch
-            exporters:
-              - otlphttp
-          logs/systemd:
-            receivers:
-              - journald
-            processors:
-              - logstransform/systemd
-              - batch
-            exporters:
-              - otlphttp
-      receivers:
-        filelog/containers:
-          include:
-            - /var/log/pods/*/*/*.log
-          start_at: beginning
-          ## sets fingerprint_size to 17kb in order to match the longest possible docker line (which by default is 16kb)
-          ## we want to include timestamp, which is at the end of the line
-          fingerprint_size: 17408
-          include_file_path: true
-          include_file_name: false
-          operators:
-            ## Detect the container runtime log format
-            ## Can be: docker-shim, CRI-O and containerd
-            - id: get-format
-              type: router
-              routes:
-                - output: parser-docker
-                  expr: 'body matches "^\\{"'
-                - output: parser-crio
-                  expr: 'body matches "^[^ Z]+ "'
-                - output: parser-containerd
-                  expr: 'body matches "^[^ Z]+Z"'
-            ## Parse CRI-O format
-            - id: parser-crio
-              type: regex_parser
-              regex: '^(?P<time>[^ Z]+) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*)( |)(?P<log>.*)$'
-              output: merge-cri-lines
-              parse_to: body
-              timestamp:
-                parse_from: body.time
-                layout_type: gotime
-                layout: '2006-01-02T15:04:05.000000000-07:00'
-            ## Parse CRI-Containerd format
-            - id: parser-containerd
-              type: regex_parser
-              regex: '^(?P<time>[^ ^Z]+Z) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*)( |)(?P<log>.*)$'
-              output: merge-cri-lines
-              parse_to: body
-              timestamp:
-                parse_from: body.time
-                layout: '%Y-%m-%dT%H:%M:%S.%LZ'
-            ## Parse docker-shim format
-            ## parser-docker interprets the input string as JSON and moves the `time` field from the JSON to Timestamp field in the OTLP log
-            ## record.
-            ## Input Body (string): '{"log":"2001-02-03 04:05:06 first line\n","stream":"stdout","time":"2021-11-25T09:59:13.23887954Z"}'
-            ## Output Body (JSON): { "log": "2001-02-03 04:05:06 first line\n", "stream": "stdout" }
-            ## Input Timestamp: _empty_
-            ## Output Timestamp: 2021-11-25 09:59:13.23887954 +0000 UTC
-            - id: parser-docker
-              type: json_parser
-              parse_to: body
-              output: merge-docker-lines
-              timestamp:
-                parse_from: body.time
-                layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+      override: {}
 
-            ## merge-docker-lines stitches back together log lines split by Docker logging driver.
-            ## Input Body (JSON): { "log": "2001-02-03 04:05:06 very long li", "stream": "stdout" }
-            ## Input Body (JSON): { "log": "ne that was split by the logging driver\n", "stream": "stdout" }
-            ## Output Body (JSON): { "log": "2001-02-03 04:05:06 very long line that was split by the logging driver\n","stream":"stdout"}
-            - id: merge-docker-lines
-              type: recombine
-              source_identifier: attributes["log.file.path"]
-              output: merge-multiline-logs
-              combine_field: body.log
-              combine_with: ""
-              is_last_entry: body.log matches "\n$"
-
-            ## merge-cri-lines stitches back together log lines split by CRI logging drivers.
-            ## Input Body (JSON): { "log": "2001-02-03 04:05:06 very long li", "logtag": "P" }
-            ## Input Body (JSON): { "log": "ne that was split by the logging driver", "logtag": "F" }
-            ## Output Body (JSON): { "log": "2001-02-03 04:05:06 very long line that was split by the logging driver\n", "stream": "stdout" }
-            - id: merge-cri-lines
-              type: recombine
-              source_identifier: attributes["log.file.path"]
-              output: merge-multiline-logs
-              combine_field: body.log
-              combine_with: ""
-              is_last_entry: body.logtag == "F"
-              overwrite_with: newest
-
-            ## merge-multiline-logs merges incoming log records into multiline logs.
-            ## Input Body (JSON): { "log": "2001-02-03 04:05:06 first line\n", "stream": "stdout" }
-            ## Input Body (JSON): { "log": "  second line\n", "stream": "stdout" }
-            ## Input Body (JSON): { "log": "  third line\n", "stream": "stdout" }
-            ## Output Body (JSON): { "log": "2001-02-03 04:05:06 first line\n  second line\n  third line\n", "stream": "stdout" }
-            - id: merge-multiline-logs
-              type: recombine
-              output: extract-metadata-from-filepath
-              source_identifier: attributes["log.file.path"]
-              combine_field: body.log
-              combine_with: ""
-              is_first_entry: body.log matches "^\\[?\\d{4}-\\d{1,2}-\\d{1,2}.\\d{2}:\\d{2}:\\d{2}.*"
-
-            ## extract-metadata-from-filepath extracts data from the `log.file.path` Attribute into the Attributes
-            ## Input Attributes:
-            ## - log.file.path: '/var/log/pods/default_logger-multiline-4nvg4_aed49747-b541-4a07-8663-f7e1febc47d5/loggercontainer/0.log'
-            ## Output Attributes:
-            ## - log.file.path: '/var/log/pods/default_logger-multiline-4nvg4_aed49747-b541-4a07-8663-f7e1febc47d5/loggercontainer/0.log'
-            ## - container_name: "loggercontainer",
-            ## - namespace: "default",
-            ## - pod_name: "logger-multiline-4nvg4",
-            ## - run_id: "0",
-            ## - uid: "aed49747-b541-4a07-8663-f7e1febc47d5"
-            ## }
-            - id: extract-metadata-from-filepath
-              type: regex_parser
-              regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<uid>[a-f0-9\-]+)\/(?P<container_name>[^\._]+)\/(?P<run_id>\d+)\.log$'
-              parse_from: attributes["log.file.path"]
-
-            ## The following actions are being performed:
-            ## - renaming attributes
-            ## - moving stream from body to attribtues
-            ## - using body.log as body
-            ## - create fluent.tag attribute in order to route in metadata pods
-            ## Input Body (JSON): {
-            ##   "log": "2001-02-03 04:05:06 loggerlog 1 first line\n",
-            ##   "stream": "stdout",
-            ## }
-            ## Output Body (String): "2001-02-03 04:05:06 loggerlog 1 first line\n"
-            ## Input Attributes:
-            ## - log.file.path: '/var/log/pods/default_logger-multiline-4nvg4_aed49747-b541-4a07-8663-f7e1febc47d5/loggercontainer/0.log'
-            ## - container_name: "loggercontainer",
-            ## - namespace: "default",
-            ## - pod_name: "logger-multiline-4nvg4",
-            ## - run_id: "0",
-            ## - uid: "aed49747-b541-4a07-8663-f7e1febc47d5"
-            ## Output Attributes:
-            ## - k8s.container.name: "loggercontainer"
-            ## - k8s.namespace.name: "default"
-            ## - k8s.pod.name: "logger-multiline-4nvg4"
-            ## - k8s.pod.uid: "aed49747-b541-4a07-8663-f7e1febc47d5"
-            ## - run_id: "0"
-            ## - stream: "stdout"
-            ## - fluent.tag: "containers.loggercontainer"
-            - id: move-attributes
-              type: move
-              from: body.stream
-              to: attributes["stream"]
-            - type: move
-              from: attributes.container_name
-              to: attributes["k8s.container.name"]
-            - type: move
-              from: attributes.namespace
-              to: attributes["k8s.namespace.name"]
-            - type: move
-              from: attributes.pod_name
-              to: attributes["k8s.pod.name"]
-            - type: move
-              from: attributes.run_id
-              to: attributes["run_id"]
-            - type: move
-              from: attributes.uid
-              to: attributes["k8s.pod.uid"]
-            - type: add
-              field: attributes["fluent.tag"]
-              value: EXPR("containers." + attributes["k8s.container.name"])
-            ## Use remove operator when available in opentelemetry collector:
-            ## https://github.com/open-telemetry/opentelemetry-collector-contrib/pull/9524
-            - type: move
-              from: attributes["log.file.path"]
-              to: body["log.file.path"]
-            - type: move
-              from: body.log
-              to: body
-        journald:
-          directory: /var/log/journal
-          ## This is not a full equivalent of fluent-bit filtering as fluent-bit filters by `_SYSTEMD_UNIT`
-          ## Here is filtering by `UNIT`
-          units:
-            - addon-config.service
-            - addon-run.service
-            - cfn-etcd-environment.service
-            - cfn-signal.service
-            - clean-ca-certificates.service
-            - containerd.service
-            - coreos-metadata.service
-            - coreos-setup-environment.service
-            - coreos-tmpfiles.service
-            - dbus.service
-            - docker.service
-            - efs.service
-            - etcd-member.service
-            - etcd.service
-            - etcd2.service
-            - etcd3.service
-            - etcdadm-check.service
-            - etcdadm-reconfigure.service
-            - etcdadm-save.service
-            - etcdadm-update-status.service
-            - flanneld.service
-            - format-etcd2-volume.service
-            - kube-node-taint-and-uncordon.service
-            - kubelet.service
-            - ldconfig.service
-            - locksmithd.service
-            - logrotate.service
-            - lvm2-monitor.service
-            - mdmon.service
-            - nfs-idmapd.service
-            - nfs-mountd.service
-            - nfs-server.service
-            - nfs-utils.service
-            - node-problem-detector.service
-            - ntp.service
-            - oem-cloudinit.service
-            - rkt-gc.service
-            - rkt-metadata.service
-            - rpc-idmapd.service
-            - rpc-mountd.service
-            - rpc-statd.service
-            - rpcbind.service
-            - set-aws-environment.service
-            - system-cloudinit.service
-            - systemd-timesyncd.service
-            - update-ca-certificates.service
-            - user-cloudinit.service
-            - var-lib-etcd2.service
-      exporters:
-        otlphttp:
-          endpoint: http://${LOGS_METADATA_SVC}.${NAMESPACE}.svc.cluster.local:4318
-      processors:
-        ## The batch processor accepts spans and places them into batches grouped by node and resource
-        batch:
-          ## Number of spans after which a batch will be sent regardless of time
-          ## This is set to the 10240, to avoid loosing logs on the start of the collector
-          ## TODO: Figure out what the optimal values should be for different configurations
-          send_batch_size: 10_240
-          ## Time duration after which a batch will be sent regardless of size
-          timeout: 1s
-        ## copy _SYSTEMD_UNIT, SYSLOG_FACILITY, _HOSTNAME and PRIORITY from body to attributes
-        ## so they can be used by metadata processors same way like for fluentd
-        ## build fluent.tag attribute as `host.{_SYSTEMD_UNIT}`
-        logstransform/systemd:
-          operators:
-            - type: copy
-              from: body._SYSTEMD_UNIT
-              to: attributes._SYSTEMD_UNIT
-            - type: copy
-              from: body.SYSLOG_FACILITY
-              to: attributes.SYSLOG_FACILITY
-            - type: copy
-              from: body._HOSTNAME
-              to: attributes._HOSTNAME
-            - type: copy
-              from: body.PRIORITY
-              to: attributes.PRIORITY
-            - type: add
-              field: attributes["fluent.tag"]
-              value: EXPR("host." + attributes["_SYSTEMD_UNIT"])
-            ## Removes __CURSOR and __MONOTONIC_TIMESTAMP keys from body
-            - type: remove
-              field: body.__CURSOR
-            - type: remove
-              field: body.__MONOTONIC_TIMESTAMP
     daemonset:
       ## Set securityContext for containers running in pods in log collector daemonset
       securityContext:
@@ -5346,11 +5104,15 @@ spec:
   tailing-sidecar-operator:
     enabled: false
 
+    ## creation of Security Context Constraints in Openshift
+    scc:
+      create: false
+
   ## Configure OpenTelemetry Operator - Tracing
   ## ref: https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-operator
   opentelemetry-operator:
     enabled: false
-
+    createDefaultInstrumentation: true
     admissionWebhooks:
       failurePolicy: Fail
       enabled: false
