@@ -62,7 +62,7 @@ helm install test-openshift sumologic/sumologic \
   --set opentelemetry-operator.manager.image.tag=148960f590a96fb000b2ff2accb33d131e52649006ef24a0c572664b8d2c9644 \
   --set opentelemetry-operator.kubeRBACProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
   --set opentelemetry-operator.kubeRBACProxy.image.tag=d47164d94803408071d68227798eadd3692d6705a6bcd55ccb31b025fc36d1d8 \
-  --version 2.14.1 \
+  --version 2.17.0 \
   -n sumologic-system \
   --create-namespace -f "${ROOT_DIR}/tests/values.yaml"
 
