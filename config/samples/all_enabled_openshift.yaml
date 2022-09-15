@@ -234,7 +234,12 @@ spec:
   tailing-sidecar-operator:
     enabled: true
 
+    ## creation of Security Context Constraints in Openshift
+    scc:
+      create: true
+
   ## Configure OpenTelemetry Operator - Tracing
   ## ref: https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-operator
   opentelemetry-operator:
     enabled: true
+    createDefaultInstrumentation: false
