@@ -35,7 +35,7 @@ helm install test-openshift sumologic/sumologic \
   --set metrics-server.image.repository=sumologic/metrics-server@sha256 \
   --set metrics-server.image.tag=c4a41f333bf942fa21c08d0c5b1b6b649f878341886ba59593b73d808ad9d3b0 \
   --set fluent-bit.image.repository=public.ecr.aws/sumologic/fluent-bit@sha256 \
-  --set fluent-bit.image.tag=5f676040c66bd3d5c6309366beeb4c7ca91e0a70df3995ef19cea1adfec9b5ce \
+  --set fluent-bit.image.tag=02f7a5821750ecea915b5207fb738909e70560f130809b0e1af3034174d3ef6c \
   --set kube-prometheus-stack.prometheusOperator.image.repository=public.ecr.aws/sumologic/prometheus-operator \
   --set kube-prometheus-stack.prometheusOperator.image.tag=v0.44.0 \
   --set kube-prometheus-stack.prometheusOperator.image.sha=27384cfcd3bf32bee7584332b82188a7da5780dfc33f33ea8aa3afd2c10ca948 \
@@ -53,9 +53,9 @@ helm install test-openshift sumologic/sumologic \
   --set telegraf-operator.image.repository=public.ecr.aws/sumologic/telegraf-operator-ubi \
   --set telegraf-operator.image.sidecarImage=public.ecr.aws/sumologic/telegraf@sha256:f9883d1e9e0baf0d326a7c2c5503e011b36bf0bff22d6470c2f6d2b39fdd11fb \
   --set tailing-sidecar-operator.operator.image.repository=ghcr.io/sumologic/tailing-sidecar-operator@sha256 \
-  --set tailing-sidecar-operator.operator.image.tag=5829d4e03c0a473d27fba56774a6a0f19aed84e2ae1e501d706bd50b60241b6c \
+  --set tailing-sidecar-operator.operator.image.tag=e8b1d815666b69ab3047bc1d81afb51fb03caa99ca382c3f81949488072cd748 \
   --set tailing-sidecar-operator.sidecar.image.repository=ghcr.io/sumologic/tailing-sidecar@sha256 \
-  --set tailing-sidecar-operator.sidecar.image.tag=aff9aef3bbe41ffe1fc8e4b280533405a6065d48f7e3ff617458cd0a8e3b4ab5 \
+  --set tailing-sidecar-operator.sidecar.image.tag=3a9a741cbc10298d9be5bd68367883de45ad887e63ce12fedaf4024da807b82f \
   --set tailing-sidecar-operator.kubeRbacProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
   --set tailing-sidecar-operator.kubeRbacProxy.image.tag=d47164d94803408071d68227798eadd3692d6705a6bcd55ccb31b025fc36d1d8 \
   --set opentelemetry-operator.manager.image.repository=ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator@sha256 \
