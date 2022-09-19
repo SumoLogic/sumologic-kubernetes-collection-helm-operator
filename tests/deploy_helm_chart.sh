@@ -53,7 +53,7 @@ helm install test-openshift sumologic/sumologic \
   --set telegraf-operator.image.repository=public.ecr.aws/sumologic/telegraf-operator-ubi \
   --set telegraf-operator.image.sidecarImage=public.ecr.aws/sumologic/telegraf@sha256:f9883d1e9e0baf0d326a7c2c5503e011b36bf0bff22d6470c2f6d2b39fdd11fb \
   --set tailing-sidecar-operator.operator.image.repository=ghcr.io/sumologic/tailing-sidecar-operator@sha256 \
-  --set tailing-sidecar-operator.operator.image.tag=e8b1d815666b69ab3047bc1d81afb51fb03caa99ca382c3f8194948807 \
+  --set tailing-sidecar-operator.operator.image.tag=e8b1d815666b69ab3047bc1d81afb51fb03caa99ca382c3f81949488072cd748 \
   --set tailing-sidecar-operator.sidecar.image.repository=ghcr.io/sumologic/tailing-sidecar@sha256 \
   --set tailing-sidecar-operator.sidecar.image.tag=3a9a741cbc10298d9be5bd68367883de45ad887e63ce12fedaf4024da807b82f \
   --set tailing-sidecar-operator.kubeRbacProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
