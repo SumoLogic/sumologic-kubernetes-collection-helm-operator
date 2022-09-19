@@ -28,7 +28,7 @@ sed -i.bak "s#registry.connect.redhat.com/sumologic/tailing-sidecar@sha256:34c7e
 sed -i.bak "s#registry.connect.redhat.com/sumologic/telegraf-operator@sha256:e27d7a4d7c9947685641df6e238fbae5a48993530bd5c2c4bf6d7385c262715e#public.ecr.aws/sumologic/telegraf-operator-ubi@sha256:5ec540691a2db5032e117ff6f883ef75bfdd94b529d84fcb30f04acc5313724d#g" bundle.yaml
 sed -i.bak "s#registry.connect.redhat.com/sumologic/telegraf@sha256:ca396dad12a289aea9136da713020d31b179e9f49aae61c48332d61086d1d059#public.ecr.aws/sumologic/telegraf@sha256:f9883d1e9e0baf0d326a7c2c5503e011b36bf0bff22d6470c2f6d2b39fdd11fb#g" bundle.yaml
 sed -i.bak "s#registry.connect.redhat.com/sumologic/kubernetes-fluentd@sha256:fdc41e366fa24046eb023ab76ca3bb571cdde5b35ea75ccdd9b9435091266562#public.ecr.aws/sumologic/kubernetes-fluentd@sha256:dca1e3854b2e7fd2540c53c8092e3105c6a4bdcce426035a2cd5fed28a8690bf#g" bundle.yaml
-sed -i.bak "s#registry.connect.redhat.com/sumologic/fluent-bit@sha256:02f7a5821750ecea915b5207fb738909e70560f130809b0e1af3034174d3ef6c#public.ecr.aws/sumologic/fluent-bit@sha256:02f7a5821750ecea915b5207fb738909e70560f130809b0e1af3034174d3ef6c#g" bundle.yaml
+sed -i.bak "s#registry.connect.redhat.com/sumologic/fluent-bit@sha256:4e76cb20c8808ac149db6ba532ab3f42047e5a5e8d178a7294f9881d0bbf3f43#public.ecr.aws/sumologic/fluent-bit@sha256:02f7a5821750ecea915b5207fb738909e70560f130809b0e1af3034174d3ef6c#g" bundle.yaml
 
 # Change image in bundle.yaml to imag
 sed -i.bak "s#public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:2.14.1-0-rc.0#${IMG}#g" bundle.yaml
