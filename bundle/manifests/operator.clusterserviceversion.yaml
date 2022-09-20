@@ -465,7 +465,7 @@ spec:
                       - name: RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR
                         value: registry.connect.redhat.com/sumologic/sumologic-otel-collector@sha256:9e37f8f6244f82a4caa138d77f89a946f781e76c74326b771727843cd9f113a1
                       - name: RELATED_IMAGE_OPENTELEMETRY_OPERATOR
-                        value: ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator@sha256:148960f590a96fb000b2ff2accb33d131e52649006ef24a0c572664b8d2c9644
+                        value: registry.connect.redhat.com/sumologic/opentelemetry-operator@sha256:9f62a7e50ea91a2424fc48f94feff3ccfc4a1fccaabf56dd5259852ba2565efd
                     image: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:2.14.1-0-rc.0
                     livenessProbe:
                       httpGet:
