@@ -4,8 +4,10 @@ Sumo Logic Kubernetes Collection Helm Operator for the [Sumo Logic Kubernetes Co
 
 **Supported platforms:**
 
-- OpenShift 4.6
-- OpenShift 4.7
+| Sumo Logic Kubernetes Collection Helm Operator version | OpenShift version    |
+|--------------------------------------------------------|----------------------|
+| v2.17.0-0                                              | 4.8<br/>4.9<br/>4.10 |
+| v2.1.4-0                                               | 4.6<br/>4.7          |
 
 ## Installation
 
