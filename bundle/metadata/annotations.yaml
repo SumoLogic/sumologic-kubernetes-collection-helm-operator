@@ -1,3 +1,4 @@
+---
 annotations:
   # Core bundle annotations.
   operators.operatorframework.io.bundle.mediatype.v1: registry+v1
@@ -14,6 +15,6 @@ annotations:
   operators.operatorframework.io.test.config.v1: tests/scorecard/
 
   # Red Hat annotations.
-  com.redhat.openshift.versions: v4.6-v4.10
+  com.redhat.openshift.versions: v4.8-v4.10
   com.redhat.delivery.operator.bundle: true
   operators.operatorframework.io.bundle.channel.default.v1: alpha
