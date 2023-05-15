@@ -30,7 +30,7 @@ jobs:
 
       - name: Extract tag
         id: extract_tag
-        run: echo "::set-output name=tag::$(echo $(git describe --tags --always))"
+        run: echo "tag=$(echo $(git describe --tags --always))" >> $GITHUB_OUTPUT
 
       - name: Print tag
         run: echo "Running release build for ${{ steps.extract_tag.outputs.tag }}"
@@ -38,7 +38,7 @@ jobs:
       - name: Extract release number
         id: extract_release_number
         # count git tags omitting rc versions
-        run: echo "::set-output name=release_number::$(echo $(git tag | sed '/rc/d' | wc -l))" 
+        run: echo "release_number=$(echo $(git tag | sed '/rc/d' | wc -l))" >> $GITHUB_OUTPUT
 
       - name: Log in to AWS Public ECR to publish operator
         run: make login-ecr
