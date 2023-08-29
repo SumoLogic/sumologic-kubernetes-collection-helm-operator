@@ -103,6 +103,7 @@ metadata:
   name: sumologic-kubernetes-collection-helm-operator.v2.17.0-0
   namespace: placeholder
 spec:
+  replaces: sumologic-kubernetes-collection-helm-operator.v2.17.0-0
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
