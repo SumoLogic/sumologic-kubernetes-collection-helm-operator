@@ -36,8 +36,16 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install yq
         run: |
-          sudo wget -O /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.8.0/yq_linux_amd64
+          sudo wget -O /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.35.1/yq_linux_amd64
           sudo chmod +x /usr/local/bin/yq
+      - name: Install Helm in tested version
+        run: |
+          sudo mkdir /opt/helm3
+          sudo curl "https://get.helm.sh/helm-v3.8.2-linux-amd64.tar.gz" | tar -xz -C /opt/helm3
+          sudo rm /usr/local/bin/helm
+          sudo ln -s /opt/helm3/linux-amd64/helm /usr/bin/helm3
+          sudo ln -s /usr/bin/helm3 /usr/bin/helm
+          helm version
       - uses: imranismail/setup-kustomize@v1
       - uses: AbsaOSS/k3d-action@v1.5.0
         id: single-cluster

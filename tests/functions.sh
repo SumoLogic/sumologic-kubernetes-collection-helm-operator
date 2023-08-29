@@ -5,11 +5,11 @@ function wait_for_resource() {
   local time="${2}"
   local resource="${3}"
 
+  echo "Waiting for ${resource}"
+  kubectl get pods -n "${namespace}"
   for i in $(seq 0 "${time}")
   do
     if ! kubectl get -n "${namespace}" "${resource}" ; then
-      echo "Waiting for ${resource} in ${i} iteration"
-      kubectl get pods -n "${namespace}"
       sleep 1
     else
       echo "Found ${resource}"
@@ -21,16 +21,6 @@ function wait_for_resource() {
 function wait_for_collection_resources() {
   local namespace="${1}"
   local time="${2}"
-
-  wait_for_resource "${namespace}" "${time}" daemonset.apps/test-openshift-falco
-  wait_for_resource "${namespace}" "${time}" daemonset.apps/test-openshift-fluent-bit
-  wait_for_resource "${namespace}" "${time}" daemonset.apps/test-openshift-prometheus-node-exporter 
-
-  wait_for_resource "${namespace}" "${time}" deployment.apps/test-openshift-kube-promet-operator
-  wait_for_resource "${namespace}" "${time}" deployment.apps/test-openshift-kube-state-metrics  
-  wait_for_resource "${namespace}" "${time}" deployment.apps/test-openshift-metrics-server
-  wait_for_resource "${namespace}" "${time}" deployment.apps/test-openshift-tailing-sidecar-operator
-  wait_for_resource "${namespace}" "${time}" deployment.apps/test-openshift-telegraf-operator
 
   wait_for_resource "${namespace}" "${time}" statefulset.apps/prometheus-test-openshift-kube-promet-prometheus 
   wait_for_resource "${namespace}" "${time}" statefulset.apps/test-openshift-sumologic-fluentd-events

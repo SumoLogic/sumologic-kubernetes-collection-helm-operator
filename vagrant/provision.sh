@@ -53,7 +53,7 @@ curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack
 mv kustomize /usr/local/bin/
 
 # Install Helm
-HELM_VERSION=v3.5.2
+HELM_VERSION=v3.8.2
 mkdir /opt/helm3
 curl "https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz" | tar -xz -C /opt/helm3
 ln -s /opt/helm3/linux-amd64/helm /usr/bin/helm3
@@ -64,7 +64,7 @@ curl -Lo- "https://github.com/koalaman/shellcheck/releases/download/${SHELLCHECK
 cp "shellcheck-${SHELLCHECK_VERSION}/shellcheck" /usr/local/bin
 rm -rf "shellcheck-${SHELLCHECK_VERSION}/"
 
-YQ_VERSION=v4.7.1
+YQ_VERSION=v4.35.1
 wget "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64" -O /usr/bin/yq &&\
     chmod +x /usr/bin/yq
 
