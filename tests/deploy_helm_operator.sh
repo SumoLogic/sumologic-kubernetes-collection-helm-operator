@@ -10,7 +10,7 @@ source "${ROOT_DIR}/tests/functions.sh"
 readonly DEPLOYMENT_TYPE="${DEPLOYMENT_TYPE:=default}"
 readonly IMG="${IMG:=registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:2.17.0-0}"
 readonly NAMESPACE="sumologic-system"
-readonly TIME=900
+readonly TIME=300
 
 # Change container registry in bundle.yaml to public.ecr.aws and ghcr.io to not login to registry.connect.redhat.com
 sed -i.bak "s#registry.connect.redhat.com/sumologic/kubernetes-setup@sha256:96de6f9352cabbddf7f0cb537108b41183e827be27d100ba6566bbb0d1c0f01d#public.ecr.aws/sumologic/kubernetes-setup@sha256:0039bd5e77d922b82293702fe5a81be78185e49c4ebd5039aa26e1d36f3619f3#g" bundle.yaml
@@ -40,6 +40,8 @@ wait_for_resource "${NAMESPACE}" "${TIME}" deployment.apps/sumologic-helm-operat
 kubectl wait --for=condition=ready --timeout 300s pod -l control-plane=sumologic-kubernetes-collection-helm-operator -n sumologic-system
 
 kubectl apply -f tests/test_openshift.yaml -n sumologic-system
+
+kubectl get SumologicCollection --all-namespaces
 
 wait_for_collection_resources "${NAMESPACE}" "${TIME}"
 

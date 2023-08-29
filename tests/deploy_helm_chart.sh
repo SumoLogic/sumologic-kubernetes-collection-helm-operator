@@ -8,7 +8,7 @@ readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
 source "${ROOT_DIR}/tests/functions.sh"
 
 readonly NAMESPACE="sumologic-system"
-readonly TIME=900
+readonly TIME=300
 
 helm repo add sumologic https://sumologic.github.io/sumologic-kubernetes-collection
 helm repo update
@@ -28,7 +28,7 @@ helm install test-openshift sumologic/sumologic \
   --set telegraf-operator.enabled=true \
   --set falco.enabled=true \
   --set tailing-sidecar-operator.enabled=true \
-  --set opentelemetry-operator.enabled=true \
+  --set opentelemetry-operator.enabled=false \
   --set fluentd.image.repository=public.ecr.aws/sumologic/kubernetes-fluentd@sha256 \
   --set fluentd.image.tag=dca1e3854b2e7fd2540c53c8092e3105c6a4bdcce426035a2cd5fed28a8690bf \
   --set metrics-server.image.registry=public.ecr.aws \

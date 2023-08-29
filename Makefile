@@ -104,7 +104,7 @@ helm-update-dependency:
 	helm dependency update helm-charts/sumologic-kubernetes-collection/deploy/helm/sumologic
 
 docker-build: ## Build docker image with the manager.
-	docker build -t ${IMG} --build-arg VERSION=${VERSION}  --build-arg RELEASE_NUMBER=${RELEASE_NUMBER} .
+	docker build -t ${IMG} --build-arg VERSION=${VERSION}  --build-arg RELEASE_NUMBER=${RELEASE_NUMBER} --no-cache .
 
 docker-push: ## Push docker image with the manager.
 	docker push ${IMG}

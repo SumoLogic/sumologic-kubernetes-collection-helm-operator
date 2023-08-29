@@ -21,7 +21,7 @@ sed -i.bak '/tag: v2.22.1/d' helm_operator_templates.yaml
 sed -i.bak 's#public.ecr.aws/sumologic/prometheus:v2.22.1#public.ecr.aws/sumologic/prometheus#g' helm_chart_templates.yaml
 
 # Change image for telegraf operator to version with tag
-sed -i.bak 's#public.ecr.aws/sumologic/telegraf-operator-ubi@sha256:5ec540691a2db5032e117ff6f883ef75bfdd94b529d84fcb30f04acc5313724d#public.ecr.aws/sumologic/telegraf-operator-ubi:v1.3.5#g' helm_operator_templates.yaml
+sed -i.bak 's#public.ecr.aws/sumologic/telegraf-operator-ubi@sha256:5ec540691a2db5032e117ff6f883ef75bfdd94b529d84fcb30f04acc5313724d#public.ecr.aws/sumologic/telegraf-operator-ubi:v1.3.10#g' helm_operator_templates.yaml
 
 # busybox image has not tag set in collection
 sed -i.bak 's/busybox:1.33.0/busybox/g' helm_operator_templates.yaml
@@ -32,5 +32,5 @@ sed -i.bak '/tls.crt:/d' helm_chart_templates.yaml
 sed -i.bak '/tls.key:/d' helm_operator_templates.yaml
 sed -i.bak '/tls.key:/d' helm_chart_templates.yaml
 
-DIFF="$(diff <(yq e -P helm_operator_templates.yaml) <(yq e -P helm_chart_templates.yaml) )"
+DIFF="$(diff <(yq -P 'sort_keys(..)' -o=props helm_operator_templates.yaml) <(yq -P 'sort_keys(..)' -o=props helm_chart_templates.yaml))"
 check_diff "${DIFF}"
