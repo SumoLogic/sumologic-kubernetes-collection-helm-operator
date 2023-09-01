@@ -58,8 +58,8 @@ helm install test-openshift sumologic/sumologic \
   --set tailing-sidecar-operator.sidecar.image.tag=3a9a741cbc10298d9be5bd68367883de45ad887e63ce12fedaf4024da807b82f \
   --set tailing-sidecar-operator.kubeRbacProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
   --set tailing-sidecar-operator.kubeRbacProxy.image.tag=d47164d94803408071d68227798eadd3692d6705a6bcd55ccb31b025fc36d1d8 \
-  --set opentelemetry-operator.manager.image.repository=ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator@sha256 \
-  --set opentelemetry-operator.manager.image.tag=148960f590a96fb000b2ff2accb33d131e52649006ef24a0c572664b8d2c9644 \
+  --set opentelemetry-operator.manager.image.repository=public.ecr.aws/sumologic/opentelemetry-operator@sha256 \
+  --set opentelemetry-operator.manager.image.tag=b6fc0d5880016a8dc51a371839d0336409ad242f3ef046ca877c5d2c9df7e43e \
   --set opentelemetry-operator.kubeRBACProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
   --set opentelemetry-operator.kubeRBACProxy.image.tag=d47164d94803408071d68227798eadd3692d6705a6bcd55ccb31b025fc36d1d8 \
   --version 2.19.1 \
