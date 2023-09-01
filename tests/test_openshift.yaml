@@ -5153,7 +5153,7 @@ spec:
   ## Configure OpenTelemetry Operator - Tracing
   ## ref: https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-operator
   opentelemetry-operator:
-    enabled: false
+    enabled: true
     createDefaultInstrumentation: true
     admissionWebhooks:
       failurePolicy: Fail
@@ -5162,6 +5162,3 @@ spec:
       certManager:
         enabled: false
         issuerRef: {}
-
-    manager:
-      env:
