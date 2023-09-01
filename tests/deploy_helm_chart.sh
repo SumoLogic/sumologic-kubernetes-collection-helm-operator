@@ -28,7 +28,7 @@ helm install test-openshift sumologic/sumologic \
   --set telegraf-operator.enabled=true \
   --set falco.enabled=true \
   --set tailing-sidecar-operator.enabled=true \
-  --set opentelemetry-operator.enabled=false \
+  --set opentelemetry-operator.enabled=true \
   --set fluentd.image.repository=public.ecr.aws/sumologic/kubernetes-fluentd@sha256 \
   --set fluentd.image.tag=dca1e3854b2e7fd2540c53c8092e3105c6a4bdcce426035a2cd5fed28a8690bf \
   --set metrics-server.image.registry=public.ecr.aws \
