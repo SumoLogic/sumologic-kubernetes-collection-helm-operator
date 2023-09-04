@@ -13,7 +13,7 @@ readonly NAMESPACE="sumologic-system"
 readonly TIME=300
 
 # Change container registry in bundle.yaml to public.ecr.aws and ghcr.io to not login to registry.connect.redhat.com
-sed -i.bak "s#registry.connect.redhat.com/sumologic/kubernetes-setup@sha256:96de6f9352cabbddf7f0cb537108b41183e827be27d100ba6566bbb0d1c0f01d#public.ecr.aws/sumologic/kubernetes-setup@sha256:0039bd5e77d922b82293702fe5a81be78185e49c4ebd5039aa26e1d36f3619f3#g" bundle.yaml
+sed -i.bak "s#registry.connect.redhat.com/sumologic/kubernetes-setup@sha256:f58a7df3898c2c7b9b85c6537e7c8e971aa66e8556ee3c429e581efa3967284b#public.ecr.aws/sumologic/kubernetes-setup@sha256:f58a7df3898c2c7b9b85c6537e7c8e971aa66e8556ee3c429e581efa3967284b#g" bundle.yaml
 sed -i.bak "s#registry.connect.redhat.com/sumologic/node-exporter@sha256:7acec4473ddf508514dca1d08335cfd071e345d7eca660793d59e09ef9f0491f#public.ecr.aws/sumologic/node-exporter@sha256:685b59ebf0ce3c7e32f9de83359fdfc66a5143660f96b82c8ef8964c727bb2e5#g" bundle.yaml
 sed -i.bak "s#registry.connect.redhat.com/sumologic/kube-state-metrics@sha256:094ad2a0136b7ded390763dd9c63acf282903d49d07385a806160e2cdad89345#public.ecr.aws/sumologic/kube-state-metrics@sha256:18fb3800783b26db6a131ab846a28186dc0e9c12401e72a12ad99bf11d33186a#g" bundle.yaml
 sed -i.bak "s#registry.connect.redhat.com/sumologic/prometheus-operator@sha256:79769d200a6d5b977fed1c05e1021ad83b89b817b30ab24131cf9d262f4b86fc#public.ecr.aws/sumologic/prometheus-operator@sha256:27384cfcd3bf32bee7584332b82188a7da5780dfc33f33ea8aa3afd2c10ca948#g" bundle.yaml
