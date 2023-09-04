@@ -439,7 +439,7 @@ spec:
                       - name: OPERATOR_NAME
                         value: sumologic-kubernetes-collection-helm-operator
                       - name: RELATED_IMAGE_KUBERNETES_SETUP
-                        value: registry.connect.redhat.com/sumologic/kubernetes-setup@sha256:96de6f9352cabbddf7f0cb537108b41183e827be27d100ba6566bbb0d1c0f01d
+                        value: registry.connect.redhat.com/sumologic/kubernetes-setup@sha256:f58a7df3898c2c7b9b85c6537e7c8e971aa66e8556ee3c429e581efa3967284b
                       - name: RELATED_IMAGE_NODE_EXPORTER
                         value: registry.connect.redhat.com/sumologic/node-exporter@sha256:7acec4473ddf508514dca1d08335cfd071e345d7eca660793d59e09ef9f0491f
                       - name: RELATED_IMAGE_KUBE_STATE_METRICS
