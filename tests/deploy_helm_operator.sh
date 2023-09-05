@@ -8,7 +8,7 @@ readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
 source "${ROOT_DIR}/tests/functions.sh"
 
 readonly DEPLOYMENT_TYPE="${DEPLOYMENT_TYPE:=default}"
-readonly IMG="${IMG:=registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:2.17.0-0}"
+readonly IMG="${IMG:=registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:2.19.1-0}"
 readonly NAMESPACE="sumologic-system"
 readonly TIME=300
 
@@ -32,7 +32,7 @@ sed -i.bak "s#registry.connect.redhat.com/sumologic/fluent-bit@sha256:18e188c2b7
 sed -i.bak "s#registry.connect.redhat.com/sumologic/opentelemetry-operator@sha256:b6fc0d5880016a8dc51a371839d0336409ad242f3ef046ca877c5d2c9df7e43e#public.ecr.aws/sumologic/opentelemetry-operator@sha256:b6fc0d5880016a8dc51a371839d0336409ad242f3ef046ca877c5d2c9df7e43e#g" bundle.yaml
 
 # Change image in bundle.yaml to imag
-sed -i.bak "s#registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:2.17.0-0#${IMG}#g" bundle.yaml
+sed -i.bak "s#registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:2.19.1-0#${IMG}#g" bundle.yaml
 
 kubectl apply -f bundle.yaml
 
