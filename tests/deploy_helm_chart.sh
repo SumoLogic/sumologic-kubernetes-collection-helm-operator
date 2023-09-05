@@ -35,7 +35,7 @@ helm install test-openshift sumologic/sumologic \
   --set metrics-server.image.repository=sumologic/metrics-server@sha256 \
   --set metrics-server.image.tag=c4a41f333bf942fa21c08d0c5b1b6b649f878341886ba59593b73d808ad9d3b0 \
   --set fluent-bit.image.repository=public.ecr.aws/sumologic/fluent-bit@sha256 \
-  --set fluent-bit.image.tag=02f7a5821750ecea915b5207fb738909e70560f130809b0e1af3034174d3ef6c \
+  --set fluent-bit.image.tag=a8ead538bbba26e83c9f70137ee9ae6dac922f7844ebd3273d57178b214790ab \
   --set kube-prometheus-stack.prometheusOperator.image.repository=public.ecr.aws/sumologic/prometheus-operator \
   --set kube-prometheus-stack.prometheusOperator.image.tag=v0.44.0 \
   --set kube-prometheus-stack.prometheusOperator.image.sha=27384cfcd3bf32bee7584332b82188a7da5780dfc33f33ea8aa3afd2c10ca948 \
