@@ -4,10 +4,33 @@ Sumo Logic Kubernetes Collection Helm Operator for the [Sumo Logic Kubernetes Co
 
 **Supported platforms:**
 
-| Sumo Logic Kubernetes Collection Helm Operator version | OpenShift version    |
-|--------------------------------------------------------|----------------------|
-| v2.17.0-0                                              | 4.8<br/>4.9<br/>4.10 |
-| v2.1.4-0                                               | 4.6<br/>4.7          |
+| Sumo Logic Kubernetes Collection Helm Operator version | OpenShift version                                                      |
+|--------------------------------------------------------|------------------------------------------------------------------------|
+| v2.19.1-0                                              | 4.11<br/>4.12 [special configuration for OpenShift v4.12][config_4.12] |
+| v2.17.0-0                                              | 4.8<br/>4.9<br/>4.10                                                   |
+| v2.1.4-0                                               | 4.6<br/>4.7                                                            |
+
+**Note:** using Sumo Logic Kubernetes Collection Helm Operator on OpenShift v4.12 requires special configuration with `PodSecurityPolicy` disabled
+because`PodSecurityPolicy` was completely removed on Kubernetes 1.25+.
+
+Following changes needs to be added to configuration to use Sumo Logic Kubernetes Collection Helm Operator on OpenShift v4.12:
+
+```yaml
+kube-prometheus-stack:
+  global:
+    rbac:
+      pspEnabled: false
+  kube-state-metrics:
+    podSecurityPolicy:
+      enabled: false
+  prometheus-node-exporter:
+    rbac:
+      pspEnabled: false
+```
+
+Example configuration for Sumo Logic Kubernetes Collection Helm Operator on OpenShift v4.12 is available [here][config_4.12].
+
+[config_4.12]: config/samples/default_openshift_4_12.yaml
 
 ## Installation
 
