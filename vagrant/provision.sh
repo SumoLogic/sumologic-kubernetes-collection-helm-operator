@@ -18,7 +18,7 @@ apt-get install --yes docker-ce docker-ce-cli containerd.io
 usermod -aG docker vagrant
 
 # Install k8s
-snap install microk8s --classic --channel=1.25/stable
+snap install microk8s --classic --channel=1.29/stable
 microk8s.status --wait-ready
 ufw allow in on cbr0
 ufw allow out on cbr0
@@ -32,12 +32,12 @@ microk8s.kubectl config view --raw > /operator/.kube-config
 
 usermod -a -G microk8s vagrant
 
-snap install kubectl --classic --channel=1.25/stable
+snap install kubectl --classic --channel=1.29/stable
 
 echo "export KUBECONFIG=/var/snap/microk8s/current/credentials/kubelet.config" >> /home/vagrant/.bashrc
 
 # Install go
-GO_VERSION="1.16"
+GO_VERSION="1.22.4"
 wget "https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz"
 tar -C /usr/local -xzf "go${GO_VERSION}.linux-amd64.tar.gz"
 rm "go${GO_VERSION}.linux-amd64.tar.gz"
@@ -53,7 +53,7 @@ curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack
 mv kustomize /usr/local/bin/
 
 # Install Helm
-HELM_VERSION=v3.8.2
+HELM_VERSION=v3.15.1
 mkdir /opt/helm3
 curl "https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz" | tar -xz -C /opt/helm3
 ln -s /opt/helm3/linux-amd64/helm /usr/bin/helm3
@@ -64,10 +64,10 @@ curl -Lo- "https://github.com/koalaman/shellcheck/releases/download/${SHELLCHECK
 cp "shellcheck-${SHELLCHECK_VERSION}/shellcheck" /usr/local/bin
 rm -rf "shellcheck-${SHELLCHECK_VERSION}/"
 
-YQ_VERSION=v4.35.1
+YQ_VERSION=v4.44.1
 wget "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64" -O /usr/bin/yq &&\
     chmod +x /usr/bin/yq
 
-OPM_VERSION=v1.14.3
+OPM_VERSION=v1.43.1
 wget -q "https://github.com/operator-framework/operator-registry/releases/download/${OPM_VERSION}/linux-amd64-opm" -O /usr/bin/opm &&\
    chmod +x /usr/bin/opm
