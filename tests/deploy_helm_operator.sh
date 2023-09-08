@@ -45,6 +45,7 @@ kubectl get SumologicCollection --all-namespaces
 
 wait_for_collection_resources "${NAMESPACE}" "${TIME}"
 
+kubectl describe pods -n sumologic-system
 helm get manifest -n "${NAMESPACE}" test-openshift > helm_operator_templates.yaml
 
 kubectl delete -f tests/test_openshift.yaml -n sumologic-system

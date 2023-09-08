@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 45
     env:
-      IMG: registry.localhost:5000/sumologic/sumologic-collection-helm-operator:latest
+      IMG: sumologic/sumologic-kubernetes-helm-operator:test
     steps:
       - uses: actions/checkout@v2
       - name: Install yq
@@ -47,21 +47,20 @@ jobs:
           sudo ln -s /usr/bin/helm3 /usr/bin/helm
           helm version
       - uses: imranismail/setup-kustomize@v1
-      - uses: AbsaOSS/k3d-action@v1.5.0
+      - uses: AbsaOSS/k3d-action@v2
         id: single-cluster
-        name: Create single k3d Cluster with Registry
+        name: Create single k3d Cluster
         with:
-          cluster-name: "test-cluster"
-          use-default-registry: true
+          cluster-name: "k3s-default"
           args: >-
             --agents 1
             --no-lb
-            --k3s-server-arg "--no-deploy=traefik,servicelb,metrics-server"
+            --k3s-arg "--no-deploy=traefik,servicelb,metrics-server@server:*"
       - name: Checkout submodules
         run: git submodule update --init
       - name: Build helm operator image
         run: make docker-build IMG="${IMG}"
-      - name: Push helm operator image to local registry
-        run: make docker-push IMG="${IMG}"
+      - name: Import helm operator image to k3d
+        run:  k3d image import sumologic/sumologic-kubernetes-helm-operator:test -c k3s-default --verbose
       - name: Test Helm operator
         run: make test-using-public-images IMG="${IMG}"
