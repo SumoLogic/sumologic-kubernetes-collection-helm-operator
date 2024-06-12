@@ -1,0 +1,101 @@
+#!/usr/bin/env python
+
+import re
+import yaml
+import urllib.request
+from yaml.loader import SafeLoader
+
+def values_to_dictionary(url: str) -> dict:
+    """Downloads and reads given url as values.yaml and returns it as dict
+
+    Args:
+        path (str): path to the value.yaml
+
+    Returns:
+        dict: values.yaml as dict
+    """
+    with urllib.request.urlopen(values_url) as response:
+        values = response.read().decode(response.headers.get_content_charset())
+        values = re.sub(r'(\[\]|\{\})\n(\s+# )', r'\n\2', values, flags=re.M)
+        values = re.sub(r'^(\s+)# ', r'\1', values, flags=re.M)
+        return yaml.load(values, Loader=SafeLoader)
+
+def extract_keys(dictionary: dict) -> list:
+    """Extracts list of keys from the dictionary and returns as list.
+    Uses dot as separator for nested dicts.
+
+    Args:
+        dictionary (dict): dictionary to extract keys from
+
+    Returns:
+        list: list of extracted keys
+    """
+    keys = []
+    if not isinstance(dictionary, dict):
+        return None
+
+    if not dictionary:
+        return None
+
+    for key, value in dictionary.items():
+        more_keys = extract_keys(value)
+
+        if more_keys is None:
+            keys.append(key)
+        else:
+            keys.extend(f'{key}.{mk}' for mk in more_keys)
+
+    return keys
+
+# known_image_keys contains list of image configuration keys which are not available in values.yaml
+known_image_keys = [
+    "tailing-sidecar-operator.sidecar.image.repository",
+    "tailing-sidecar-operator.sidecar.image.tag",
+    "tailing-sidecar-operator.operator.image.repository",
+    "tailing-sidecar-operator.operator.image.tag",
+    "tailing-sidecar-operator.kubeRbacProxy.image.tag",
+    "opentelemetry-operator.manager.image.repository.tag",
+    "opentelemetry-operator.kubeRBACProxy.image.repository.tag",
+    "opentelemetry-operator.testFramework.image.repository.tag",
+    "telegraf-operator.image.tag",
+    "kube-prometheus-stack.prometheus.prometheusSpec.image.tag",
+    "kube-prometheus-stack.prometheus.prometheusSpec.image.sha",
+    "kube-prometheus-stack.prometheus-node-exporter.image.tag",
+    "kube-prometheus-stack.prometheusOperator.thanosImage.tag",
+    "kube-prometheus-stack.prometheusOperator.thanosImage.sha",
+    "kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.tag",
+    "kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.sha",
+    "kube-prometheus-stack.prometheusOperator.image.tag",
+    "kube-prometheus-stack.prometheusOperator.image.sha",
+    "metrics-server.image.tag",
+]
+
+not_needed_image_keys = ["Percentage", "falco", "pullPolicy", "pullSecrets", "imagePullSecrets"]
+needed_image_keys = ["image", "tag", "repository"]
+
+if __name__ == '__main__':
+    values_url = "https://raw.githubusercontent.com/SumoLogic/sumologic-kubernetes-collection/main/deploy/helm/sumologic/values.yaml"
+
+    values = values_to_dictionary(values_url)
+    values_keys = extract_keys(values)
+    image_keys =[]
+
+    for key in values_keys:
+        needed_key = True
+        for not_needed in not_needed_image_keys: 
+            # to eliminate keys which are related to image but not related to image repository and tag, e.g.
+            # sumologic.metrics.remoteWriteProxy.image.pullPolicy
+            # kube-prometheus-stack.global.imagePullSecrets
+            if not_needed in key:
+                needed_key = False
+                break
+
+        for needed in needed_image_keys:
+            if needed in key and needed_key:
+                image_keys.append(key)
+                break
+
+    image_keys.extend(known_image_keys)
+    image_keys.sort()
+    
+    print("\n".join(image_keys))
