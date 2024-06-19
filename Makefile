@@ -229,3 +229,6 @@ catalog-push: ## Push a catalog image.
 
 update-components-images:
 	./scripts/update_images.py --images-file=$(IMAGES_FILE)
+
+generate-watches:
+	./scripts/generate_watches.py

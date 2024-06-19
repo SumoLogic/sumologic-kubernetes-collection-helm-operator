@@ -2,6 +2,7 @@
 
 import yaml
 import argparse
+import os 
 
 RED_HAT_REGISTRY = "registry.connect.redhat.com/sumologic/"
 ENV_PREFIX = "RELATED_IMAGE_"
@@ -175,8 +176,8 @@ if __name__ == '__main__':
 
     related_images, image_envs = generate_image_lists(args.images_file)
 
-    csv_path = args.operator_repo_dir + CLUSTER_SERVICE_VERSION_PATH
+    csv_path = os.path.join(args.operator_repo_dir, CLUSTER_SERVICE_VERSION_PATH)
     update_cluster_service_version(csv_path, related_images, image_envs, args.create_new_file)
 
-    m_path = args.operator_repo_dir  + MANAGER_PATH
+    m_path = os.path.join(args.operator_repo_dir, MANAGER_PATH)
     update_manager(m_path, image_envs, args.create_new_file)
