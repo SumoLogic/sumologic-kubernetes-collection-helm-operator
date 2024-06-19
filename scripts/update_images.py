@@ -59,9 +59,7 @@ def generate_image_lists(image_list_file: str) -> tuple[list, list]:
     related_images = []
     image_envs = []
     for image_with_tag, image_with_sha256 in pairwise(lines):
-        component_and_tag = image_with_tag.removeprefix(RED_HAT_REGISTRY).split(":")
-        component = component_and_tag[0]
-        tag = component_and_tag[1]
+        component, tag = image_with_tag.removeprefix(RED_HAT_REGISTRY).split(":")
         env_name = "{}{}".format(ENV_PREFIX, component.upper().replace("-", "_"))
         related_images.append({"name": env_name, "image": image_with_sha256 })
         image_envs.append({"name": env_name, "value": image_with_sha256 })
