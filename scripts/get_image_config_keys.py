@@ -14,7 +14,7 @@ def values_to_dictionary(url: str) -> dict:
     Returns:
         dict: values.yaml as dict
     """
-    with urllib.request.urlopen(values_url) as response:
+    with urllib.request.urlopen(url) as response:
         values = response.read().decode(response.headers.get_content_charset())
         values = re.sub(r'(\[\]|\{\})\n(\s+# )', r'\n\2', values, flags=re.M)
         values = re.sub(r'^(\s+)# ', r'\1', values, flags=re.M)
@@ -73,7 +73,12 @@ known_image_keys = [
 not_needed_image_keys = ["Percentage", "falco", "pullPolicy", "pullSecrets", "imagePullSecrets"]
 needed_image_keys = ["image", "tag", "repository"]
 
-if __name__ == '__main__':
+def get_image_keys()-> list:
+    """Gets list of image configuration keys for the Sumo Logic Kubernetes Collection Helm Chart
+
+    Returns:
+        list: list of image configuration keys for the Sumo Logic Kubernetes Collection Helm Chart
+    """
     values_url = "https://raw.githubusercontent.com/SumoLogic/sumologic-kubernetes-collection/main/deploy/helm/sumologic/values.yaml"
 
     values = values_to_dictionary(values_url)
@@ -97,5 +102,8 @@ if __name__ == '__main__':
 
     image_keys.extend(known_image_keys)
     image_keys.sort()
-    
+    return image_keys
+
+if __name__ == '__main__':
+    image_keys = get_image_keys()
     print("\n".join(image_keys))
