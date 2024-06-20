@@ -232,3 +232,9 @@ update-components-images:
 
 generate-watches:
 	./scripts/generate_watches.py
+
+pylint:
+	pylint --rcfile=pylint.rc scripts/*.py
+
+autopep8:
+	autopep8 --in-place  scripts/*.py

@@ -16,7 +16,7 @@ add-apt-repository \
    "deb [arch=${ARCH}] https://download.docker.com/linux/ubuntu \
    $(lsb_release -cs) \
    stable"
-apt-get install --yes docker-ce docker-ce-cli containerd.io
+apt-get install --yes docker-ce docker-ce-cli containerd.io pylint python-is-python3 python3-autopep8 python3-pip
 usermod -aG docker vagrant
 
 # Install k8s
