@@ -238,3 +238,9 @@ pylint:
 
 autopep8:
 	autopep8 --in-place  scripts/*.py
+
+black-check:
+	black --check --line-length 180 scripts/*.py
+
+black-format:
+	black --line-length 180 scripts/*.py

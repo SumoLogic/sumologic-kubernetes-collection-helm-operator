@@ -8,7 +8,7 @@ on:
 
 jobs:
   check:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       - name: Install shellcheck
@@ -17,14 +17,24 @@ jobs:
             sudo cp shellcheck-v0.7.1/shellcheck /usr/local/bin && rm -rf shellcheck-v0.7.1
       - name: shellcheck
         run: make shellcheck
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11.6' # set the same Python version as in Vagrant virtual machine
       - name: Install pylint
         run: sudo apt-get install --yes pylint
       - name: Run pylint
         run: make pylint
+      - name: Install black for formatting of Python scripts
+        run: sudo apt-get install --yes black
+      - name: Check black version
+        run: black --version
+      - name: Check formatting of Python scripts
+        run: make black-check
         
   test-bundle-status:
     name: Test whether bundle.yaml is up to date
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       - name: Check bundle.yaml
@@ -32,7 +42,7 @@ jobs:
 
   test-helm-operator:
     name: Test Helm operator
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 45
     env:
       IMG: sumologic/sumologic-kubernetes-helm-operator:test

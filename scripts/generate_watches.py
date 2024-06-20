@@ -24,23 +24,29 @@ def create_new_file_path(file_path: str, create_new_file: bool) -> str:
     Returns:
         str: path to file in which changes will be save
     """
-    new_file_path = file_path
+    new_path = file_path
     if create_new_file:
-        new_file_path = file_path.replace(".yaml", "_new.yaml")
-    return new_file_path
+        new_path = file_path.replace(".yaml", "_new.yaml")
+    return new_path
 
 
 def parse_args():
-    """ Parses command line arguments"""
+    """Parses command line arguments"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--operator-repo-dir",
-                        help="path to directory with Helm Operator repository, e.g. /operator/", default="./")
     parser.add_argument(
-        "--create-new-file", help="determines whether new yaml should be created or the exiting file should be overwritten", default=True)
+        "--operator-repo-dir",
+        help="path to directory with Helm Operator repository, e.g. /operator/",
+        default="./",
+    )
+    parser.add_argument(
+        "--create-new-file",
+        help="determines whether new yaml should be created or the exiting file should be overwritten",
+        default=True,
+    )
     return parser.parse_args()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = parse_args()
 
     image_keys = get_image_keys()
@@ -54,5 +60,6 @@ if __name__ == '__main__':
             if image_key not in watches[0]["overrideValues"].keys():
                 overrideValues[image_key] = ""
 
-        with open(create_new_file_path(watches_file_path, args.create_new_file), 'w', encoding="utf-8") as nw:
+        new_file_path = create_new_file_path(watches_file_path, args.create_new_file)
+        with open(new_file_path, "w", encoding="utf-8") as nw:
             yaml.safe_dump(watches, nw)
