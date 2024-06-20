@@ -19,8 +19,8 @@ def values_to_dictionary(url: str) -> dict:
     """
     with urllib.request.urlopen(url) as response:
         values = response.read().decode(response.headers.get_content_charset())
-        values = re.sub(r'(\[\]|\{\})\n(\s+# )', r'\n\2', values, flags=re.M)
-        values = re.sub(r'^(\s+)# ', r'\1', values, flags=re.M)
+        values = re.sub(r"(\[\]|\{\})\n(\s+# )", r"\n\2", values, flags=re.M)
+        values = re.sub(r"^(\s+)# ", r"\1", values, flags=re.M)
         return yaml.load(values, Loader=SafeLoader)
 
 
@@ -47,7 +47,7 @@ def extract_keys(dictionary: dict) -> list:
         if more_keys is None:
             keys.append(key)
         else:
-            keys.extend(f'{key}.{mk}' for mk in more_keys)
+            keys.extend(f"{key}.{mk}" for mk in more_keys)
 
     return keys
 
@@ -75,8 +75,13 @@ known_image_keys = [
     "metrics-server.image.tag",
 ]
 
-not_needed_image_keys = ["Percentage", "falco",
-                         "pullPolicy", "pullSecrets", "imagePullSecrets"]
+not_needed_image_keys = [
+    "Percentage",
+    "falco",
+    "pullPolicy",
+    "pullSecrets",
+    "imagePullSecrets",
+]
 needed_image_keys = ["image", "tag", "repository"]
 
 
@@ -112,6 +117,6 @@ def get_image_keys() -> list:
     return image_keys
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     image_config_keys = get_image_keys()
     print("\n".join(image_config_keys))

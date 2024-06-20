@@ -24,6 +24,7 @@ def pairwise(iterable: list) -> list:
     element = iter(iterable)
     return zip(element, element)
 
+
 def get_lines(file_path: str) -> list:
     """Read file line by line removing unnecessary string at the beginning,
     e.g. output of get_images_sha256.sh:
@@ -64,8 +65,7 @@ def generate_image_lists(image_list_file: str):
     related_images = []
     image_envs = []
     for image_with_tag, image_with_sha256 in pairwise(lines):
-        component, _ = image_with_tag.removeprefix(
-            RED_HAT_REGISTRY).split(":")
+        component, _ = image_with_tag.removeprefix(RED_HAT_REGISTRY).split(":")
         component = component.upper().replace("-", "_")
         env_name = f"{ENV_PREFIX}{component}"
         related_images.append({"name": env_name, "image": image_with_sha256})
@@ -83,10 +83,10 @@ def create_new_file_path(file_path: str, create_new_file: bool) -> str:
     Returns:
         str: path to file in which changes will be save
     """
-    new_file_path = file_path
+    new_path = file_path
     if create_new_file:
-        new_file_path = file_path.replace(".yaml", "_new.yaml")
-    return new_file_path
+        new_path = file_path.replace(".yaml", "_new.yaml")
+    return new_path
 
 
 def get_helm_operator_image(images: list) -> dict:
@@ -125,7 +125,7 @@ def update_envs(envs: list, new_image_envs) -> list:
 
 
 def update_cluster_service_version(file_path: str, new_related_images: list, new_image_envs: list, create_new_file):
-    """ Updates components images in bundle/manifests/operator.clusterserviceversion.yaml
+    """Updates components images in bundle/manifests/operator.clusterserviceversion.yaml
 
     Args:
         file_path (str): absolute path to bundle/manifests/operator.clusterserviceversion.yaml
@@ -141,8 +141,7 @@ def update_cluster_service_version(file_path: str, new_related_images: list, new
         new_related_images.insert(0, helm_operator_image)
         cluster_service_version["spec"]["relatedImages"] = new_related_images
 
-        containers = cluster_service_version["spec"]["install"]["spec"][
-            "deployments"][0]["spec"]["template"]["spec"]["containers"]
+        containers = cluster_service_version["spec"]["install"]["spec"]["deployments"][0]["spec"]["template"]["spec"]["containers"]
         # pylint: disable=C0200
         for i in range(len(containers)):
             name = containers[i]["name"]
@@ -150,12 +149,13 @@ def update_cluster_service_version(file_path: str, new_related_images: list, new
                 envs = containers[i]["env"]
                 containers[i]["env"] = update_envs(envs, new_image_envs)
 
-    with open(create_new_file_path(file_path, create_new_file), 'w', encoding="utf-8") as cluster_service_version_file_new:
+    new_file_path = create_new_file_path(file_path, create_new_file)
+    with open(new_file_path, "w", encoding="utf-8") as cluster_service_version_file_new:
         yaml.dump(cluster_service_version, cluster_service_version_file_new)
 
 
 def update_manager(file_path: str, new_image_envs: list, create_new_file):
-    """ Updates components images in config/manager/manager.yaml
+    """Updates components images in config/manager/manager.yaml
 
     Args:
         file_path (str): absolute path to config/manager/manager.yaml
@@ -171,35 +171,42 @@ def update_manager(file_path: str, new_image_envs: list, create_new_file):
                 new_contents.append(yaml_content)
             else:
                 envs = yaml_content["spec"]["template"]["spec"]["containers"][0]["env"]
-                yaml_content["spec"]["template"]["spec"]["containers"][0]["env"] = update_envs(
-                    envs, new_image_envs)
+                yaml_content["spec"]["template"]["spec"]["containers"][0]["env"] = update_envs(envs, new_image_envs)
                 new_contents.append(yaml_content)
 
-        with open(create_new_file_path(file_path, create_new_file), 'w', encoding="utf-8") as manager_file_new:
+        new_file_path = create_new_file_path(file_path, create_new_file)
+        with open(new_file_path, "w", encoding="utf-8") as manager_file_new:
             yaml.safe_dump_all(new_contents, manager_file_new)
 
 
 def parse_args():
-    """ Parses command line arguments"""
+    """Parses command line arguments"""
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--images-file", help="file with the list of container images, output of get_images_sha256.sh from sumologic-openshift-images repository", required=True)
-    parser.add_argument("--operator-repo-dir",
-                        help="path to directory with Helm Operator repository, e.g. /operator/", default="./")
+        "--images-file",
+        help="file with the list of container images, output of get_images_sha256.sh from sumologic-openshift-images repository",
+        required=True,
+    )
     parser.add_argument(
-        "--create-new-file", help="determines whether new yaml should be created or the exiting file should be overwritten", default=True)
+        "--operator-repo-dir",
+        help="path to directory with Helm Operator repository, e.g. /operator/",
+        default="./",
+    )
+    parser.add_argument(
+        "--create-new-file",
+        help="determines whether new yaml should be created or the exiting file should be overwritten",
+        default=True,
+    )
     return parser.parse_args()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = parse_args()
 
     related_images_list, image_envs_list = generate_image_lists(args.images_file)
 
-    csv_path = os.path.join(args.operator_repo_dir,
-                            CLUSTER_SERVICE_VERSION_PATH)
-    update_cluster_service_version(
-        csv_path, related_images_list, image_envs_list, args.create_new_file)
+    csv_path = os.path.join(args.operator_repo_dir, CLUSTER_SERVICE_VERSION_PATH)
+    update_cluster_service_version(csv_path, related_images_list, image_envs_list, args.create_new_file)
 
     m_path = os.path.join(args.operator_repo_dir, MANAGER_PATH)
     update_manager(m_path, image_envs_list, args.create_new_file)
