@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 
+"""Gets list of image configuration keys for the Sumo Logic Kubernetes Collection Helm Chart"""
+
 import re
-import yaml
 import urllib.request
+import yaml
 from yaml.loader import SafeLoader
+
 
 def values_to_dictionary(url: str) -> dict:
     """Downloads and reads given url as values.yaml and returns it as dict
@@ -19,6 +22,7 @@ def values_to_dictionary(url: str) -> dict:
         values = re.sub(r'(\[\]|\{\})\n(\s+# )', r'\n\2', values, flags=re.M)
         values = re.sub(r'^(\s+)# ', r'\1', values, flags=re.M)
         return yaml.load(values, Loader=SafeLoader)
+
 
 def extract_keys(dictionary: dict) -> list:
     """Extracts list of keys from the dictionary and returns as list.
@@ -47,6 +51,7 @@ def extract_keys(dictionary: dict) -> list:
 
     return keys
 
+
 # known_image_keys contains list of image configuration keys which are not available in values.yaml
 known_image_keys = [
     "tailing-sidecar-operator.sidecar.image.repository",
@@ -70,10 +75,12 @@ known_image_keys = [
     "metrics-server.image.tag",
 ]
 
-not_needed_image_keys = ["Percentage", "falco", "pullPolicy", "pullSecrets", "imagePullSecrets"]
+not_needed_image_keys = ["Percentage", "falco",
+                         "pullPolicy", "pullSecrets", "imagePullSecrets"]
 needed_image_keys = ["image", "tag", "repository"]
 
-def get_image_keys()-> list:
+
+def get_image_keys() -> list:
     """Gets list of image configuration keys for the Sumo Logic Kubernetes Collection Helm Chart
 
     Returns:
@@ -83,11 +90,11 @@ def get_image_keys()-> list:
 
     values = values_to_dictionary(values_url)
     values_keys = extract_keys(values)
-    image_keys =[]
+    image_keys = []
 
     for key in values_keys:
         needed_key = True
-        for not_needed in not_needed_image_keys: 
+        for not_needed in not_needed_image_keys:
             # to eliminate keys which are related to image but not related to image repository and tag, e.g.
             # sumologic.metrics.remoteWriteProxy.image.pullPolicy
             # kube-prometheus-stack.global.imagePullSecrets
@@ -104,6 +111,7 @@ def get_image_keys()-> list:
     image_keys.sort()
     return image_keys
 
+
 if __name__ == '__main__':
-    image_keys = get_image_keys()
-    print("\n".join(image_keys))
+    image_config_keys = get_image_keys()
+    print("\n".join(image_config_keys))
