@@ -1,15 +1,23 @@
 #!/usr/bin/env python3
 
-"""Updates components container images in bundle/manifests/operator.clusterserviceversion.yaml" and config/manager/manager.yaml"""
+"""Updates components container images in:
+- bundle/manifests/operator.clusterserviceversion.yaml
+- config/manager/manager.yaml
+- tests/replace_components_images.sh
+"""
 
 import argparse
 import os
+import subprocess
 import yaml
 
 RED_HAT_REGISTRY = "registry.connect.redhat.com/sumologic/"
+PUBLIC_ECR_REGISTRY = "public.ecr.aws/sumologic/"
 ENV_PREFIX = "RELATED_IMAGE_"
 CLUSTER_SERVICE_VERSION_PATH = "bundle/manifests/operator.clusterserviceversion.yaml"
 MANAGER_PATH = "config/manager/manager.yaml"
+REPLACE_COMPONENTS_IMAGES_PATH = "tests/replace_components_images.sh"
+BASH_HEADER = "#!/usr/bin/env bash\n\n"
 
 
 def pairwise(iterable: list) -> list:
@@ -73,7 +81,7 @@ def generate_image_lists(image_list_file: str):
     return related_images, image_envs
 
 
-def create_new_file_path(file_path: str, create_new_file: bool) -> str:
+def create_new_file_path(file_path: str, create_new_file: bool, extension=".yaml") -> str:
     """Creates path for the file with updated list of components images
 
     Args:
@@ -85,7 +93,7 @@ def create_new_file_path(file_path: str, create_new_file: bool) -> str:
     """
     new_path = file_path
     if create_new_file:
-        new_path = file_path.replace(".yaml", "_new.yaml")
+        new_path = file_path.replace(extension, f"_new{extension}")
     return new_path
 
 
@@ -179,6 +187,32 @@ def update_manager(file_path: str, new_image_envs: list, create_new_file):
             yaml.safe_dump_all(new_contents, manager_file_new)
 
 
+def update_replace_components_images(image_file_path: str, create_new_file: bool):
+    """Updates components images in tests/replace_components_images.sh
+
+    Args:
+        file_path (str): path to the output of get_images_sha256.sh, see: https://github.com/SumoLogic/sumologic-openshift-images/blob/main/scripts/get_images_sha256.sh
+        create_new_file (bool): determines whether new yaml should be created or the exiting file should be overwritten
+    """
+    cmd_lines = []
+    for image_with_tag, image_with_sha256 in pairwise(get_lines(image_file_path)):
+        public_ecr_image_with_tag = image_with_tag.replace(RED_HAT_REGISTRY, PUBLIC_ECR_REGISTRY)
+        docker_output = subprocess.run(["docker", "pull", public_ecr_image_with_tag], stdout=subprocess.PIPE, check=False)
+
+        for line in str(docker_output.stdout).split("\\n"):
+            if "Digest" in line:
+                digest = line.removeprefix("Digest:").strip()
+                component, _ = image_with_tag.removeprefix(RED_HAT_REGISTRY).split(":")
+                public_ecr_image_with_sha256 = f"{PUBLIC_ECR_REGISTRY}{component}@{digest}"
+                cmd_lines.append(f'sed -i.bak "s#{image_with_sha256}#{public_ecr_image_with_sha256}#g" bundle.yaml')
+
+        new_file_path = create_new_file_path(REPLACE_COMPONENTS_IMAGES_PATH, create_new_file, ".sh")
+        with open(new_file_path, "w", encoding="utf-8") as new_file:
+            new_file.write(BASH_HEADER)
+            for cmd in cmd_lines:
+                new_file.write(f"{cmd}\n")
+
+
 def parse_args():
     """Parses command line arguments"""
     parser = argparse.ArgumentParser()
@@ -210,3 +244,5 @@ if __name__ == "__main__":
 
     m_path = os.path.join(args.operator_repo_dir, MANAGER_PATH)
     update_manager(m_path, image_envs_list, args.create_new_file)
+
+    update_replace_components_images(args.images_file, args.create_new_file)
