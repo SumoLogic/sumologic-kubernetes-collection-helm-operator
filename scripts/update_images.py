@@ -4,6 +4,7 @@
 - bundle/manifests/operator.clusterserviceversion.yaml
 - config/manager/manager.yaml
 - tests/replace_components_images.sh
+- tests/helm_install.sh
 """
 
 import argparse
@@ -11,13 +12,78 @@ import os
 import subprocess
 import yaml
 
+from get_image_config_keys import get_image_keys
+
 RED_HAT_REGISTRY = "registry.connect.redhat.com/sumologic/"
 PUBLIC_ECR_REGISTRY = "public.ecr.aws/sumologic/"
 ENV_PREFIX = "RELATED_IMAGE_"
 CLUSTER_SERVICE_VERSION_PATH = "bundle/manifests/operator.clusterserviceversion.yaml"
 MANAGER_PATH = "config/manager/manager.yaml"
 REPLACE_COMPONENTS_IMAGES_PATH = "tests/replace_components_images.sh"
+HELM_INSTALL_SCRIPT_PATH = "tests/helm_install.sh"
 BASH_HEADER = "#!/usr/bin/env bash\n\n"
+
+HELM_INSTALL_COMMAND_HEADER = """readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
+
+helm install test-openshift sumologic/sumologic \\
+  --set sumologic.accessId="dummy" \\
+  --set sumologic.accessKey="dummy" \\
+  --set sumologic.endpoint="http://receiver-mock.receiver-mock:3000/terraform/api/" \\
+  --set sumologic.scc.create=true \\
+  --set fluent-bit.securityContext.privileged=true \\
+  --set kube-prometheus-stack.prometheus-node-exporter.service.port=9200 \\
+  --set kube-prometheus-stack.prometheus-node-exporter.service.targetPort=9200 \\
+  --set fluentd.logs.containers.multiline.enabled=false \\
+  --set metrics-server.enabled=true \\
+  --set metrics-server.apiService.create=false \\
+  --set otelagent.enabled=true \\
+  --set telegraf-operator.enabled=true \\
+  --set falco.enabled=true \\
+  --set tailing-sidecar-operator.enabled=true \\
+  --set opentelemetry-operator.enabled=true \\
+  --version 2.19.1 \\
+  -n sumologic-system \\
+  --create-namespace -f "${ROOT_DIR}/tests/values.yaml" \\\n"""
+
+# COMPONENTS_CONFIG_MAP maps helm chart configuration keys into components names
+COMPONENTS_CONFIG_MAP = {
+    "instrumentation.instrumentationJobImage.image": "kubernetes-tools-kubectl",
+    "kube-prometheus-stack.kube-state-metrics.image": "kube-state-metrics",
+    "kube-prometheus-stack.prometheus-node-exporter.image": "node-exporter",
+    "kube-prometheus-stack.prometheus.prometheusSpec.image": "prometheus",
+    "kube-prometheus-stack.prometheusOperator.image": "prometheus-operator",
+    "kube-prometheus-stack.prometheusOperator.prometheusConfigReloader.image": "prometheus-config-reloader",
+    "kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage": "prometheus-config-reloader",
+    "kube-prometheus-stack.prometheusOperator.thanosImage": "thanos",
+    "metadata.image": "sumologic-otel-collector",
+    "metrics-server.image": "metrics-server",
+    "opentelemetry-operator.kubeRBACProxy.image": "kube-rbac-proxy",
+    "opentelemetry-operator.kubeRBACProxy.image.repository": "kube-rbac-proxy",
+    "opentelemetry-operator.manager.autoInstrumentationImage.dotnet": "autoinstrumentation-dotnet",
+    "opentelemetry-operator.manager.autoInstrumentationImage.java": "autoinstrumentation-java",
+    "opentelemetry-operator.manager.autoInstrumentationImage.nodejs": "autoinstrumentation-nodejs",
+    "opentelemetry-operator.manager.autoInstrumentationImage.python": "autoinstrumentation-nodejs",
+    "opentelemetry-operator.manager.collectorImage": "sumologic-otel-collector",
+    "opentelemetry-operator.manager.image": "opentelemetry-operator",
+    "opentelemetry-operator.manager.image.repository": "opentelemetry-operator",
+    "otelcolInstrumentation.statefulset.image": "sumologic-otel-collector",
+    "otelevents.image": "sumologic-otel-collector",
+    "otellogs.daemonset.initContainers.changeowner.image": "busybox",
+    "otellogs.image": "sumologic-otel-collector",
+    "pvcCleaner.job.image": "kubernetes-tools-kubectl",
+    "sumologic.metrics.collector.otelcol.image": "sumologic-otel-collector",
+    "sumologic.metrics.remoteWriteProxy.image": "nginx-unprivileged",
+    "sumologic.otelcolImage": "sumologic-otel-collector",
+    "sumologic.setup.job.image": "kubernetes-setup",
+    "sumologic.setup.job.initContainerImage": "busybox",
+    "tailing-sidecar-operator.kubeRbacProxy.image": "kube-rbac-proxy",
+    "tailing-sidecar-operator.operator.image": "tailing-sidecar-operator",
+    "tailing-sidecar-operator.sidecar.image": "tailing-sidecar",
+    "telegraf-operator.image": "telegraf-operator",
+    "telegraf-operator.image.sidecarImage": "telegraf",
+    "tracesGateway.deployment.image": "sumologic-otel-collector",
+    "tracesSampler.deployment.image": "sumologic-otel-collector",
+}
 
 
 def pairwise(iterable: list) -> list:
@@ -192,7 +258,7 @@ def update_replace_components_images(image_file_path: str, create_new_file: bool
 
     Args:
         file_path (str): path to the output of get_images_sha256.sh, see: https://github.com/SumoLogic/sumologic-openshift-images/blob/main/scripts/get_images_sha256.sh
-        create_new_file (bool): determines whether new yaml should be created or the exiting file should be overwritten
+        create_new_file (bool): determines whether new file should be created or the exiting file should be overwritten
     """
     cmd_lines = []
     for image_with_tag, image_with_sha256 in pairwise(get_lines(image_file_path)):
@@ -213,6 +279,85 @@ def update_replace_components_images(image_file_path: str, create_new_file: bool
                 new_file.write(f"{cmd}\n")
 
 
+def prepare_components_images_map(file_path: str) -> dict:
+    """Prepares components dict containing information about container images
+
+    Args:
+        file_path (str): path to the output of get_images_sha256.sh, see: https://github.com/SumoLogic/sumologic-openshift-images/blob/main/scripts/get_images_sha256.sh
+        create_new_file (bool): determines whether new file should be created or the exiting file should be overwritten
+
+    Returns
+        dict: dict with information about container images
+    """
+    components_images = {}
+    for image_with_tag, image_with_sha256 in pairwise(get_lines(file_path)):
+        component, tag = image_with_tag.removeprefix(RED_HAT_REGISTRY).split(":")
+        sha = image_with_sha256.split(":")[-1]
+        components_images[component] = {"image_with_tag": image_with_tag, "image_with_sha256": image_with_sha256, "tag": tag, "sha": sha}
+    return components_images
+
+
+def update_helm_install(image_file_path: str, create_new_file: bool):
+    """Updates helm install command in tests/helm_install.sh"
+
+    Args:
+        file_path (str): path to the output of get_images_sha256.sh, see: https://github.com/SumoLogic/sumologic-openshift-images/blob/main/scripts/get_images_sha256.sh
+    """
+    # pylint: disable=R0912,R0914
+    image_config_keys = get_image_keys()
+    components_images = prepare_components_images_map(image_file_path)
+    set_args = []
+
+    for image_config in image_config_keys:
+        image_config_root = ".".join(image_config.split(".")[:-1])
+
+        if image_config_root not in COMPONENTS_CONFIG_MAP:
+            print(f"WARNING: missing key in components map, key: {image_config_root}")
+            continue
+
+        component = COMPONENTS_CONFIG_MAP[image_config_root]
+
+        if component not in components_images:
+            print(f"WARNING: missing key in components_images, key: {component}")
+            set_arg = f"  --set {image_config}='' \\"
+            set_args.append(set_arg)
+            continue
+
+        config = image_config.split(".")[-1]
+        if config == "repository":
+            if image_config_root + ".registry" not in image_config_keys:
+                set_arg = f"  --set {image_config}={PUBLIC_ECR_REGISTRY}{component}@sha256 \\"
+            else:
+                set_arg = f"  --set {image_config}={component}@sha256 \\"
+        elif config == "tag":
+            if image_config_root + ".sha" not in image_config_keys:
+                tag = components_images[component]["sha"]
+            else:
+                tag = components_images[component]["tag"]
+
+            set_arg = f"  --set {image_config}={tag} \\"
+        elif config == "registry":
+            registry = PUBLIC_ECR_REGISTRY[:-1]
+            set_arg = f"  --set {image_config}={registry} \\"
+        elif config == "sha":
+            sha = components_images[component]["sha"]
+            set_arg = f"  --set {image_config}={sha} \\"
+        elif config == "sidecarImage":
+            # special case for telegraf-operator.image.sidecarImage
+            component = component.removesuffix("-operator")
+            sidecar = components_images[component]["image_with_sha256"]
+            set_arg = f"  --set {image_config}={sidecar} \\"
+        else:
+            set_arg = f"  --set {image_config}='' \\"
+        set_args.append(set_arg)
+
+    new_file_path = create_new_file_path(HELM_INSTALL_SCRIPT_PATH, create_new_file, ".sh")
+    with open(new_file_path, "w", encoding="utf-8") as new_file:
+        file_content = BASH_HEADER + HELM_INSTALL_COMMAND_HEADER + "\n".join(set_args)
+        file_content = file_content.removesuffix(" \\")  # remove last \ after last helm install argument
+        new_file.write(f"{file_content}\n")
+
+
 def parse_args():
     """Parses command line arguments"""
     parser = argparse.ArgumentParser()
@@ -228,7 +373,7 @@ def parse_args():
     )
     parser.add_argument(
         "--create-new-file",
-        help="determines whether new yaml should be created or the exiting file should be overwritten",
+        help="determines whether new file should be created or the exiting file should be overwritten",
         default=True,
     )
     return parser.parse_args()
@@ -246,3 +391,5 @@ if __name__ == "__main__":
     update_manager(m_path, image_envs_list, args.create_new_file)
 
     update_replace_components_images(args.images_file, args.create_new_file)
+
+    update_helm_install(args.images_file, args.create_new_file)
