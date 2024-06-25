@@ -61,7 +61,6 @@ known_image_keys = [
     "tailing-sidecar-operator.kubeRbacProxy.image.tag",
     "opentelemetry-operator.manager.image.repository.tag",
     "opentelemetry-operator.kubeRBACProxy.image.repository.tag",
-    "opentelemetry-operator.testFramework.image.repository.tag",
     "telegraf-operator.image.tag",
     "kube-prometheus-stack.prometheus.prometheusSpec.image.tag",
     "kube-prometheus-stack.prometheus.prometheusSpec.image.sha",
@@ -75,13 +74,7 @@ known_image_keys = [
     "metrics-server.image.tag",
 ]
 
-not_needed_image_keys = [
-    "Percentage",
-    "falco",
-    "pullPolicy",
-    "pullSecrets",
-    "imagePullSecrets",
-]
+not_needed_image_keys = ["Percentage", "falco", "pullPolicy", "pullSecrets", "imagePullSecrets", "debug.sumologicMock.image", "otellogswindows", "testFramework"]
 needed_image_keys = ["image", "tag", "repository"]
 
 
@@ -117,6 +110,27 @@ def get_image_keys() -> list:
     return image_keys
 
 
+def generate_components_map(keys) -> list:
+    """Generates image configuration keys for components map used in update_images.py
+
+    Args:
+        keys (list): list of Helm Chart image configuration keys from values.yaml
+    Returns:
+        list: image configuration keys for components map used in update_images.py
+    """
+    unique_root_keys = set()
+    for key in keys:
+        keys_parts = key.split(".")[:-1]
+        new_key = ".".join(keys_parts)
+        unique_root_keys.add(f'"{new_key}": "",')
+
+    return sorted(unique_root_keys)
+
+
 if __name__ == "__main__":
+    print("---------- Helm Chart image configuration keys from values.yaml, used in watches.yaml ---------------")
     image_config_keys = get_image_keys()
     print("\n".join(image_config_keys))
+    print("---------- Image configuration keys for components map used in update_images.py ---------------------")
+    components_map_keys = generate_components_map(image_config_keys)
+    print("\n".join(sorted(components_map_keys)))
