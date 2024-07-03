@@ -18,7 +18,7 @@ helm install test-openshift sumologic/sumologic \
   --set falco.enabled=true \
   --set tailing-sidecar-operator.enabled=true \
   --set opentelemetry-operator.enabled=true \
-  --version 2.19.1 \
+  --version 4.9.0 \
   -n sumologic-system \
   --create-namespace -f "${ROOT_DIR}/tests/values.yaml" \
   --set instrumentation.instrumentationJobImage.image.repository=public.ecr.aws/sumologic/kubernetes-tools-kubectl@sha256 \
