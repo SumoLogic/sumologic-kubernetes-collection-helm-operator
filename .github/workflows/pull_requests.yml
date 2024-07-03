@@ -37,6 +37,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
+      - uses: imranismail/setup-kustomize@v2.1.0
+      - name: Check kustomize version
+        run: kustomize version
       - name: Check bundle.yaml
         run: make test-bundle-status
 
@@ -60,7 +63,9 @@ jobs:
           sudo ln -s /opt/helm3/linux-amd64/helm /usr/bin/helm3
           sudo ln -s /usr/bin/helm3 /usr/bin/helm
           helm version
-      - uses: imranismail/setup-kustomize@v1
+      - uses: imranismail/setup-kustomize@v2.1.0
+      - name: Check kustomize version
+        run: kustomize version
       - uses: AbsaOSS/k3d-action@v2
         id: single-cluster
         name: Create single k3d Cluster
