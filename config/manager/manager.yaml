@@ -37,40 +37,50 @@ spec:
               fieldPath: metadata.name
         - name: OPERATOR_NAME
           value: sumologic-kubernetes-collection-helm-operator
+        - name: RELATED_IMAGE_AUTOINSTRUMENTATION_DOTNET
+          value: registry.connect.redhat.com/sumologic/autoinstrumentation-dotnet@sha256:e99182dd7c0c8611cdc852bcc2e0866e635077b50b7e739022269cc8721f4109
+        - name: RELATED_IMAGE_AUTOINSTRUMENTATION_JAVA
+          value: registry.connect.redhat.com/sumologic/autoinstrumentation-java@sha256:7fdb03d08173964f234f8262e872f67a42527173195b2e39cf56581c6a784f92
+        - name: RELATED_IMAGE_AUTOINSTRUMENTATION_NODEJS
+          value: registry.connect.redhat.com/sumologic/autoinstrumentation-nodejs@sha256:f6d2109be49cbfc725ca7f0ebbc06b74c699e55a7f18690e9959de8bcf294028
+        - name: RELATED_IMAGE_AUTOINSTRUMENTATION_PYTHON
+          value: registry.connect.redhat.com/sumologic/autoinstrumentation-python@sha256:2cf6a7fb9680539a1c352c24827cd01e152e27d865916e6112a07c8c94f32973
+        - name: RELATED_IMAGE_BUSYBOX
+          value: registry.connect.redhat.com/sumologic/busybox@sha256:ceace4beb7db070ae30589a7ef11d68b0435916d6220abccac9396618c2514ed
+        - name: RELATED_IMAGE_KUBE_RBAC_PROXY
+          value: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:6081af347a86a9cd51232f60e9f5567bdaddf0377927a462ced91524ce80bf95
+        - name: RELATED_IMAGE_KUBE_STATE_METRICS
+          value: registry.connect.redhat.com/sumologic/kube-state-metrics@sha256:473614d1c0de0f9f0b5314eab40d3172f5180332a2009be590ce474b85cb898e
         - name: RELATED_IMAGE_KUBERNETES_SETUP
-          value: registry.connect.redhat.com/sumologic/kubernetes-setup@sha256:f58a7df3898c2c7b9b85c6537e7c8e971aa66e8556ee3c429e581efa3967284b
+          value: registry.connect.redhat.com/sumologic/kubernetes-setup@sha256:157290d458724d63dde2d8b2b81b8184618ae07de6776f56ab33f3e3cb0566b5
+        - name: RELATED_IMAGE_KUBERNETES_TOOLS_KUBECTL
+          value: registry.connect.redhat.com/sumologic/kubernetes-tools-kubectl@sha256:0beabc526fbd99db0bae9f34d6f1cf806b5b29354d03b21766edec82c26c3353
+        - name: RELATED_IMAGE_METRICS_SERVER
+          value: registry.connect.redhat.com/sumologic/metrics-server@sha256:d57ba890f7ea80a3afef709f6aa60b2ee989bc575e81565bfa664cd2fcfd2980
+        - name: RELATED_IMAGE_NGINX_UNPRIVILEGED
+          value: registry.connect.redhat.com/sumologic/nginx-unprivileged@sha256:9aef85eed423d0bf6bce16eb0dce3d56d18c0aa7929627ed4fe7aef7aa749c1f
         - name: RELATED_IMAGE_NODE_EXPORTER
           value: registry.connect.redhat.com/sumologic/node-exporter@sha256:7acec4473ddf508514dca1d08335cfd071e345d7eca660793d59e09ef9f0491f
-        - name: RELATED_IMAGE_KUBE_STATE_METRICS
-          value: registry.connect.redhat.com/sumologic/kube-state-metrics@sha256:094ad2a0136b7ded390763dd9c63acf282903d49d07385a806160e2cdad89345
-        - name: RELATED_IMAGE_PROMETHEUS_OPERATOR
-          value: registry.connect.redhat.com/sumologic/prometheus-operator@sha256:79769d200a6d5b977fed1c05e1021ad83b89b817b30ab24131cf9d262f4b86fc
+        - name: RELATED_IMAGE_OPENTELEMETRY_OPERATOR
+          value: registry.connect.redhat.com/sumologic/opentelemetry-operator@sha256:a714dd6995f5c3f479488c8ca281fe1a5dd92b1103c4b00b9c68f47826172267
         - name: RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER
-          value: registry.connect.redhat.com/sumologic/prometheus-config-reloader@sha256:bbc4ae3f769172545cd0ee7862066e6dab75045370f099e4bdacc344fe7c46a7
+          value: registry.connect.redhat.com/sumologic/prometheus-config-reloader@sha256:03d3ca5b7c96c88ff8de363371d89ead3be6ac0b74653da1ac2231bd1b0e386d
+        - name: RELATED_IMAGE_PROMETHEUS_OPERATOR
+          value: registry.connect.redhat.com/sumologic/prometheus-operator@sha256:f98f265fd0609da354ca6cbb6ea3b56a88ebccfb2daff14896f7004aa4ffa174
         - name: RELATED_IMAGE_PROMETHEUS
-          value: registry.connect.redhat.com/sumologic/prometheus@sha256:f9fa9040c8e134a1e6be81dd6e14f1d1dee3e0651e4039cf9580e8e9cfbf8455
-        - name: RELATED_IMAGE_THANOS
-          value: registry.connect.redhat.com/sumologic/thanos@sha256:9772a1f329596cc4f0934b044f63b2c4f6e93952a44f1c68cc09f1a61f7f309a
-        - name: RELATED_IMAGE_METRICS_SERVER
-          value: registry.connect.redhat.com/sumologic/metrics-server@sha256:4a60b5f706e4ae2b79c91a90dd4d23d8fd87408beed9f0a14a29d639bbcb8a35
-        - name: RELATED_IMAGE_KUBE_RBAC_PROXY
-          value: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:c1ea7aa4873a78d8d506e4dab8c281c6c72a65d1374312cd76b27ed881b043b5
+          value: registry.connect.redhat.com/sumologic/prometheus@sha256:92c173c757018178920385bbb93d826ae5b5cab4706ac6b239e919ae6b3520b4
+        - name: RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR
+          value: registry.connect.redhat.com/sumologic/sumologic-otel-collector@sha256:986d8432eb84cad7c2ac69bdf5a48831a76d23d9d9cb08595e091b4f1f802533
         - name: RELATED_IMAGE_TAILING_SIDECAR_OPERATOR
-          value: registry.connect.redhat.com/sumologic/tailing-sidecar-operator@sha256:8b22b5035e7512fff17b05b37076f1bdbc3102cfbfc676e66ef7f3682dff5b98
+          value: registry.connect.redhat.com/sumologic/tailing-sidecar-operator@sha256:faf736cd82ceee3e97990da0346487e51ddc9fbc9a0647042f640d2012ef9f35
         - name: RELATED_IMAGE_TAILING_SIDECAR
-          value: registry.connect.redhat.com/sumologic/tailing-sidecar@sha256:34c7e3d6a15dcbb72ce498744baa5e6b4663af4838a6f6429458e2d73ecb4d09
+          value: registry.connect.redhat.com/sumologic/tailing-sidecar@sha256:48203fa961951147802711ed4769ab2d42e4adb4593a6e50c639d9cc4fb75242
         - name: RELATED_IMAGE_TELEGRAF_OPERATOR
-          value: registry.connect.redhat.com/sumologic/telegraf-operator@sha256:b21263cb36281d282246376e3dfd63e8ea5885a50047690f7fa3845917a7bbc6
+          value: registry.connect.redhat.com/sumologic/telegraf-operator@sha256:88c3b5d9f8e9a419131c39e6e22c5aa7cfaab5157fe4c5cc928574f5a3cfda2c
         - name: RELATED_IMAGE_TELEGRAF
           value: registry.connect.redhat.com/sumologic/telegraf@sha256:ca396dad12a289aea9136da713020d31b179e9f49aae61c48332d61086d1d059
-        - name: RELATED_IMAGE_KUBERNETES_FLUENTD
-          value: registry.connect.redhat.com/sumologic/kubernetes-fluentd@sha256:fdc41e366fa24046eb023ab76ca3bb571cdde5b35ea75ccdd9b9435091266562
-        - name: RELATED_IMAGE_FLUENT_BIT
-          value: registry.connect.redhat.com/sumologic/fluent-bit@sha256:18e188c2b72d4404cd14244776795244e49ff7f4bc743db97c5acec068fe5394
-        - name: RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR
-          value: registry.connect.redhat.com/sumologic/sumologic-otel-collector@sha256:9e37f8f6244f82a4caa138d77f89a946f781e76c74326b771727843cd9f113a1
-        - name: RELATED_IMAGE_OPENTELEMETRY_OPERATOR
-          value: registry.connect.redhat.com/sumologic/opentelemetry-operator@sha256:b6fc0d5880016a8dc51a371839d0336409ad242f3ef046ca877c5d2c9df7e43e
+        - name: RELATED_IMAGE_THANOS
+          value: registry.connect.redhat.com/sumologic/thanos@sha256:323ff1e3500fdbf594acfca19639911b5ed8d0a527b9742c264d5f5b1ce5d4cc
         image: controller
         livenessProbe:
           httpGet:
