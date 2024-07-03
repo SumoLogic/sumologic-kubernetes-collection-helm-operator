@@ -9,7 +9,7 @@ VERSION ?= 0.0.1
 RELEASE_NUMBER ?= 0
 
 # Sumo Logic Kubernetes Collection Chart branch name
-COLLECTION_BRANCH ?= release-v2.19
+COLLECTION_BRANCH ?= release-v4.9
 
 # CHANNELS define the bundle channels used in the bundle.
 # Add a new line here if you would like to change its default config. (E.g CHANNELS = "preview,fast,stable")
