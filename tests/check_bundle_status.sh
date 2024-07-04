@@ -9,5 +9,5 @@ readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
 source "${ROOT_DIR}/tests/functions.sh"
 
 make generate-bundle
-DIFF="$(diff generated_bundle.yaml bundle.yaml)"
+DIFF="$(diff -B generated_bundle.yaml bundle.yaml)"
 check_diff "${DIFF}"
