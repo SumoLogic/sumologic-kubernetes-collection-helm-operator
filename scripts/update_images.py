@@ -30,10 +30,15 @@ helm install test-openshift sumologic/sumologic \\
   --set sumologic.accessKey="dummy" \\
   --set sumologic.endpoint="http://receiver-mock.receiver-mock:3000/terraform/api/" \\
   --set sumologic.scc.create=true \\
+  --set sumologic.otellogs.daemonset.containers.otelcol.securityContext.privileged=true \\
+  --set sumologic.otellogs.daemonset.initContainers.changeowner.securityContext.privileged=true \\
+  --set kube-prometheus-stack.prometheus-node-exporter.service.port=9200 \\
+  --set kube-prometheus-stack.prometheus-node-exporter.service.targetPort=9200 \\
   --set metrics-server.enabled=true \\
   --set metrics-server.apiService.create=false \\
   --set telegraf-operator.enabled=true \\
   --set tailing-sidecar-operator.enabled=true \\
+  --set tailing-sidecar-operator.scc.create=true \\
   --version 4.9.0 \\
   -n sumologic-system \\
   --create-namespace -f "${ROOT_DIR}/tests/values.yaml" \\\n"""
@@ -391,14 +396,14 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
 
-    related_images_list, image_envs_list = generate_image_lists(args.images_file)
+    # related_images_list, image_envs_list = generate_image_lists(args.images_file)
 
-    csv_path = os.path.join(args.operator_repo_dir, CLUSTER_SERVICE_VERSION_PATH)
-    update_cluster_service_version(csv_path, related_images_list, image_envs_list, args.create_new_file)
+    # csv_path = os.path.join(args.operator_repo_dir, CLUSTER_SERVICE_VERSION_PATH)
+    # update_cluster_service_version(csv_path, related_images_list, image_envs_list, args.create_new_file)
 
-    m_path = os.path.join(args.operator_repo_dir, MANAGER_PATH)
-    update_manager(m_path, image_envs_list, args.create_new_file)
+    # m_path = os.path.join(args.operator_repo_dir, MANAGER_PATH)
+    # update_manager(m_path, image_envs_list, args.create_new_file)
 
-    update_replace_components_images(args.images_file, args.create_new_file)
+    # update_replace_components_images(args.images_file, args.create_new_file)
 
     update_helm_install(args.images_file, args.create_new_file)
