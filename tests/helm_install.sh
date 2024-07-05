@@ -7,10 +7,15 @@ helm install test-openshift sumologic/sumologic \
   --set sumologic.accessKey="dummy" \
   --set sumologic.endpoint="http://receiver-mock.receiver-mock:3000/terraform/api/" \
   --set sumologic.scc.create=true \
+  --set sumologic.otellogs.daemonset.containers.otelcol.securityContext.privileged=true \
+  --set sumologic.otellogs.daemonset.initContainers.changeowner.securityContext.privileged=true \
+  --set kube-prometheus-stack.prometheus-node-exporter.service.port=9200 \
+  --set kube-prometheus-stack.prometheus-node-exporter.service.targetPort=9200 \
   --set metrics-server.enabled=true \
   --set metrics-server.apiService.create=false \
   --set telegraf-operator.enabled=true \
   --set tailing-sidecar-operator.enabled=true \
+  --set tailing-sidecar-operator.scc.create=true \
   --version 4.9.0 \
   -n sumologic-system \
   --create-namespace -f "${ROOT_DIR}/tests/values.yaml" \
