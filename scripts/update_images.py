@@ -30,18 +30,11 @@ helm install test-openshift sumologic/sumologic \\
   --set sumologic.accessKey="dummy" \\
   --set sumologic.endpoint="http://receiver-mock.receiver-mock:3000/terraform/api/" \\
   --set sumologic.scc.create=true \\
-  --set fluent-bit.securityContext.privileged=true \\
-  --set kube-prometheus-stack.prometheus-node-exporter.service.port=9200 \\
-  --set kube-prometheus-stack.prometheus-node-exporter.service.targetPort=9200 \\
-  --set fluentd.logs.containers.multiline.enabled=false \\
   --set metrics-server.enabled=true \\
   --set metrics-server.apiService.create=false \\
-  --set otelagent.enabled=true \\
   --set telegraf-operator.enabled=true \\
-  --set falco.enabled=true \\
   --set tailing-sidecar-operator.enabled=true \\
-  --set opentelemetry-operator.enabled=true \\
-  --version 2.19.1 \\
+  --version 4.9.0 \\
   -n sumologic-system \\
   --create-namespace -f "${ROOT_DIR}/tests/values.yaml" \\\n"""
 
@@ -277,6 +270,23 @@ def update_replace_components_images(image_file_path: str, create_new_file: bool
                 new_file.write(f"{cmd}\n")
 
 
+def get_image_digest(image_with_tag: str) -> str:
+    """Gets digest/sha256 for given image with tag
+    Args:
+        image_with_tag(str): image with tag
+    Returns:
+        digest(str): digest for given image
+    """
+    docker_output = subprocess.run(["docker", "pull", image_with_tag], stdout=subprocess.PIPE, check=False)
+
+    digest = ""
+    for line in str(docker_output.stdout).split("\\n"):
+        if "Digest" in line:
+            digest = line.removeprefix("Digest:").strip()
+            digest = digest.removeprefix("sha256:")
+    return digest
+
+
 def prepare_components_images_map(file_path: str) -> dict:
     """Prepares components dict containing information about container images
 
@@ -329,7 +339,8 @@ def update_helm_install(image_file_path: str, create_new_file: bool):
                 set_arg = f"  --set {image_config}={component}@sha256 \\"
         elif config == "tag":
             if image_config_root + ".sha" not in image_config_keys:
-                tag = components_images[component]["sha"]
+                public_ecr_image_with_tag = components_images[component]["image_with_tag"].replace(RED_HAT_REGISTRY, PUBLIC_ECR_REGISTRY)
+                tag = get_image_digest(public_ecr_image_with_tag)
             else:
                 tag = components_images[component]["tag"]
 
