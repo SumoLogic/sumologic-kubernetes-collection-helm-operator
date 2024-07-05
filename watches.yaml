@@ -2,12 +2,6 @@
   group: helm-operator.sumologic.com
   kind: SumologicCollection
   overrideValues:
-    fluent-bit.image.repository: '{{ ("$RELATED_IMAGE_FLUENT_BIT" | split ":")._0
-      }}'
-    fluent-bit.image.tag: '{{ ("$RELATED_IMAGE_FLUENT_BIT" | split ":")._1 }}'
-    fluentd.image.repository: '{{ ("$RELATED_IMAGE_KUBERNETES_FLUENTD" | split ":")._0
-      }}'
-    fluentd.image.tag: '{{ ("$RELATED_IMAGE_KUBERNETES_FLUENTD" | split ":")._1 }}'
     instrumentation.instrumentationJobImage.image.repository: '{{ ("$RELATED_IMAGE_KUBERNETES_TOOLS_KUBECTL"
       | split ":")._0 }}'
     instrumentation.instrumentationJobImage.image.tag: '{{ ("$RELATED_IMAGE_KUBERNETES_TOOLS_KUBECTL"
