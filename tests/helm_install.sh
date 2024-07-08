@@ -49,7 +49,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set otelevents.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
   --set otelevents.image.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
   --set otellogs.daemonset.initContainers.changeowner.image.repository=public.ecr.aws/sumologic/busybox@sha256 \
-  --set otellogs.daemonset.initContainers.changeowner.image.tag=b4546940f92abc714d70fc188c662736a3392fd168e793167533d5f72e5a91cc \
+  --set otellogs.daemonset.initContainers.changeowner.image.tag=bc4b632a545fb8b797aa99d1e7cee8c042332c7cc849df30c945a8a7bd9f6c3a \
   --set otellogs.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
   --set otellogs.image.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
   --set pvcCleaner.job.image.repository=public.ecr.aws/sumologic/kubernetes-tools-kubectl@sha256 \
@@ -63,7 +63,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set sumologic.setup.job.image.repository=public.ecr.aws/sumologic/kubernetes-setup@sha256 \
   --set sumologic.setup.job.image.tag=21819dcc791144843ebed17abf7304e2cefd711995027a8737f2d9ae14418811 \
   --set sumologic.setup.job.initContainerImage.repository=public.ecr.aws/sumologic/busybox@sha256 \
-  --set sumologic.setup.job.initContainerImage.tag=b4546940f92abc714d70fc188c662736a3392fd168e793167533d5f72e5a91cc \
+  --set sumologic.setup.job.initContainerImage.tag=bc4b632a545fb8b797aa99d1e7cee8c042332c7cc849df30c945a8a7bd9f6c3a \
   --set tailing-sidecar-operator.kubeRbacProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
   --set tailing-sidecar-operator.kubeRbacProxy.image.tag=6081af347a86a9cd51232f60e9f5567bdaddf0377927a462ced91524ce80bf95 \
   --set tailing-sidecar-operator.operator.image.repository=public.ecr.aws/sumologic/tailing-sidecar-operator@sha256 \
