@@ -22,10 +22,9 @@ function wait_for_collection_resources() {
   local namespace="${1}"
   local time="${2}"
 
-  wait_for_resource "${namespace}" "${time}" statefulset.apps/prometheus-test-openshift-kube-promet-prometheus 
-  wait_for_resource "${namespace}" "${time}" statefulset.apps/test-openshift-sumologic-fluentd-events
-  wait_for_resource "${namespace}" "${time}" statefulset.apps/test-openshift-sumologic-fluentd-logs
-  wait_for_resource "${namespace}" "${time}" statefulset.apps/test-openshift-sumologic-fluentd-metrics
+  wait_for_resource "${namespace}" "${time}" statefulset.apps/test-openshift-sumolog-otelcol-events
+  wait_for_resource "${namespace}" "${time}" statefulset.apps/test-openshift-sumolog-otelcol-logs
+  wait_for_resource "${namespace}" "${time}" statefulset.apps/test-openshift-sumolog-otelcol-metrics
 }
 
 function wait_for_ns_termination() {
