@@ -5,6 +5,12 @@ generatorOptions:
   disableNameSuffixHash: true
 
 configMapGenerator:
-- name: operator-config
-  files:
+- files:
   - controller_manager_config.yaml
+  name: operator-config
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+images:
+- name: controller
+  newName: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator
+  newTag: 2.19.1-0
