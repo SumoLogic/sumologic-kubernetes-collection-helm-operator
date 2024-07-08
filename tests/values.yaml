@@ -1,4 +1,32 @@
+sumologic:
+  accessId: "dummy"
+  accessKey: "dummy"
+  endpoint: "http://receiver-mock.receiver-mock:3000/terraform/api/"
+  scc:
+    create: true
+
+otellogs:
+  daemonset:
+    containers:
+      otelcol:
+        securityContext:
+          privileged: true
+    initContainers:
+      changeowner:
+        securityContext:
+          privileged: true
+
+tailing-sidecar-operator:
+  enabled: true
+  scc:
+    create: true
+
 kube-prometheus-stack:
+  prometheus-node-exporter:
+    service:
+      port: 9200
+      targetPort: 9200
+
   prometheusOperator:
     denyNamespaces:
     - openshift-apiserver
@@ -39,9 +67,14 @@ kube-prometheus-stack:
     - openshift-service-ca-operator
     - openshift-user-workload-monitoring
 
-metrics-server:
-  extraArgs:
-    - --kubelet-insecure-tls: true
-    - --kubelet-preferred-address-types: InternalIP,ExternalIP,Hostname
-    - --metric-resolution: 120s
-    - --cert-dir: /tmp
+# metrics-server:
+# TODO: enable metrics server
+#   enabled: true
+#   extraArgs:
+#     - --kubelet-insecure-tls: true
+#     - --kubelet-preferred-address-types: InternalIP,ExternalIP,Hostname
+#     - --metric-resolution: 120s
+#     - --cert-dir: /tmp
+
+telegraf-operator:
+  enabled: true

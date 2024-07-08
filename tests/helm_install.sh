@@ -2,20 +2,7 @@
 
 readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
 
-helm install test-openshift sumologic/sumologic \
-  --set sumologic.accessId="dummy" \
-  --set sumologic.accessKey="dummy" \
-  --set sumologic.endpoint="http://receiver-mock.receiver-mock:3000/terraform/api/" \
-  --set sumologic.scc.create=true \
-  --set sumologic.otellogs.daemonset.containers.otelcol.securityContext.privileged=true \
-  --set sumologic.otellogs.daemonset.initContainers.changeowner.securityContext.privileged=true \
-  --set kube-prometheus-stack.prometheus-node-exporter.service.port=9200 \
-  --set kube-prometheus-stack.prometheus-node-exporter.service.targetPort=9200 \
-  --set metrics-server.enabled=true \
-  --set metrics-server.apiService.create=false \
-  --set telegraf-operator.enabled=true \
-  --set tailing-sidecar-operator.enabled=true \
-  --set tailing-sidecar-operator.scc.create=true \
+helm upgrade --install test-openshift sumologic/sumologic \
   --version 4.9.0 \
   -n sumologic-system \
   --create-namespace -f "${ROOT_DIR}/tests/values.yaml" \
@@ -83,9 +70,8 @@ helm install test-openshift sumologic/sumologic \
   --set tailing-sidecar-operator.operator.image.tag=faf736cd82ceee3e97990da0346487e51ddc9fbc9a0647042f640d2012ef9f35 \
   --set tailing-sidecar-operator.sidecar.image.repository=public.ecr.aws/sumologic/tailing-sidecar@sha256 \
   --set tailing-sidecar-operator.sidecar.image.tag=48203fa961951147802711ed4769ab2d42e4adb4593a6e50c639d9cc4fb75242 \
-  --set telegraf-operator.image.repository=public.ecr.aws/sumologic/telegraf-operator@sha256 \
+  --set telegraf-operator.image.repository=public.ecr.aws/sumologic/telegraf-operator-ubi \
   --set telegraf-operator.image.sidecarImage=registry.connect.redhat.com/sumologic/telegraf@sha256:ca396dad12a289aea9136da713020d31b179e9f49aae61c48332d61086d1d059 \
-  --set telegraf-operator.image.tag=88c3b5d9f8e9a419131c39e6e22c5aa7cfaab5157fe4c5cc928574f5a3cfda2c \
   --set tracesGateway.deployment.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
   --set tracesGateway.deployment.image.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
   --set tracesSampler.deployment.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
