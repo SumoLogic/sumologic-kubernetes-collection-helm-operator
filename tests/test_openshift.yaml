@@ -9,6 +9,7 @@ spec:
     endpoint: "http://receiver-mock.receiver-mock:3000/terraform/api/"
     scc:
       create: true
+
   otellogs:
     daemonset:
       containers:
@@ -19,21 +20,18 @@ spec:
         changeowner:
           securityContext:
             privileged: true
+
   tailing-sidecar-operator:
+    enabled: true
     scc:
       create: true
-  metrics-server:
-    enabled: true
-    apiService:
-      create: false
-    extraArgs:
-    - --kubelet-insecure-tls: true
-    - --kubelet-preferred-address-types: InternalIP,ExternalIP,Hostname
-    - --metric-resolution: 120s
-    - --cert-dir: /tmp
-  telegraf-operator.enabled:
-    enabled: true
+
   kube-prometheus-stack:
+    prometheus-node-exporter:
+      service:
+        port: 9200
+        targetPort: 9200
+
     prometheusOperator:
       denyNamespaces:
       - openshift-apiserver
@@ -73,3 +71,11 @@ spec:
       - openshift-sdn
       - openshift-service-ca-operator
       - openshift-user-workload-monitoring
+
+  metrics-server:
+    enabled: true
+    apiService:
+      create: false
+
+  telegraf-operator:
+    enabled: true

@@ -67,14 +67,10 @@ kube-prometheus-stack:
     - openshift-service-ca-operator
     - openshift-user-workload-monitoring
 
-# metrics-server:
-# TODO: enable metrics server
-#   enabled: true
-#   extraArgs:
-#     - --kubelet-insecure-tls: true
-#     - --kubelet-preferred-address-types: InternalIP,ExternalIP,Hostname
-#     - --metric-resolution: 120s
-#     - --cert-dir: /tmp
+metrics-server:
+  enabled: true
+  apiService:
+    create: false
 
 telegraf-operator:
   enabled: true
