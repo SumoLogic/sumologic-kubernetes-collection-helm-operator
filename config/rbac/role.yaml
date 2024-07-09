@@ -106,8 +106,13 @@ rules:
 - apiGroups:
   - networking.k8s.io
   verbs:
-  - list
-  - watch
+  - '*'
+  resources:
+  - networkpolicies
+- apiGroups:
+  - networkpolicies.networking.k8s.io
+  verbs:
+  - '*'
   resources:
   - networkpolicies
 - apiGroups:
@@ -190,8 +195,7 @@ rules:
 - apiGroups:
   - autoscaling
   verbs:
-  - list
-  - watch
+  - '*'
   resources:
   - horizontalpodautoscalers
 - apiGroups:
@@ -246,6 +250,12 @@ rules:
   - opentelemetry.io
   resources:
   - instrumentations
+  verbs:
+  - '*'
+- apiGroups:
+  - opentelemetry.io
+  resources:
+  - opentelemetrycollectors
   verbs:
   - '*'
 
