@@ -37,8 +37,8 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set opentelemetry-operator.manager.autoInstrumentationImage.java.tag=7fdb03d08173964f234f8262e872f67a42527173195b2e39cf56581c6a784f92 \
   --set opentelemetry-operator.manager.autoInstrumentationImage.nodejs.repository=public.ecr.aws/sumologic/autoinstrumentation-nodejs@sha256 \
   --set opentelemetry-operator.manager.autoInstrumentationImage.nodejs.tag=f6d2109be49cbfc725ca7f0ebbc06b74c699e55a7f18690e9959de8bcf294028 \
-  --set opentelemetry-operator.manager.autoInstrumentationImage.python.repository=public.ecr.aws/sumologic/autoinstrumentation-nodejs@sha256 \
-  --set opentelemetry-operator.manager.autoInstrumentationImage.python.tag=f6d2109be49cbfc725ca7f0ebbc06b74c699e55a7f18690e9959de8bcf294028 \
+  --set opentelemetry-operator.manager.autoInstrumentationImage.python.repository=public.ecr.aws/sumologic/autoinstrumentation-python@sha256 \
+  --set opentelemetry-operator.manager.autoInstrumentationImage.python.tag=2cf6a7fb9680539a1c352c24827cd01e152e27d865916e6112a07c8c94f32973 \
   --set opentelemetry-operator.manager.collectorImage.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
   --set opentelemetry-operator.manager.collectorImage.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
   --set opentelemetry-operator.manager.collectorImage.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
