@@ -25,12 +25,11 @@
     kube-prometheus-stack.prometheusOperator.image.sha: '{{ ("$RELATED_IMAGE_PROMETHEUS_OPERATOR"
       | split ":")._1 }}'
     kube-prometheus-stack.prometheusOperator.image.tag: v0.59.2-ubi
-    kube-prometheus-stack.prometheusOperator.prometheusConfigReloader.image.repository: ''
-    kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.repository: '{{
+    kube-prometheus-stack.prometheusOperator.prometheusConfigReloader.image.repository: '{{
       ("$RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER" | split "@")._0 }}'
-    kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.sha: '{{
+    kube-prometheus-stack.prometheusOperator.prometheusConfigReloader.image.sha: '{{
       ("$RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER" | split ":")._1 }}'
-    kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.tag: v0.59.2-ubi
+    kube-prometheus-stack.prometheusOperator.prometheusConfigReloader.image.tag: v0.59.2-ubi
     kube-prometheus-stack.prometheusOperator.thanosImage.repository: '{{ ("$RELATED_IMAGE_THANOS"
       | split "@")._0 }}'
     kube-prometheus-stack.prometheusOperator.thanosImage.sha: '{{ ("$RELATED_IMAGE_THANOS"
