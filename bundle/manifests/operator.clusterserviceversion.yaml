@@ -385,7 +385,7 @@ spec:
                 - name: RELATED_IMAGE_AUTOINSTRUMENTATION_PYTHON
                   value: registry.connect.redhat.com/sumologic/autoinstrumentation-python@sha256:2cf6a7fb9680539a1c352c24827cd01e152e27d865916e6112a07c8c94f32973
                 - name: RELATED_IMAGE_BUSYBOX
-                  value: registry.connect.redhat.com/sumologic/busybox@sha256:ceace4beb7db070ae30589a7ef11d68b0435916d6220abccac9396618c2514ed
+                  value: registry.connect.redhat.com/sumologic/busybox@sha256:960945a7d586d7d2799311af97f4d17affb9f7c39c818d7912f138ae164664fa
                 - name: RELATED_IMAGE_KUBE_RBAC_PROXY
                   value: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:6081af347a86a9cd51232f60e9f5567bdaddf0377927a462ced91524ce80bf95
                 - name: RELATED_IMAGE_KUBE_STATE_METRICS
@@ -507,7 +507,7 @@ spec:
     name: RELATED_IMAGE_AUTOINSTRUMENTATION_NODEJS
   - image: registry.connect.redhat.com/sumologic/autoinstrumentation-python@sha256:2cf6a7fb9680539a1c352c24827cd01e152e27d865916e6112a07c8c94f32973
     name: RELATED_IMAGE_AUTOINSTRUMENTATION_PYTHON
-  - image: registry.connect.redhat.com/sumologic/busybox@sha256:ceace4beb7db070ae30589a7ef11d68b0435916d6220abccac9396618c2514ed
+  - image: registry.connect.redhat.com/sumologic/busybox@sha256:960945a7d586d7d2799311af97f4d17affb9f7c39c818d7912f138ae164664fa
     name: RELATED_IMAGE_BUSYBOX
   - image: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:6081af347a86a9cd51232f60e9f5567bdaddf0377927a462ced91524ce80bf95
     name: RELATED_IMAGE_KUBE_RBAC_PROXY
