@@ -23,7 +23,7 @@ metadata:
       \       }\n            }\n        }\n    }\n]"
     capabilities: Basic Install
     categories: Logging & Tracing,Monitoring
-    containerImage: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:3a8af118243308c704119200b5a561072ed185703c5131e1e1fc78fcf661808a
+    containerImage: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:0d4562c573658c67c140c64428354e91872873bff4a2f6994d556d05115d237f
     createdAt: '2023-09-05T10:34:15Z'
     operators.operatorframework.io/builder: operator-sdk-v1.6.1+git
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
@@ -410,7 +410,7 @@ spec:
                   value: registry.connect.redhat.com/sumologic/telegraf@sha256:ca396dad12a289aea9136da713020d31b179e9f49aae61c48332d61086d1d059
                 - name: RELATED_IMAGE_THANOS
                   value: registry.connect.redhat.com/sumologic/thanos@sha256:323ff1e3500fdbf594acfca19639911b5ed8d0a527b9742c264d5f5b1ce5d4cc
-                image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:3a8af118243308c704119200b5a561072ed185703c5131e1e1fc78fcf661808a
+                image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:0d4562c573658c67c140c64428354e91872873bff4a2f6994d556d05115d237f
                 livenessProbe:
                   httpGet:
                     path: /healthz
