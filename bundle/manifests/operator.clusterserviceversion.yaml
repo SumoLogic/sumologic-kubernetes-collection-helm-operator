@@ -170,8 +170,13 @@ spec:
           resources:
           - networkpolicies
           verbs:
-          - list
-          - watch
+          - '*'
+        - apiGroups:
+          - networkpolicies.networking.k8s.io
+          resources:
+          - networkpolicies
+          verbs:
+          - '*'
         - apiGroups:
           - security.openshift.io
           resources:
@@ -254,8 +259,7 @@ spec:
           resources:
           - horizontalpodautoscalers
           verbs:
-          - list
-          - watch
+          - '*'
         - apiGroups:
           - certificates.k8s.io
           resources:
@@ -320,6 +324,12 @@ spec:
           - opentelemetry.io
           resources:
           - instrumentations
+          verbs:
+          - '*'
+        - apiGroups:
+          - opentelemetry.io
+          resources:
+          - opentelemetrycollectors
           verbs:
           - '*'
         serviceAccountName: sumologic-helm-operator
