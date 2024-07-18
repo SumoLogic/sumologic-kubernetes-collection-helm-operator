@@ -24,7 +24,7 @@ metadata:
     capabilities: Basic Install
     categories: Logging & Tracing,Monitoring
     containerImage: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:0d4562c573658c67c140c64428354e91872873bff4a2f6994d556d05115d237f
-    createdAt: '2023-09-05T10:34:15Z'
+    createdAt: '2024-07-18T11:00:00Z'
     operators.operatorframework.io/builder: operator-sdk-v1.6.1+git
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
     repository: https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator.git
