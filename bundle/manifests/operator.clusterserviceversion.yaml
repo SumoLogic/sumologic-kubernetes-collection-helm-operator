@@ -29,6 +29,16 @@ metadata:
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
     repository: https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator.git
     support: Sumo Logic
+    operators.openshift.io/valid-subscription: ''
+    features.operators.openshift.io/disconnected: 'true'
+    features.operators.openshift.io/fips-compliant: 'false'
+    features.operators.openshift.io/proxy-aware: 'true'
+    features.operators.openshift.io/tls-profiles: 'false'
+    features.operators.openshift.io/token-auth-aws: 'false'
+    features.operators.openshift.io/token-auth-azure: 'false'
+    features.operators.openshift.io/token-auth-gcp: 'false'
+    features.operators.openshift.io/cnf: 'false'
+    features.operators.openshift.io/csi: 'false'
   name: sumologic-kubernetes-collection-helm-operator.v4.9.0-1
   namespace: placeholder
 spec:
