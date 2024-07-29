@@ -12,7 +12,11 @@ This document describes steps required to update the Sumo Logic Kubernetes Colle
    make verify > images.txt
    ```
 
-1. Check the content of `images.txt` and make sure that all images are available - no `MISSING` entries in the `images.txt`.
+1. Check the content of `images.txt` and make sure that all images are available - no `MISSING` entries in the `images.txt`, e.g.
+
+   ```bash
+   cat images.txt | grep 'MISSING'
+   ```
 
 1. Check the content of `images.txt` and remove duplicated entries for single component (multiple versions of container images for single component).
    At this moment it is known that we have two versions for `busybox` and `kube-rbac-proxy`, remove one of the version leaving the only one.
