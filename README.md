@@ -2,6 +2,8 @@
 
 Sumo Logic Kubernetes Collection Helm Operator for the [Sumo Logic Kubernetes Collection Helm Chart][helm-chart-repo].
 
+This project was generated using [Operator SDK][operator-sdk].
+
 **Supported platforms:**
 
 | Sumo Logic Kubernetes Collection Helm Operator version | OpenShift version                                                      |
@@ -91,33 +93,39 @@ for default configuration you should see similar list of Pods:
 ```bash
 $ kubectl get pods -n openshift-operators
 NAME                                                   READY   STATUS    RESTARTS   AGE
-collection-fluent-bit-2hgvs                            1/1     Running   0          3m42s
-collection-fluent-bit-2slb4                            1/1     Running   0          3m42s
-collection-fluent-bit-4p2km                            1/1     Running   0          3m42s
-collection-fluent-bit-5rkwn                            1/1     Running   0          3m42s
-collection-fluent-bit-7mpsl                            1/1     Running   0          3m41s
-collection-fluent-bit-fzvzv                            1/1     Running   0          3m42s
-collection-fluent-bit-j4xbh                            1/1     Running   0          3m41s
-collection-fluent-bit-qvklb                            1/1     Running   0          3m42s
-collection-kube-prometheus-operator-7dddffd7cf-jp4qp   1/1     Running   0          3m42s
-collection-kube-state-metrics-864f877555-khjzv         1/1     Running   0          3m42s
-collection-prometheus-node-exporter-5smcs              1/1     Running   0          3m42s
-collection-prometheus-node-exporter-6qd6b              1/1     Running   0          3m41s
-collection-prometheus-node-exporter-8gl59              1/1     Running   0          3m41s
-collection-prometheus-node-exporter-g67ws              1/1     Running   0          3m41s
-collection-prometheus-node-exporter-hgfsw              1/1     Running   0          3m41s
-collection-prometheus-node-exporter-qpnfv              1/1     Running   0          3m42s
-collection-prometheus-node-exporter-xkcjn              1/1     Running   0          3m42s
-collection-prometheus-node-exporter-z6z9b              1/1     Running   0          3m41s
-collection-sumologic-fluentd-events-0                  1/1     Running   0          3m41s
-collection-sumologic-fluentd-logs-0                    1/1     Running   0          3m41s
-collection-sumologic-fluentd-logs-1                    1/1     Running   0          3m41s
-collection-sumologic-fluentd-logs-2                    1/1     Running   0          3m41s
-collection-sumologic-fluentd-metrics-0                 1/1     Running   0          3m41s
-collection-sumologic-fluentd-metrics-1                 1/1     Running   0          3m41s
-collection-sumologic-fluentd-metrics-2                 1/1     Running   0          3m41s
-prometheus-collection-kube-prometheus-prometheus-0     3/3     Running   1          3m22s
-sumologic-helm-operator-84678d8744-qlclc               2/2     Running   0          64m
+collection-kube-state-metrics-75bfd69587-5gchw                  1/1     Running   0               3m
+collection-opentelemetry-operator-5f99bfbf4d-v4v2l              2/2     Running   0               3m
+collection-prometheus-node-exporter-4rnqv                       1/1     Running   0               2m59s
+collection-prometheus-node-exporter-8wfw7                       1/1     Running   0               2m59s
+collection-prometheus-node-exporter-9g7c5                       1/1     Running   0               3m
+collection-prometheus-node-exporter-k6xfz                       1/1     Running   0               3m
+collection-prometheus-node-exporter-lh88z                       1/1     Running   0               3m
+collection-prometheus-node-exporter-s4bql                       1/1     Running   0               2m59s
+collection-prometheus-node-exporter-xgrrd                       1/1     Running   0               2m59s
+collection-prometheus-node-exporter-zq4ld                       1/1     Running   0               2m59s
+collection-sumologic-metrics-collector-0                        1/1     Running   0               2m36s
+collection-sumologic-metrics-targetallocator-6db5f4dc9d-8dzd5   1/1     Running   0               2m36s
+collection-sumologic-otelcol-events-0                           1/1     Running   0               3m
+collection-sumologic-otelcol-instrumentation-0                  1/1     Running   0               3m
+collection-sumologic-otelcol-instrumentation-1                  1/1     Running   0               2m45s
+collection-sumologic-otelcol-instrumentation-2                  1/1     Running   0               2m45s
+collection-sumologic-otelcol-logs-0                             1/1     Running   0               3m
+collection-sumologic-otelcol-logs-1                             1/1     Running   0               2m45s
+collection-sumologic-otelcol-logs-2                             1/1     Running   0               2m45s
+collection-sumologic-otelcol-logs-collector-7562c               1/1     Running   0               3m
+collection-sumologic-otelcol-logs-collector-8phqz               1/1     Running   0               3m
+collection-sumologic-otelcol-logs-collector-9xscf               1/1     Running   0               3m
+collection-sumologic-otelcol-logs-collector-b96f6               1/1     Running   0               3m
+collection-sumologic-otelcol-logs-collector-kq924               1/1     Running   0               2m59s
+collection-sumologic-otelcol-logs-collector-l8nsh               1/1     Running   0               3m
+collection-sumologic-otelcol-logs-collector-pmdn7               1/1     Running   0               3m
+collection-sumologic-otelcol-logs-collector-tp9xx               1/1     Running   0               3m
+collection-sumologic-otelcol-metrics-0                          1/1     Running   0               3m
+collection-sumologic-otelcol-metrics-1                          1/1     Running   0               2m45s
+collection-sumologic-otelcol-metrics-2                          1/1     Running   0               2m45s
+collection-sumologic-traces-gateway-876fb5c65-mkzqs             1/1     Running   0               3m
+collection-sumologic-traces-sampler-ff74c5cf4-wlsw4             1/1     Running   0               3m
+sumologic-helm-operator-7bcd46469b-nglnz                        2/2     Running   0               9m36s
 ```
 
 ### Viewing Data In Sumo Logic
@@ -140,3 +148,4 @@ Please refer to our [Contributing](CONTRIBUTING.md) documentation to get started
 [helm-chart-configuration]: https://github.com/SumoLogic/sumologic-kubernetes-collection/blob/release-v2.1/deploy/helm/sumologic/README.md#configuration
 [crd]: config/crd/bases/helm-operator.sumologic.com_sumologiccollections.yaml
 [values.yaml]: https://github.com/SumoLogic/sumologic-kubernetes-collection/blob/release-v2.1/deploy/helm/sumologic/values.yaml
+[operator-sdk]: https://github.com/operator-framework/operator-sdk
