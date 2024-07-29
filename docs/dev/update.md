@@ -117,21 +117,22 @@ This document describes steps required to update the Sumo Logic Kubernetes Colle
    - files in [samples directory](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/tree/main/config/samples)
 1. Update example configuration in [bundle/manifests/operator.clusterserviceversion.yaml](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/blob/main/bundle/manifests/operator.clusterserviceversion.yaml)
 
-   ```
+   ```bash
    cat config/samples/default_openshift.yaml | python3 -c 'import sys, yaml, json; json.dump([yaml.safe_load(sys.stdin)], sys.stdout, indent=4)' > config/samples/default_openshift.json
-	EXAMPLE=$(cat config/samples/default_openshift.json) yq eval '.metadata.annotations.alm-examples |= strenv(EXAMPLE)' -P -i bundle/manifests/operator.clusterserviceversion.yaml
+   EXAMPLE=$(cat config/samples/default_openshift.json) yq eval '.metadata.annotations.alm-examples |= strenv(EXAMPLE)' -P -i bundle/manifests/operator.clusterserviceversion.yaml
    ```
 
 1. Test the Sumo Logic Kubernetes Collection Helm Chart with UBI based container images and fix issues.
    To test you can use:
 
-   ```
+   ```bash
    make deploy-helm-chart
    ```
+
 1. Build Helm Operator image and test the Sumo Logic Kubernetes Collection Helm Operator, fix occurring issues.
    To test you can use following commands:
 
-   ```
+   ```bash
    echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin
    export IMG=ghcr.io/<YOUR GITHUB ID>/sumologic-kubernetes-collection-helm-operator:<IMAGE TAG>
    make docker-build IMG="${IMG}"
@@ -143,7 +144,7 @@ This document describes steps required to update the Sumo Logic Kubernetes Colle
 
 To update [bundle.yaml](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/blob/main/bundle.yaml) use following command:
 
-```
+```bash
 make generate-bundle
 mv generated_bundle.yaml bundle.yaml 
 ```
