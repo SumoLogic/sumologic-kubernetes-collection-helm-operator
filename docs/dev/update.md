@@ -155,7 +155,37 @@ mv generated_bundle.yaml bundle.yaml
 
 1. Update supported OpenShift versions, please see [com.redhat.openshift.versions](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/blob/315922c7b75d2359c674505833da40c25aa5aae3/bundle/metadata/annotations.yaml#L18) annotation.
 
-1. Prepare new release, please see [this](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/blob/main/docs/dev/release.md) instruction.
+## Prepare new version of Helm Operator
+
+1. Prepare new release, using the instruction below:
+
+   - Prepare release pull request with changes necessary to create new version of Helm operator
+      (update version, names, description, creation date),
+      see [example pull request](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/pull/35).
+
+   - Create the release tag for commit with Helm Chart version change, e.g.
+
+      ```bash
+      git tag -a v2.1.1-0-rc.0 -m "Release v2.1.1-0-rc.0"
+      ```
+
+   - Push the release tag, e.g.
+
+      ```bash
+      git push origin v2.1.1-0-rc.0
+      ```
+
+   - For major and minor version change prepare release branch, e.g.
+
+       ```bash
+       git checkout -b release-v2.1.0
+       git push origin release-v2.1.0
+       ```
+
+   - Cut the release
+      - Go to https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/releases and click "Draft a new release".
+      - Compare changes since the last release.
+      - Prepare release notes.
 
 1. Test new Helm Operator version, please use [this](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/blob/main/docs/dev/test.md) instruction (please omit first step and use images created for the new Helm Operator version).
 
@@ -167,4 +197,4 @@ mv generated_bundle.yaml bundle.yaml
 
 1. Prepare pull request to [redhat-marketplace-operators](https://github.com/redhat-openshift-ecosystem/redhat-marketplace-operators), please see [example pull request](https://github.com/redhat-openshift-ecosystem/redhat-marketplace-operators/pull/546).
 
-1. Make sure that new version of Helm Operator is avialable on the desired platforms.
+1. Make sure that new version of Helm Operator is available on the desired platforms.
