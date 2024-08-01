@@ -28,7 +28,7 @@ jobs:
         run: |
           sudo wget -q "https://github.com/operator-framework/operator-registry/releases/download/${OPM_VERSION}/linux-amd64-opm" -O /usr/bin/opm && sudo chmod +x /usr/bin/opm
         env:
-          OPM_VERSION: v1.14.3
+          OPM_VERSION: v1.45.0
 
       - name: Checkout submodules
         run: git submodule update --init
