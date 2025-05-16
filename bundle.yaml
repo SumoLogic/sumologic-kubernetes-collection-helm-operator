@@ -533,7 +533,7 @@ spec:
           value: registry.connect.redhat.com/sumologic/telegraf@sha256:75efd2e509c6017ea0fc5c9103ce068cbc89087b16506a4ef48cb5ff00eab84e
         - name: RELATED_IMAGE_THANOS
           value: registry.connect.redhat.com/sumologic/thanos@sha256:5f132bb32e337ed474cb031ae1fcb0320e493097e81ba6915bd1f5361687529a
-        image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:4.9.0-2
+        image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:4.9.0-3
         livenessProbe:
           httpGet:
             path: /healthz
