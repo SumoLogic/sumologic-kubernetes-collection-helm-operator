@@ -1,9 +1,9 @@
 # Build the manager binary
-FROM quay.io/operator-framework/helm-operator:v1.33.0
+FROM quay.io/operator-framework/helm-operator:v1.39.2
 
 ARG VERSION=${VERSION}
 ARG RELEASE_NUMBER=${RELEASE_NUMBER}
-ARG HELM_VERSION=3.15.3
+ARG HELM_VERSION=3.17.0
 
 LABEL name="Sumologic Kubernetes Collection Helm Operator"
 LABEL maintainer="collection@sumologic.com"
