@@ -13,7 +13,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set kube-prometheus-stack.prometheus-node-exporter.image.repository=public.ecr.aws/sumologic/node-exporter@sha256 \
   --set kube-prometheus-stack.prometheus-node-exporter.image.tag=685b59ebf0ce3c7e32f9de83359fdfc66a5143660f96b82c8ef8964c727bb2e5 \
   --set kube-prometheus-stack.prometheus.prometheusSpec.image.repository=public.ecr.aws/sumologic/prometheus@sha256 \
-  --set kube-prometheus-stack.prometheus.prometheusSpec.image.sha=92c173c757018178920385bbb93d826ae5b5cab4706ac6b239e919ae6b3520b4 \
+  --set kube-prometheus-stack.prometheus.prometheusSpec.image.sha=4e483f18b2fc1642a32c6a41a802e5351627173710fec674d461a0e4109568a7 \
   --set kube-prometheus-stack.prometheus.prometheusSpec.image.tag=v2.39.0-ubi \
   --set kube-prometheus-stack.prometheusOperator.image.repository=public.ecr.aws/sumologic/prometheus-operator@sha256 \
   --set kube-prometheus-stack.prometheusOperator.image.sha=f98f265fd0609da354ca6cbb6ea3b56a88ebccfb2daff14896f7004aa4ffa174 \
@@ -22,7 +22,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.sha=03d3ca5b7c96c88ff8de363371d89ead3be6ac0b74653da1ac2231bd1b0e386d \
   --set kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.tag=v0.59.2-ubi \
   --set kube-prometheus-stack.prometheusOperator.thanosImage.repository=public.ecr.aws/sumologic/thanos@sha256 \
-  --set kube-prometheus-stack.prometheusOperator.thanosImage.sha=323ff1e3500fdbf594acfca19639911b5ed8d0a527b9742c264d5f5b1ce5d4cc \
+  --set kube-prometheus-stack.prometheusOperator.thanosImage.sha=5f132bb32e337ed474cb031ae1fcb0320e493097e81ba6915bd1f5361687529a \
   --set kube-prometheus-stack.prometheusOperator.thanosImage.tag=v0.28.0-ubi \
   --set metadata.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
   --set metadata.image.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
@@ -49,7 +49,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set otelevents.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
   --set otelevents.image.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
   --set otellogs.daemonset.initContainers.changeowner.image.repository=public.ecr.aws/sumologic/busybox@sha256 \
-  --set otellogs.daemonset.initContainers.changeowner.image.tag=bc4b632a545fb8b797aa99d1e7cee8c042332c7cc849df30c945a8a7bd9f6c3a \
+  --set otellogs.daemonset.initContainers.changeowner.image.tag=209bc8e0b1d958fc699f3bb75b1248544e372ad35cdc46c991bd1698f641e1f9 \
   --set otellogs.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
   --set otellogs.image.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
   --set pvcCleaner.job.image.repository=public.ecr.aws/sumologic/kubernetes-tools-kubectl@sha256 \
@@ -63,7 +63,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set sumologic.setup.job.image.repository=public.ecr.aws/sumologic/kubernetes-setup@sha256 \
   --set sumologic.setup.job.image.tag=21819dcc791144843ebed17abf7304e2cefd711995027a8737f2d9ae14418811 \
   --set sumologic.setup.job.initContainerImage.repository=public.ecr.aws/sumologic/busybox@sha256 \
-  --set sumologic.setup.job.initContainerImage.tag=bc4b632a545fb8b797aa99d1e7cee8c042332c7cc849df30c945a8a7bd9f6c3a \
+  --set sumologic.setup.job.initContainerImage.tag=209bc8e0b1d958fc699f3bb75b1248544e372ad35cdc46c991bd1698f641e1f9 \
   --set tailing-sidecar-operator.kubeRbacProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
   --set tailing-sidecar-operator.kubeRbacProxy.image.tag=6081af347a86a9cd51232f60e9f5567bdaddf0377927a462ced91524ce80bf95 \
   --set tailing-sidecar-operator.operator.image.repository=public.ecr.aws/sumologic/tailing-sidecar-operator@sha256 \
@@ -71,7 +71,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set tailing-sidecar-operator.sidecar.image.repository=public.ecr.aws/sumologic/tailing-sidecar@sha256 \
   --set tailing-sidecar-operator.sidecar.image.tag=48203fa961951147802711ed4769ab2d42e4adb4593a6e50c639d9cc4fb75242 \
   --set telegraf-operator.image.repository=public.ecr.aws/sumologic/telegraf-operator-ubi \
-  --set telegraf-operator.image.sidecarImage=public.ecr.aws/sumologic/telegraf@sha256:f9883d1e9e0baf0d326a7c2c5503e011b36bf0bff22d6470c2f6d2b39fdd11fb \
+  --set telegraf-operator.image.sidecarImage=public.ecr.aws/sumologic/telegraf@sha256:75efd2e509c6017ea0fc5c9103ce068cbc89087b16506a4ef48cb5ff00eab84e \
   --set tracesGateway.deployment.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
   --set tracesGateway.deployment.image.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
   --set tracesSampler.deployment.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
