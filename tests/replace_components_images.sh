@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 sed -i.bak "s#registry.connect.redhat.com/sumologic/autoinstrumentation-dotnet@sha256:f4f385c4489c74b5c43f2fe6b6620a9eb8d9ecab470567236b3c45f636106640#public.ecr.aws/sumologic/autoinstrumentation-dotnet@sha256:f4f385c4489c74b5c43f2fe6b6620a9eb8d9ecab470567236b3c45f636106640#g" bundle.yaml
 sed -i.bak "s#registry.connect.redhat.com/sumologic/autoinstrumentation-java@sha256:242958b7d8905f4ac02f6ad38897ba58b9badf2a6213a389e67dcc71fee3630c#public.ecr.aws/sumologic/autoinstrumentation-java@sha256:242958b7d8905f4ac02f6ad38897ba58b9badf2a6213a389e67dcc71fee3630c#g" bundle.yaml
 sed -i.bak "s#registry.connect.redhat.com/sumologic/autoinstrumentation-nodejs@sha256:c206eef4fdecaa58b4f01e5e7f0dbd74e9606eab2b4debf47461d36191e248d1#public.ecr.aws/sumologic/autoinstrumentation-nodejs@sha256:c206eef4fdecaa58b4f01e5e7f0dbd74e9606eab2b4debf47461d36191e248d1#g" bundle.yaml
