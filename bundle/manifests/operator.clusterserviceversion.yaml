@@ -364,7 +364,7 @@ spec:
                 - --upstream=http://127.0.0.1:8080/
                 - --logtostderr=true
                 - --v=10
-                image: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:48a94cd74a9f7466fa6273f8823da2569f5f75a8df9723d5876afc364dd8556c
+                image: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:6081af347a86a9cd51232f60e9f5567bdaddf0377927a462ced91524ce80bf95
                 name: kube-rbac-proxy
                 ports:
                 - containerPort: 8443
@@ -397,7 +397,7 @@ spec:
                 - name: RELATED_IMAGE_BUSYBOX
                   value: registry.connect.redhat.com/sumologic/busybox@sha256:209bc8e0b1d958fc699f3bb75b1248544e372ad35cdc46c991bd1698f641e1f9
                 - name: RELATED_IMAGE_KUBE_RBAC_PROXY
-                  value: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:48a94cd74a9f7466fa6273f8823da2569f5f75a8df9723d5876afc364dd8556c
+                  value: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:6081af347a86a9cd51232f60e9f5567bdaddf0377927a462ced91524ce80bf95
                 - name: RELATED_IMAGE_KUBE_STATE_METRICS
                   value: registry.connect.redhat.com/sumologic/kube-state-metrics@sha256:473614d1c0de0f9f0b5314eab40d3172f5180332a2009be590ce474b85cb898e
                 - name: RELATED_IMAGE_KUBERNETES_SETUP
@@ -519,7 +519,7 @@ spec:
     name: RELATED_IMAGE_AUTOINSTRUMENTATION_PYTHON
   - image: registry.connect.redhat.com/sumologic/busybox@sha256:209bc8e0b1d958fc699f3bb75b1248544e372ad35cdc46c991bd1698f641e1f9
     name: RELATED_IMAGE_BUSYBOX
-  - image: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:48a94cd74a9f7466fa6273f8823da2569f5f75a8df9723d5876afc364dd8556c
+  - image: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:6081af347a86a9cd51232f60e9f5567bdaddf0377927a462ced91524ce80bf95
     name: RELATED_IMAGE_KUBE_RBAC_PROXY
   - image: registry.connect.redhat.com/sumologic/kube-state-metrics@sha256:473614d1c0de0f9f0b5314eab40d3172f5180332a2009be590ce474b85cb898e
     name: RELATED_IMAGE_KUBE_STATE_METRICS
