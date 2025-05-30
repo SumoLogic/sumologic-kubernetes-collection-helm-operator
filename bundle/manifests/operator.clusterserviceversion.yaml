@@ -23,7 +23,7 @@ metadata:
       \       }\n            }\n        }\n    }\n]"
     capabilities: Basic Install
     categories: Logging & Tracing,Monitoring
-    containerImage: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:f5bda9fe35c32141b1af41785e8b2ddfe386bd4ceef6209bdeb67d60d8becbaf
+    containerImage: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:8deedbf22c39e251d001f593425471d0e6706707198ce8b288648202244aa55b
     createdAt: '2024-07-19T10:48:00Z'
     operators.operatorframework.io/builder: operator-sdk-v1.6.1+git
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
@@ -430,7 +430,7 @@ spec:
                   value: registry.connect.redhat.com/sumologic/telegraf@sha256:75efd2e509c6017ea0fc5c9103ce068cbc89087b16506a4ef48cb5ff00eab84e
                 - name: RELATED_IMAGE_THANOS
                   value: registry.connect.redhat.com/sumologic/thanos@sha256:5f132bb32e337ed474cb031ae1fcb0320e493097e81ba6915bd1f5361687529a
-                image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:f5bda9fe35c32141b1af41785e8b2ddfe386bd4ceef6209bdeb67d60d8becbaf
+                image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:8deedbf22c39e251d001f593425471d0e6706707198ce8b288648202244aa55b
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -507,7 +507,7 @@ spec:
     name: Sumo Logic
     url: https://www.sumologic.com/
   relatedImages:
-  - image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:f5bda9fe35c32141b1af41785e8b2ddfe386bd4ceef6209bdeb67d60d8becbaf
+  - image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:8deedbf22c39e251d001f593425471d0e6706707198ce8b288648202244aa55b
     name: sumologic-kubernetes-collection-helm-operator
   - image: registry.connect.redhat.com/sumologic/autoinstrumentation-dotnet@sha256:e99182dd7c0c8611cdc852bcc2e0866e635077b50b7e739022269cc8721f4109
     name: RELATED_IMAGE_AUTOINSTRUMENTATION_DOTNET
