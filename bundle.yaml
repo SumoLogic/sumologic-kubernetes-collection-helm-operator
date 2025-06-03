@@ -502,7 +502,7 @@ spec:
         - name: RELATED_IMAGE_KUBE_RBAC_PROXY
           value: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:48a94cd74a9f7466fa6273f8823da2569f5f75a8df9723d5876afc364dd8556c
         - name: RELATED_IMAGE_KUBE_STATE_METRICS
-          value: registry.connect.redhat.com/sumologic/kube-state-metrics@sha256:sha256:3551ededa327a35db798ec8286cd843580e3ae395d2231e041e8c4b7621127ee
+          value: registry.connect.redhat.com/sumologic/kube-state-metrics@sha256:3551ededa327a35db798ec8286cd843580e3ae395d2231e041e8c4b7621127ee
         - name: RELATED_IMAGE_KUBERNETES_SETUP
           value: registry.connect.redhat.com/sumologic/kubernetes-setup@sha256:f07eaf68fa11ffc708e4485a83bd3763fc5712f7d73d29edfe5b9c9e08f05df6
         - name: RELATED_IMAGE_KUBERNETES_TOOLS_KUBECTL

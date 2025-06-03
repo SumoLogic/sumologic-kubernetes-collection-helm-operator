@@ -9,7 +9,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set instrumentation.instrumentationJobImage.image.repository=public.ecr.aws/sumologic/kubernetes-tools-kubectl@sha256 \
   --set instrumentation.instrumentationJobImage.image.tag=d7570aaf54028d9ae699ecab56f0885bb3603b7b5e1717b3961935c2c1621365 \
   --set kube-prometheus-stack.kube-state-metrics.image.repository=public.ecr.aws/sumologic/kube-state-metrics@sha256 \
-  --set kube-prometheus-stack.kube-state-metrics.image.tag=sha256:3551ededa327a35db798ec8286cd843580e3ae395d2231e041e8c4b7621127ee \
+  --set kube-prometheus-stack.kube-state-metrics.image.tag=3551ededa327a35db798ec8286cd843580e3ae395d2231e041e8c4b7621127ee \
   --set kube-prometheus-stack.prometheus-node-exporter.image.repository=public.ecr.aws/sumologic/node-exporter@sha256 \
   --set kube-prometheus-stack.prometheus-node-exporter.image.tag=3e1a592dc2556345dba65b22e366a64748a8e51223facb9d82ec14c71c4a43c1 \
   --set kube-prometheus-stack.prometheus.prometheusSpec.image.repository=public.ecr.aws/sumologic/prometheus@sha256 \
@@ -61,7 +61,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set sumologic.otelcolImage.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
   --set sumologic.otelcolImage.tag=4c575848287e41884ce580c4668996f7f4bfe06e9fcc332a9bea99abf0af8791 \
   --set sumologic.setup.job.image.repository=public.ecr.aws/sumologic/kubernetes-setup@sha256 \
-  --set sumologic.setup.job.image.tag=cb1c61afe6e41ab1d0f05e95443ed858280d7ae44135cec3ded75774f1d0919 \
+  --set sumologic.setup.job.image.tag=cb1c61afe6e41ab1d0f05e95443ed858280d7ae44135cec3ded75774f1d0919e \
   --set sumologic.setup.job.initContainerImage.repository=public.ecr.aws/sumologic/busybox@sha256 \
   --set sumologic.setup.job.initContainerImage.tag=209bc8e0b1d958fc699f3bb75b1248544e372ad35cdc46c991bd1698f641e1f9 \
   --set tailing-sidecar-operator.kubeRbacProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
