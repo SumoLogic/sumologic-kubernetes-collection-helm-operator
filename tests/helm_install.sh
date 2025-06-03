@@ -3,7 +3,7 @@
 readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
 
 helm upgrade --install test-openshift sumologic/sumologic \
-  --version 4.9.0 \
+  --version 4.13.0 \
   -n sumologic-system \
   --create-namespace -f "${ROOT_DIR}/tests/values.yaml" \
   --set instrumentation.instrumentationJobImage.image.repository=public.ecr.aws/sumologic/kubernetes-tools-kubectl@sha256 \
@@ -43,7 +43,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set opentelemetry-operator.manager.collectorImage.tag=4c575848287e41884ce580c4668996f7f4bfe06e9fcc332a9bea99abf0af8791 \
   --set opentelemetry-operator.manager.collectorImage.tag=4c575848287e41884ce580c4668996f7f4bfe06e9fcc332a9bea99abf0af8791 \
   --set opentelemetry-operator.manager.image.repository=public.ecr.aws/sumologic/opentelemetry-operator@sha256 \
-  --set opentelemetry-operator.manager.image.tag=5587fe5b7ebfa57ad320ad2521103f908317388d1741c40e5f7be5ed9e5f9ad7 \
+  --set opentelemetry-operator.manager.image.tag=5587fe5b7ebfa57ad320ad2521103f908317388d1741c40e5f7be5ed9e5f9 \
   --set otelcolInstrumentation.statefulset.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
   --set otelcolInstrumentation.statefulset.image.tag=4c575848287e41884ce580c4668996f7f4bfe06e9fcc332a9bea99abf0af8791 \
   --set otelevents.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
