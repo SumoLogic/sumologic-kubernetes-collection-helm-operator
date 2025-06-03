@@ -5,6 +5,7 @@
 *.dll
 *.so
 *.dylib
+*.gitignore
 bin
 
 # editor and IDE paraphernalia
@@ -17,3 +18,4 @@ bin
 config.yaml
 ubuntu-bionic-18.04-cloudimg-console.log
 .vagrant/
+scripts/__pycache__/

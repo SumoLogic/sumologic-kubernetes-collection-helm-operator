@@ -1,9 +1,9 @@
 # Build the manager binary
-FROM quay.io/operator-framework/helm-operator:v1.33.0
+FROM --platform=linux/amd64 quay.io/operator-framework/helm-operator:v1.40.0
 
 ARG VERSION=${VERSION}
 ARG RELEASE_NUMBER=${RELEASE_NUMBER}
-ARG HELM_VERSION=3.15.3
+ARG HELM_VERSION=3.18.2
 
 LABEL name="Sumologic Kubernetes Collection Helm Operator"
 LABEL maintainer="collection@sumologic.com"
@@ -15,7 +15,7 @@ LABEL description="Sumologic Kubernetes Collection Helm Operator deploys https:/
 
 USER root
 
-RUN microdnf update && microdnf install -y tar gzip wget patch && microdnf clean all
+RUN microdnf update -y && microdnf install -y tar gzip wget patch && microdnf clean all
 
 RUN wget "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" && \
     tar -xzvf "helm-v${HELM_VERSION}-linux-amd64.tar.gz" && \
