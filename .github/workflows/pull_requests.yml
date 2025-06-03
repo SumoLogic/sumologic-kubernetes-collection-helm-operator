@@ -8,7 +8,7 @@ on:
 
 jobs:
   check:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v2
       - name: Install shellcheck
@@ -34,7 +34,7 @@ jobs:
         
   test-bundle-status:
     name: Test whether bundle.yaml is up to date
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v2
       - uses: imranismail/setup-kustomize@v2.1.0
@@ -45,7 +45,7 @@ jobs:
 
   test-helm-operator:
     name: Test Helm operator
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
       IMG: sumologic/sumologic-kubernetes-helm-operator:test

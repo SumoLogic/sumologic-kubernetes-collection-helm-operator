@@ -110,7 +110,7 @@ This document describes steps required to update the Sumo Logic Kubernetes Colle
    ```
 
 1. Update Sumo Logic Kubernetes Collection Helm Chart version in [tests](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/tree/main/tests).
-1. Update command used in tests to install the Helm Chart and example configurations for the Helm Oprator according to changes in the new version of the Helm Chart, update following files:
+1. Update command used in tests to install the Helm Chart and example configurations for the Helm Operator according to changes in the new version of the Helm Chart, update following files:
 
    - [helm_install.sh](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/blob/main/tests/helm_install.sh)
    - [test_openshift.yaml](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/blob/main/tests/test_openshift.yaml)
