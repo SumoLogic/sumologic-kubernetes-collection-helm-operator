@@ -10,7 +10,7 @@ spec:
     spec:
       containers:
       - name: kube-rbac-proxy
-        image: registry.connect.redhat.com/sumologic/kube-rbac-proxy:v0.18.0-ubi
+        image: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:48a94cd74a9f7466fa6273f8823da2569f5f75a8df9723d5876afc364dd8556c
         args:
         - "--secure-listen-address=0.0.0.0:8443"
         - "--upstream=http://127.0.0.1:8080/"
