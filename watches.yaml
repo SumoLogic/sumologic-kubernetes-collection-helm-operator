@@ -18,23 +18,23 @@
       | split "@")._0 }}'
     kube-prometheus-stack.prometheus.prometheusSpec.image.sha: '{{ ("$RELATED_IMAGE_PROMETHEUS"
       | split ":")._1 }}'
-    kube-prometheus-stack.prometheus.prometheusSpec.image.tag: v2.39.0-ubi
+    kube-prometheus-stack.prometheus.prometheusSpec.image.tag: v3.0.1-ubi
     kube-prometheus-stack.prometheus.prometheusSpec.thanos.image: $RELATED_IMAGE_THANOS
     kube-prometheus-stack.prometheusOperator.image.repository: '{{ ("$RELATED_IMAGE_PROMETHEUS_OPERATOR"
       | split "@")._0 }}'
     kube-prometheus-stack.prometheusOperator.image.sha: '{{ ("$RELATED_IMAGE_PROMETHEUS_OPERATOR"
       | split ":")._1 }}'
-    kube-prometheus-stack.prometheusOperator.image.tag: v0.59.2-ubi
+    kube-prometheus-stack.prometheusOperator.image.tag: v0.79.1-ubi
     kube-prometheus-stack.prometheusOperator.prometheusConfigReloader.image.repository: '{{
       ("$RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER" | split "@")._0 }}'
     kube-prometheus-stack.prometheusOperator.prometheusConfigReloader.image.sha: '{{
       ("$RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER" | split ":")._1 }}'
-    kube-prometheus-stack.prometheusOperator.prometheusConfigReloader.image.tag: v0.59.2-ubi
+    kube-prometheus-stack.prometheusOperator.prometheusConfigReloader.image.tag: v0.79.1-ubi
     kube-prometheus-stack.prometheusOperator.thanosImage.repository: '{{ ("$RELATED_IMAGE_THANOS"
       | split "@")._0 }}'
     kube-prometheus-stack.prometheusOperator.thanosImage.sha: '{{ ("$RELATED_IMAGE_THANOS"
       | split ":")._1 }}'
-    kube-prometheus-stack.prometheusOperator.thanosImage.tag: v0.28.0-ubi
+    kube-prometheus-stack.prometheusOperator.thanosImage.tag: v0.33.0-ubi
     metadata.image.repository: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR" | split
       ":")._0 }}'
     metadata.image.tag: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR" | split ":")._1
@@ -50,20 +50,20 @@
       | split ":")._0 }}'
     opentelemetry-operator.kubeRBACProxy.image.tag: '{{ ("$RELATED_IMAGE_KUBE_RBAC_PROXY"
       | split ":")._1 }}'
-    opentelemetry-operator.manager.autoInstrumentationImage.dotnet.repository: '{{ ("$RELATED_IMAGE_AUTOINSTRUMENTATION_DOTNET"
-      | split ":")._0 }}'
+    opentelemetry-operator.manager.autoInstrumentationImage.dotnet.repository: '{{
+      ("$RELATED_IMAGE_AUTOINSTRUMENTATION_DOTNET" | split ":")._0 }}'
     opentelemetry-operator.manager.autoInstrumentationImage.dotnet.tag: '{{ ("$RELATED_IMAGE_AUTOINSTRUMENTATION_DOTNET"
       | split ":")._1 }}'
     opentelemetry-operator.manager.autoInstrumentationImage.java.repository: '{{ ("$RELATED_IMAGE_AUTOINSTRUMENTATION_JAVA"
       | split ":")._0 }}'
     opentelemetry-operator.manager.autoInstrumentationImage.java.tag: '{{ ("$RELATED_IMAGE_AUTOINSTRUMENTATION_JAVA"
       | split ":")._1 }}'
-    opentelemetry-operator.manager.autoInstrumentationImage.nodejs.repository: '{{ ("$RELATED_IMAGE_AUTOINSTRUMENTATION_NODEJS"
-      | split ":")._0 }}'
+    opentelemetry-operator.manager.autoInstrumentationImage.nodejs.repository: '{{
+      ("$RELATED_IMAGE_AUTOINSTRUMENTATION_NODEJS" | split ":")._0 }}'
     opentelemetry-operator.manager.autoInstrumentationImage.nodejs.tag: '{{ ("$RELATED_IMAGE_AUTOINSTRUMENTATION_NODEJS"
       | split ":")._1 }}'
-    opentelemetry-operator.manager.autoInstrumentationImage.python.repository: '{{ ("$RELATED_IMAGE_AUTOINSTRUMENTATION_PYTHON"
-      | split ":")._0 }}'
+    opentelemetry-operator.manager.autoInstrumentationImage.python.repository: '{{
+      ("$RELATED_IMAGE_AUTOINSTRUMENTATION_PYTHON" | split ":")._0 }}'
     opentelemetry-operator.manager.autoInstrumentationImage.python.tag: '{{ ("$RELATED_IMAGE_AUTOINSTRUMENTATION_PYTHON"
       | split ":")._1 }}'
     opentelemetry-operator.manager.collectorImage.repository: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
@@ -86,22 +86,22 @@
       | split ":")._0 }}'
     otelcolInstrumentation.statefulset.image.tag: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
       | split ":")._1 }}'
-    otelevents.image.repository: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
-      | split ":")._0 }}'
-    otelevents.image.tag: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
-      | split ":")._1 }}'
+    otelevents.image.repository: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR" |
+      split ":")._0 }}'
+    otelevents.image.tag: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR" | split ":")._1
+      }}'
     otellogs.daemonset.initContainers.changeowner.image.repository: '{{ ("$RELATED_IMAGE_BUSYBOX"
       | split ":")._0 }}'
     otellogs.daemonset.initContainers.changeowner.image.tag: '{{ ("$RELATED_IMAGE_BUSYBOX"
       | split ":")._1 }}'
-    otellogs.image.repository: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
-      | split ":")._0 }}'
-    otellogs.image.tag: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
-      | split ":")._1 }}'
+    otellogs.image.repository: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR" | split
+      ":")._0 }}'
+    otellogs.image.tag: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR" | split ":")._1
+      }}'
     pvcCleaner.job.image.repository: '{{ ("$RELATED_IMAGE_KUBERNETES_TOOLS_KUBECTL"
       | split ":")._0 }}'
-    pvcCleaner.job.image.tag: '{{ ("$RELATED_IMAGE_KUBERNETES_TOOLS_KUBECTL"
-      | split ":")._1 }}'
+    pvcCleaner.job.image.tag: '{{ ("$RELATED_IMAGE_KUBERNETES_TOOLS_KUBECTL" | split
+      ":")._1 }}'
     sumologic.metrics.collector.otelcol.image.repository: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
       | split ":")._0 }}'
     sumologic.metrics.collector.otelcol.image.tag: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
@@ -112,16 +112,16 @@
       | split ":")._1 }}'
     sumologic.otelcolImage.repository: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
       | split ":")._0 }}'
-    sumologic.otelcolImage.tag: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
-      | split ":")._1 }}'
+    sumologic.otelcolImage.tag: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR" | split
+      ":")._1 }}'
     sumologic.setup.job.image.repository: '{{ ("$RELATED_IMAGE_KUBERNETES_SETUP" |
       split ":")._0 }}'
     sumologic.setup.job.image.tag: '{{ ("$RELATED_IMAGE_KUBERNETES_SETUP" | split
       ":")._1 }}'
     sumologic.setup.job.initContainerImage.repository: '{{ ("$RELATED_IMAGE_BUSYBOX"
       | split ":")._0 }}'
-    sumologic.setup.job.initContainerImage.tag: '{{ ("$RELATED_IMAGE_BUSYBOX"
-      | split ":")._1 }}'
+    sumologic.setup.job.initContainerImage.tag: '{{ ("$RELATED_IMAGE_BUSYBOX" | split
+      ":")._1 }}'
     tailing-sidecar-operator.kubeRbacProxy.image.repository: '{{ ("$RELATED_IMAGE_KUBE_RBAC_PROXY"
       | split ":")._0 }}'
     tailing-sidecar-operator.kubeRbacProxy.image.tag: '{{ ("$RELATED_IMAGE_KUBE_RBAC_PROXY"
@@ -139,11 +139,11 @@
     telegraf-operator.image.sidecarImage: $RELATED_IMAGE_TELEGRAF
     telegraf-operator.image.tag: '{{ ("$RELATED_IMAGE_TELEGRAF_OPERATOR" | split ":")._1
       }}'
-    tracesGateway.deployment.image.repository:  '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
+    tracesGateway.deployment.image.repository: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
       | split ":")._0 }}'
     tracesGateway.deployment.image.tag: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
       | split ":")._1 }}'
-    tracesSampler.deployment.image.repository:  '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
+    tracesSampler.deployment.image.repository: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
       | split ":")._0 }}'
     tracesSampler.deployment.image.tag: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
       | split ":")._1 }}'
