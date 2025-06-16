@@ -3,15 +3,15 @@
 readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
 
 helm upgrade --install test-openshift sumologic/sumologic \
-  --version 4.9.0 \
+  --version 4.13.0 \
   -n sumologic-system \
   --create-namespace -f "${ROOT_DIR}/tests/values.yaml" \
   --set instrumentation.instrumentationJobImage.image.repository=public.ecr.aws/sumologic/kubernetes-tools-kubectl@sha256 \
-  --set instrumentation.instrumentationJobImage.image.tag=89ae5ef9c85f6a01d520c8e237e614131cdc81a09f2eade54c9b091b2993e856 \
+  --set instrumentation.instrumentationJobImage.image.tag=d3155b864cc74f327adedf7d013a8f0fcb11c2e73a5655b7cafa848824e80172 \
   --set kube-prometheus-stack.kube-state-metrics.image.repository=public.ecr.aws/sumologic/kube-state-metrics@sha256 \
   --set kube-prometheus-stack.kube-state-metrics.image.tag=3551ededa327a35db798ec8286cd843580e3ae395d2231e041e8c4b7621127ee \
   --set kube-prometheus-stack.prometheus-node-exporter.image.repository=public.ecr.aws/sumologic/node-exporter@sha256 \
-  --set kube-prometheus-stack.prometheus-node-exporter.image.tag=3e1a592dc2556345dba65b22e366a64748a8e51223facb9d82ec14c71c4a43c1 \
+  --set kube-prometheus-stack.prometheus-node-exporter.image.tag=11e9e604432a66d9b388cb1bf70eac077c7f0372d1264342ef927d76b8ef0272 \
   --set kube-prometheus-stack.prometheus.prometheusSpec.image.repository=public.ecr.aws/sumologic/prometheus@sha256 \
   --set kube-prometheus-stack.prometheus.prometheusSpec.image.sha=4e483f18b2fc1642a32c6a41a802e5351627173710fec674d461a0e4109568a7 \
   --set kube-prometheus-stack.prometheus.prometheusSpec.image.tag=v2.39.0-ubi \
@@ -53,7 +53,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set otellogs.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
   --set otellogs.image.tag=4c575848287e41884ce580c4668996f7f4bfe06e9fcc332a9bea99abf0af8791 \
   --set pvcCleaner.job.image.repository=public.ecr.aws/sumologic/kubernetes-tools-kubectl@sha256 \
-  --set pvcCleaner.job.image.tag=89ae5ef9c85f6a01d520c8e237e614131cdc81a09f2eade54c9b091b2993e856 \
+  --set pvcCleaner.job.image.tag=d3155b864cc74f327adedf7d013a8f0fcb11c2e73a5655b7cafa848824e80172 \
   --set sumologic.metrics.collector.otelcol.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
   --set sumologic.metrics.collector.otelcol.image.tag=4c575848287e41884ce580c4668996f7f4bfe06e9fcc332a9bea99abf0af8791 \
   --set sumologic.metrics.remoteWriteProxy.image.repository=public.ecr.aws/sumologic/nginx-unprivileged@sha256 \
