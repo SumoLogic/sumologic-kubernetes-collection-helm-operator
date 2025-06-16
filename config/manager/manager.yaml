@@ -54,7 +54,7 @@ spec:
         - name: RELATED_IMAGE_KUBERNETES_SETUP
           value: registry.connect.redhat.com/sumologic/kubernetes-setup@sha256:f07eaf68fa11ffc708e4485a83bd3763fc5712f7d73d29edfe5b9c9e08f05df6
         - name: RELATED_IMAGE_KUBERNETES_TOOLS_KUBECTL
-          value: registry.connect.redhat.com/sumologic/kubernetes-tools-kubectl@sha256:d87201d8437bd08562937c304d7c189d4f9aad0be1342558fd8b8fa0fb29294e
+          value: registry.connect.redhat.com/sumologic/kubernetes-tools-kubectl@sha256:89ae5ef9c85f6a01d520c8e237e614131cdc81a09f2eade54c9b091b2993e856
         - name: RELATED_IMAGE_METRICS_SERVER
           value: registry.connect.redhat.com/sumologic/metrics-server@sha256:65d2a3ddc4b4183f438fa18b655079c93c905cb9e3b8c54977336205dc1fff07
         - name: RELATED_IMAGE_NGINX_UNPRIVILEGED
@@ -62,11 +62,11 @@ spec:
         - name: RELATED_IMAGE_NODE_EXPORTER
           value: registry.connect.redhat.com/sumologic/node-exporter@sha256:3e1a592dc2556345dba65b22e366a64748a8e51223facb9d82ec14c71c4a43c1
         - name: RELATED_IMAGE_OPENTELEMETRY_OPERATOR
-          value: registry.connect.redhat.com/sumologic/opentelemetry-operator@sha256:e9934702dee31674e5f94ba06425c29897068db7ee8a5aec96bc6ac46ed3c727
+          value: registry.connect.redhat.com/sumologic/opentelemetry-operator@sha256:5587fe5b7ebfa57ad320ad2521103f908317388d1741c40e5f7be5ed9e5f9ad7
         - name: RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER
-          value: registry.connect.redhat.com/sumologic/prometheus-config-reloader@sha256:e78c1636dfd780c81a1b2f753a5e2fa8d2ac3c30ec9c67c46785565d8416ef6e
+          value: registry.connect.redhat.com/sumologic/prometheus-config-reloader@sha256:0b605d36782afd8f50fd631d0e9c7b19d39ce962af89b7a737b2f09a8ceff291
         - name: RELATED_IMAGE_PROMETHEUS_OPERATOR
-          value: registry.connect.redhat.com/sumologic/prometheus-operator@sha256:daa5562ae7c7ae5b8f0f520d1a2942a137f66f104788e2e51ea0c74c8fa0b13f
+          value: registry.connect.redhat.com/sumologic/prometheus-operator@sha256:58a329e6582456b32abebb470086191f8366b927af4703741613993465f116b8
         - name: RELATED_IMAGE_PROMETHEUS
           value: registry.connect.redhat.com/sumologic/prometheus@sha256:0ef6eaf570a40499dd5de92a79593e950bc771b014e0ee6ff7419b4b82a36fcc
         - name: RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR
