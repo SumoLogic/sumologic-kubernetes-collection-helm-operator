@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
-
-helm upgrade test-openshift sumologic/sumologic --install --version 4.13.0 \
+helm upgrade --install test-openshift sumologic/sumologic \
+  --version 4.13.0 \
   -n sumologic-system \
   --create-namespace -f "${ROOT_DIR}/tests/values.yaml" \
   --set instrumentation.instrumentationJobImage.image.repository=public.ecr.aws/sumologic/kubernetes-tools-kubectl@sha256 \
@@ -40,8 +40,7 @@ helm upgrade test-openshift sumologic/sumologic --install --version 4.13.0 \
   --set opentelemetry-operator.manager.autoInstrumentationImage.python.tag=c206eef4fdecaa58b4f01e5e7f0dbd74e9606eab2b4debf47461d36191e248d1 \
   --set opentelemetry-operator.manager.collectorImage.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
   --set opentelemetry-operator.manager.collectorImage.tag=4c575848287e41884ce580c4668996f7f4bfe06e9fcc332a9bea99abf0af8791 \
-  --set opentelemetry-operator.manager.image.repository=public.ecr.aws/sumologic/opentelemetry-operator@sha256 \
-  --set opentelemetry-operator.manager.image.sha=5587fe5b7ebfa57ad320ad2521103f908317388d1741c40e5f7be5ed9e5f9ad \
+  --set opentelemetry-operator.manager.image.repository=public.ecr.aws/sumologic/opentelemetry-operator: \
   --set opentelemetry-operator.manager.image.tag=0.115.0-ubi \
   --set otelcolInstrumentation.statefulset.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
   --set otelcolInstrumentation.statefulset.image.tag=4c575848287e41884ce580c4668996f7f4bfe06e9fcc332a9bea99abf0af8791 \
@@ -60,7 +59,7 @@ helm upgrade test-openshift sumologic/sumologic --install --version 4.13.0 \
   --set sumologic.otelcolImage.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
   --set sumologic.otelcolImage.tag=4c575848287e41884ce580c4668996f7f4bfe06e9fcc332a9bea99abf0af8791 \
   --set sumologic.setup.job.image.repository=public.ecr.aws/sumologic/kubernetes-setup@sha256 \
-  --set sumologic.setup.job.image.tag=f07eaf68fa11ffc708e4485a83bd3763fc5712f7d73d29edfe5b9c9e08f05df6 \
+  --set sumologic.setup.job.image.tag=cb1c61afe6e41ab1d0f05e95443ed858280d7ae44135cec3ded75774f1d0919e \
   --set sumologic.setup.job.initContainerImage.repository=public.ecr.aws/sumologic/busybox@sha256 \
   --set sumologic.setup.job.initContainerImage.tag=209bc8e0b1d958fc699f3bb75b1248544e372ad35cdc46c991bd1698f641e1f9 \
   --set tailing-sidecar-operator.kubeRbacProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
