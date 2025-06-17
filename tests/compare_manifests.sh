@@ -32,5 +32,6 @@ sed -i.bak '/tls.crt:/d' helm_chart_templates.yaml
 sed -i.bak '/tls.key:/d' helm_operator_templates.yaml
 sed -i.bak '/tls.key:/d' helm_chart_templates.yaml
 
+
 DIFF="$(diff <(yq -P 'sort_keys(..)' -o=props helm_operator_templates.yaml) <(yq -P 'sort_keys(..)' -o=props helm_chart_templates.yaml))"
 check_diff "${DIFF}"
