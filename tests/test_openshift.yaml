@@ -27,6 +27,8 @@ spec:
       create: true
 
   kube-prometheus-stack:
+    nodeExporter:
+      false
     prometheus-node-exporter:
       service:
         port: 9200
