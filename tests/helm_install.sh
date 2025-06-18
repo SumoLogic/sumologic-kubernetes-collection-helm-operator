@@ -10,7 +10,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set kube-prometheus-stack.kube-state-metrics.image.repository=public.ecr.aws/sumologic/kube-state-metrics@sha256 \
   --set kube-prometheus-stack.kube-state-metrics.image.tag=3551ededa327a35db798ec8286cd843580e3ae395d2231e041e8c4b7621127ee \
   --set kube-prometheus-stack.prometheus-node-exporter.image.repository=public.ecr.aws/sumologic/node-exporter@sha256 \
-  --set kube-prometheus-stack.prometheus-node-exporter.image.tag=11e9e604432a66d9b388cb1bf70eac077c7f0372d1264342ef927d76b8ef0272 \
+  --set kube-prometheus-stack.prometheus-node-exporter.image.tag=3e1a592dc2556345dba65b22e366a64748a8e51223facb9d82ec14c71c4a43c1 \
   --set kube-prometheus-stack.prometheus.prometheusSpec.image.repository=public.ecr.aws/sumologic/prometheus@sha256 \
   --set kube-prometheus-stack.prometheus.prometheusSpec.image.sha=4e483f18b2fc1642a32c6a41a802e5351627173710fec674d461a0e4109568a7 \
   --set kube-prometheus-stack.prometheus.prometheusSpec.image.tag=v2.39.0-ubi \
