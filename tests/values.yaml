@@ -1,4 +1,10 @@
 sumologic:
+  metrics:
+    enabled: false
+  traces:
+    enabled: false
+  events:
+    enabled: false
   accessId: "dummy"
   accessKey: "dummy"
   endpoint: "http://receiver-mock.receiver-mock:3000/terraform/api/"
@@ -22,6 +28,8 @@ tailing-sidecar-operator:
     create: true
 
 kube-prometheus-stack:
+  nodeExporter:
+    false
   prometheus-node-exporter:
     service:
       port: 9200
