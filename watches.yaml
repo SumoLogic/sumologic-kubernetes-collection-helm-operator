@@ -18,7 +18,7 @@
       | split "@")._0 }}'
     kube-prometheus-stack.prometheus.prometheusSpec.image.sha: '{{ ("$RELATED_IMAGE_PROMETHEUS"
       | split ":")._1 }}'
-    kube-prometheus-stack.prometheus.prometheusSpec.image.tag: v3.0.1-ubi
+    kube-prometheus-stack.prometheus.prometheusSpec.image.tag: v2.39.0-ubi
     kube-prometheus-stack.prometheus.prometheusSpec.thanos.image: $RELATED_IMAGE_THANOS
     kube-prometheus-stack.prometheusOperator.image.repository: '{{ ("$RELATED_IMAGE_PROMETHEUS_OPERATOR"
       | split "@")._0 }}'

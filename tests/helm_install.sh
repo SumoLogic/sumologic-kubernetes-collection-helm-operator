@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
+
 helm upgrade --install test-openshift sumologic/sumologic \
   --version 4.13.0 \
   -n sumologic-system \
@@ -10,7 +11,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set kube-prometheus-stack.kube-state-metrics.image.repository=public.ecr.aws/sumologic/kube-state-metrics@sha256 \
   --set kube-prometheus-stack.kube-state-metrics.image.tag=3551ededa327a35db798ec8286cd843580e3ae395d2231e041e8c4b7621127ee \
   --set kube-prometheus-stack.prometheus-node-exporter.image.repository=public.ecr.aws/sumologic/node-exporter@sha256 \
-  --set kube-prometheus-stack.prometheus-node-exporter.image.tag=3e1a592dc2556345dba65b22e366a64748a8e51223facb9d82ec14c71c4a43c1 \
+  --set kube-prometheus-stack.prometheus-node-exporter.image.tag=11e9e604432a66d9b388cb1bf70eac077c7f0372d1264342ef927d76b8ef0272 \
   --set kube-prometheus-stack.prometheus.prometheusSpec.image.repository=public.ecr.aws/sumologic/prometheus@sha256 \
   --set kube-prometheus-stack.prometheus.prometheusSpec.image.sha=4e483f18b2fc1642a32c6a41a802e5351627173710fec674d461a0e4109568a7 \
   --set kube-prometheus-stack.prometheus.prometheusSpec.image.tag=v2.39.0-ubi \
@@ -28,16 +29,16 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set metrics-server.image.registry=public.ecr.aws/sumologic \
   --set metrics-server.image.repository=metrics-server@sha256 \
   --set metrics-server.image.tag=65d2a3ddc4b4183f438fa18b655079c93c905cb9e3b8c54977336205dc1fff07 \
-  --set opentelemetry-operator.kubeRBACProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
-  --set opentelemetry-operator.kubeRBACProxy.image.tag=48a94cd74a9f7466fa6273f8823da2569f5f75a8df9723d5876afc364dd8556c \
+  --set opentelemetry-operator.kubeRBACProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy: \
+  --set opentelemetry-operator.kubeRBACProxy.image.tag=v0.18.1-ubi \
   --set opentelemetry-operator.manager.autoInstrumentationImage.dotnet.repository=public.ecr.aws/sumologic/autoinstrumentation-dotnet@sha256 \
   --set opentelemetry-operator.manager.autoInstrumentationImage.dotnet.tag=f4f385c4489c74b5c43f2fe6b6620a9eb8d9ecab470567236b3c45f636106640 \
   --set opentelemetry-operator.manager.autoInstrumentationImage.java.repository=public.ecr.aws/sumologic/autoinstrumentation-java@sha256 \
   --set opentelemetry-operator.manager.autoInstrumentationImage.java.tag=242958b7d8905f4ac02f6ad38897ba58b9badf2a6213a389e67dcc71fee3630c \
   --set opentelemetry-operator.manager.autoInstrumentationImage.nodejs.repository=public.ecr.aws/sumologic/autoinstrumentation-nodejs@sha256 \
   --set opentelemetry-operator.manager.autoInstrumentationImage.nodejs.tag=c206eef4fdecaa58b4f01e5e7f0dbd74e9606eab2b4debf47461d36191e248d1 \
-  --set opentelemetry-operator.manager.autoInstrumentationImage.python.repository=public.ecr.aws/sumologic/autoinstrumentation-nodejs@sha256 \
-  --set opentelemetry-operator.manager.autoInstrumentationImage.python.tag=c206eef4fdecaa58b4f01e5e7f0dbd74e9606eab2b4debf47461d36191e248d1 \
+  --set opentelemetry-operator.manager.autoInstrumentationImage.python.repository=public.ecr.aws/sumologic/autoinstrumentation-python@sha256 \
+  --set opentelemetry-operator.manager.autoInstrumentationImage.python.tag=f0fa45fa45e64c7df88f21181ae18ee96fe83cd3988258663d0806ea6f39e6bb \
   --set opentelemetry-operator.manager.collectorImage.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
   --set opentelemetry-operator.manager.collectorImage.tag=4c575848287e41884ce580c4668996f7f4bfe06e9fcc332a9bea99abf0af8791 \
   --set opentelemetry-operator.manager.image.repository=public.ecr.aws/sumologic/opentelemetry-operator: \
@@ -62,8 +63,8 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set sumologic.setup.job.image.tag=cb1c61afe6e41ab1d0f05e95443ed858280d7ae44135cec3ded75774f1d0919e \
   --set sumologic.setup.job.initContainerImage.repository=public.ecr.aws/sumologic/busybox@sha256 \
   --set sumologic.setup.job.initContainerImage.tag=209bc8e0b1d958fc699f3bb75b1248544e372ad35cdc46c991bd1698f641e1f9 \
-  --set tailing-sidecar-operator.kubeRbacProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
-  --set tailing-sidecar-operator.kubeRbacProxy.image.tag=48a94cd74a9f7466fa6273f8823da2569f5f75a8df9723d5876afc364dd8556c \
+  --set tailing-sidecar-operator.kubeRbacProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy: \
+  --set tailing-sidecar-operator.kubeRbacProxy.image.tag=v0.18.1-ubi \
   --set tailing-sidecar-operator.operator.image.repository=public.ecr.aws/sumologic/tailing-sidecar-operator@sha256 \
   --set tailing-sidecar-operator.operator.image.tag=c16b8b18e9b263fc3eb24059bba512bcfc3201b32105af6e5518392826ddd66c \
   --set tailing-sidecar-operator.sidecar.image.repository=public.ecr.aws/sumologic/tailing-sidecar@sha256 \
