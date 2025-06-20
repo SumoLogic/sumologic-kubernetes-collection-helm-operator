@@ -29,8 +29,8 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set metrics-server.image.registry=public.ecr.aws/sumologic \
   --set metrics-server.image.repository=metrics-server@sha256 \
   --set metrics-server.image.tag=65d2a3ddc4b4183f438fa18b655079c93c905cb9e3b8c54977336205dc1fff07 \
-  --set opentelemetry-operator.kubeRBACProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy \
-  --set opentelemetry-operator.kubeRBACProxy.image.tag=v0.18.1-ubi \
+  --set opentelemetry-operator.kubeRBACProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
+  --set opentelemetry-operator.kubeRBACProxy.image.tag=48a94cd74a9f7466fa6273f8823da2569f5f75a8df9723d5876afc364dd8556c \
   --set opentelemetry-operator.manager.autoInstrumentationImage.dotnet.repository=public.ecr.aws/sumologic/autoinstrumentation-dotnet@sha256 \
   --set opentelemetry-operator.manager.autoInstrumentationImage.dotnet.tag=f4f385c4489c74b5c43f2fe6b6620a9eb8d9ecab470567236b3c45f636106640 \
   --set opentelemetry-operator.manager.autoInstrumentationImage.java.repository=public.ecr.aws/sumologic/autoinstrumentation-java@sha256 \
@@ -63,8 +63,8 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set sumologic.setup.job.image.tag=cb1c61afe6e41ab1d0f05e95443ed858280d7ae44135cec3ded75774f1d0919e \
   --set sumologic.setup.job.initContainerImage.repository=public.ecr.aws/sumologic/busybox@sha256 \
   --set sumologic.setup.job.initContainerImage.tag=209bc8e0b1d958fc699f3bb75b1248544e372ad35cdc46c991bd1698f641e1f9 \
-  --set tailing-sidecar-operator.kubeRbacProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy \
-  --set tailing-sidecar-operator.kubeRbacProxy.image.tag=v0.18.1-ubi \
+  --set tailing-sidecar-operator.kubeRbacProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
+  --set tailing-sidecar-operator.kubeRbacProxy.image.tag=48a94cd74a9f7466fa6273f8823da2569f5f75a8df9723d5876afc364dd8556c \
   --set tailing-sidecar-operator.operator.image.repository=public.ecr.aws/sumologic/tailing-sidecar-operator@sha256 \
   --set tailing-sidecar-operator.operator.image.tag=c16b8b18e9b263fc3eb24059bba512bcfc3201b32105af6e5518392826ddd66c \
   --set tailing-sidecar-operator.sidecar.image.repository=public.ecr.aws/sumologic/tailing-sidecar@sha256 \
