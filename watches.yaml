@@ -29,8 +29,6 @@
       ("$RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER" | split "@")._0 }}'
     kube-prometheus-stack.prometheusOperator.prometheusConfigReloader.image.sha: '{{
       ("$RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER" | split ":")._1 }}'
-    kube-prometheus-stack.prometheusOperator.prometheusConfigReloader.image.tag: v0.79.1-ubi
-    kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.sha: 0b605d36782afd8f50fd631d0e9c7b19d39ce962af89b7a737b2f09a8ceff291
     kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.tag: v0.79.1-ubi
     kube-prometheus-stack.prometheusOperator.thanosImage.repository: '{{ ("$RELATED_IMAGE_THANOS"
       | split "@")._0 }}'
