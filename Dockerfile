@@ -1,5 +1,5 @@
 # Build the manager binary
-FROM --platform=linux/amd64 quay.io/operator-framework/helm-operator:v1.40.0
+FROM quay.io/operator-framework/helm-operator:v1.40.0
 
 ARG VERSION=${VERSION}
 ARG RELEASE_NUMBER=${RELEASE_NUMBER}
