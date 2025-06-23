@@ -21,7 +21,7 @@ sed -i.bak '/tag: v2.22.1/d' helm_operator_templates.yaml
 sed -i.bak 's#public.ecr.aws/sumologic/prometheus:v2.22.1#public.ecr.aws/sumologic/prometheus#g' helm_chart_templates.yaml
 
 # Change image for telegraf operator to version with tag
-sed -i.bak 's#public.ecr.aws/sumologic/telegraf-operator@sha256:75efd2e509c6017ea0fc5c9103ce068cbc89087b16506a4ef48cb5ff00eab84e#public.ecr.aws/sumologic/telegraf-operator-ubi:v1.3.11#g' helm_operator_templates.yaml
+sed -i.bak 's#public.ecr.aws/sumologic/telegraf-operator-ubi@sha256:88c3b5d9f8e9a419131c39e6e22c5aa7cfaab5157fe4c5cc928574f5a3cfda2c#public.ecr.aws/sumologic/telegraf-operator-ubi:v1.3.11#g' helm_operator_templates.yaml
 
 # busybox image has not tag set in collection
 sed -i.bak 's/busybox:1.33.0/busybox/g' helm_operator_templates.yaml

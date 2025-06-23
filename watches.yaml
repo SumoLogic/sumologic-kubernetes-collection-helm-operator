@@ -29,6 +29,7 @@
       ("$RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER" | split "@")._0 }}'
     kube-prometheus-stack.prometheusOperator.prometheusConfigReloader.image.sha: '{{
       ("$RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER" | split ":")._1 }}'
+    kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.sha: ''
     kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.tag: v0.79.1-ubi
     kube-prometheus-stack.prometheusOperator.thanosImage.repository: '{{ ("$RELATED_IMAGE_THANOS"
       | split "@")._0 }}'
@@ -128,7 +129,8 @@
       | split ":")._1 }}'
     tailing-sidecar-operator.operator.image.repository: '{{ ("$RELATED_IMAGE_TAILING_SIDECAR_OPERATOR"
       | split ":")._0 }}'
-    tailing-sidecar-operator.operator.image.tag: 0.17.0-ubi
+    tailing-sidecar-operator.operator.image.tag: '{{ ("$RELATED_IMAGE_TAILING_SIDECAR_OPERATOR"
+      | split ":")._1 }}'
     tailing-sidecar-operator.sidecar.image.repository: '{{ ("$RELATED_IMAGE_TAILING_SIDECAR"
       | split ":")._0 }}'
     tailing-sidecar-operator.sidecar.image.tag: '{{ ("$RELATED_IMAGE_TAILING_SIDECAR"

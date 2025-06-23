@@ -66,11 +66,11 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set tailing-sidecar-operator.kubeRbacProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
   --set tailing-sidecar-operator.kubeRbacProxy.image.tag=48a94cd74a9f7466fa6273f8823da2569f5f75a8df9723d5876afc364dd8556c \
   --set tailing-sidecar-operator.operator.image.repository=public.ecr.aws/sumologic/tailing-sidecar-operator@sha256 \
-  --set tailing-sidecar-operator.operator.image.tag=13322691d4bebae6e2c0363a4bfb77bbf0d96a078c1842abc1a274a94c6fdf58 \
+  --set tailing-sidecar-operator.operator.image.tag=c16b8b18e9b263fc3eb24059bba512bcfc3201b32105af6e5518392826ddd66c \
   --set tailing-sidecar-operator.sidecar.image.repository=public.ecr.aws/sumologic/tailing-sidecar@sha256 \
   --set tailing-sidecar-operator.sidecar.image.tag=738d653a78dc415243ab3627db9135768175fb7f51d0803566f5d9e824c8744b \
   --set telegraf-operator.image.repository=public.ecr.aws/sumologic/telegraf-operator-ubi \
-  --set telegraf-operator.image.sidecarImage=public.ecr.aws/sumologic/telegraf@sha256:75efd2e509c6017ea0fc5c9103ce068cbc89087b16506a4ef48cb5ff00eab84e \
+  --set telegraf-operator.image.sidecarImage=88c3b5d9f8e9a419131c39e6e22c5aa7cfaab5157fe4c5cc928574f5a3cfda2c \
   --set tracesGateway.deployment.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
   --set tracesGateway.deployment.image.tag=4c575848287e41884ce580c4668996f7f4bfe06e9fcc332a9bea99abf0af8791 \
   --set tracesSampler.deployment.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
