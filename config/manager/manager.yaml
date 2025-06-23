@@ -48,7 +48,7 @@ spec:
         - name: RELATED_IMAGE_BUSYBOX
           value: registry.connect.redhat.com/sumologic/busybox@sha256:209bc8e0b1d958fc699f3bb75b1248544e372ad35cdc46c991bd1698f641e1f9
         - name: RELATED_IMAGE_KUBE_RBAC_PROXY
-          value: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:48a94cd74a9f7466fa6273f8823da2569f5f75a8df9723d5876afc364dd8556c
+          value: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:e1f49fcf5b7e86d9eb49c16dbbf9484cb486f55f999fd51d7c738c3b1f2666cf
         - name: RELATED_IMAGE_KUBE_STATE_METRICS
           value: registry.connect.redhat.com/sumologic/kube-state-metrics@sha256:3551ededa327a35db798ec8286cd843580e3ae395d2231e041e8c4b7621127ee
         - name: RELATED_IMAGE_KUBERNETES_SETUP
