@@ -422,6 +422,7 @@ data:
       healthProbeBindAddress: :8081
     metrics:
       bindAddress: 127.0.0.1:8080
+
     leaderElection:
       leaderElect: true
       resourceName: 811c9dc5.sumologic.com
@@ -524,7 +525,7 @@ spec:
         - name: RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR
           value: registry.connect.redhat.com/sumologic/sumologic-otel-collector@sha256:4554d43dba204e3ec8e91b36442a438f10234fa0cb4db7fb7880b257a6485112
         - name: RELATED_IMAGE_TAILING_SIDECAR_OPERATOR
-          value: registry.connect.redhat.com/sumologic/tailing-sidecar-operator@sha256:c16b8b18e9b263fc3eb24059bba512bcfc3201b32105af6e5518392826ddd66c
+          value: registry.connect.redhat.com/sumologic/tailing-sidecar-operator@sha256:13322691d4bebae6e2c0363a4bfb77bbf0d96a078c1842abc1a274a94c6fdf58
         - name: RELATED_IMAGE_TAILING_SIDECAR
           value: registry.connect.redhat.com/sumologic/tailing-sidecar@sha256:738d653a78dc415243ab3627db9135768175fb7f51d0803566f5d9e824c8744b
         - name: RELATED_IMAGE_TELEGRAF_OPERATOR
