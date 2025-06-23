@@ -23,9 +23,9 @@ otellogs:
           privileged: true
 
 tailing-sidecar-operator:
-  enabled: true
+  enabled: false
   scc:
-    create: true
+    create: false
 
 kube-prometheus-stack:
   nodeExporter:

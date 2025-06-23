@@ -22,9 +22,9 @@ spec:
             privileged: true
 
   tailing-sidecar-operator:
-    enabled: false
+    enabled: true
     scc:
-      create: false
+      create: true
 
   kube-prometheus-stack:
     prometheus-node-exporter:
