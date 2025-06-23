@@ -3,7 +3,7 @@
 readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
 
 helm upgrade --install test-openshift sumologic/sumologic \
-  --version 4.13.0 \
+  --version 4.9.0 \
   -n sumologic-system \
   --create-namespace -f "${ROOT_DIR}/tests/values.yaml" \
   --set instrumentation.instrumentationJobImage.image.repository=public.ecr.aws/sumologic/kubernetes-tools-kubectl@sha256 \
