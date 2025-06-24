@@ -48,7 +48,7 @@ spec:
         - name: RELATED_IMAGE_BUSYBOX
           value: registry.connect.redhat.com/sumologic/busybox@sha256:209bc8e0b1d958fc699f3bb75b1248544e372ad35cdc46c991bd1698f641e1f9
         - name: RELATED_IMAGE_KUBE_RBAC_PROXY
-          value: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:6081af347a86a9cd51232f60e9f5567bdaddf0377927a462ced91524ce80bf95
+          value: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:e1f49fcf5b7e86d9eb49c16dbbf9484cb486f55f999fd51d7c738c3b1f2666cf
         - name: RELATED_IMAGE_KUBE_STATE_METRICS
           value: registry.connect.redhat.com/sumologic/kube-state-metrics@sha256:473614d1c0de0f9f0b5314eab40d3172f5180332a2009be590ce474b85cb898e
         - name: RELATED_IMAGE_KUBERNETES_SETUP
@@ -62,7 +62,7 @@ spec:
         - name: RELATED_IMAGE_NODE_EXPORTER
           value: registry.connect.redhat.com/sumologic/node-exporter@sha256:7acec4473ddf508514dca1d08335cfd071e345d7eca660793d59e09ef9f0491f
         - name: RELATED_IMAGE_OPENTELEMETRY_OPERATOR
-          value: registry.connect.redhat.com/sumologic/opentelemetry-operator@sha256:a714dd6995f5c3f479488c8ca281fe1a5dd92b1103c4b00b9c68f47826172267
+          value: registry.connect.redhat.com/sumologic/opentelemetry-operator@sha256:5587fe5b7ebfa57ad320ad2521103f908317388d1741c40e5f7be5ed9e5f9ad7
         - name: RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER
           value: registry.connect.redhat.com/sumologic/prometheus-config-reloader@sha256:0b605d36782afd8f50fd631d0e9c7b19d39ce962af89b7a737b2f09a8ceff291
         - name: RELATED_IMAGE_PROMETHEUS_OPERATOR

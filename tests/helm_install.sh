@@ -3,7 +3,7 @@
 readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
 
 helm upgrade --install test-openshift sumologic/sumologic \
-  --version 4.9.0 \
+  --version 4.13.0 \
   -n sumologic-system \
   --create-namespace -f "${ROOT_DIR}/tests/values.yaml" \
   --set instrumentation.instrumentationJobImage.image.repository=public.ecr.aws/sumologic/kubernetes-tools-kubectl@sha256 \
@@ -25,7 +25,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set kube-prometheus-stack.prometheusOperator.thanosImage.sha=5f132bb32e337ed474cb031ae1fcb0320e493097e81ba6915bd1f5361687529a \
   --set kube-prometheus-stack.prometheusOperator.thanosImage.tag=v0.28.0-ubi \
   --set metadata.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
-  --set metadata.image.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
+  --set metadata.image.tag=4554d43dba204e3ec8e91b36442a438f10234fa0cb4db7fb7880b257a6485112 \
   --set metrics-server.image.registry=public.ecr.aws/sumologic \
   --set metrics-server.image.repository=metrics-server@sha256 \
   --set metrics-server.image.tag=6398a46ccf68a28f647d4f05bb9a273580deb063efc501dfed0ccf1bcac44f98 \
@@ -40,26 +40,26 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set opentelemetry-operator.manager.autoInstrumentationImage.python.repository=public.ecr.aws/sumologic/autoinstrumentation-python@sha256 \
   --set opentelemetry-operator.manager.autoInstrumentationImage.python.tag=2cf6a7fb9680539a1c352c24827cd01e152e27d865916e6112a07c8c94f32973 \
   --set opentelemetry-operator.manager.collectorImage.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
-  --set opentelemetry-operator.manager.collectorImage.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
-  --set opentelemetry-operator.manager.collectorImage.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
-  --set opentelemetry-operator.manager.image.repository=public.ecr.aws/sumologic/opentelemetry-operator@sha256 \
-  --set opentelemetry-operator.manager.image.tag=a714dd6995f5c3f479488c8ca281fe1a5dd92b1103c4b00b9c68f47826172267 \
+  --set opentelemetry-operator.manager.collectorImage.tag=4554d43dba204e3ec8e91b36442a438f10234fa0cb4db7fb7880b257a6485112 \
+  --set opentelemetry-operator.manager.collectorImage.tag=4554d43dba204e3ec8e91b36442a438f10234fa0cb4db7fb7880b257a6485112 \
+  --set opentelemetry-operator.manager.image.repository=public.ecr.aws/sumologic/opentelemetry-operator \
+  --set opentelemetry-operator.manager.image.tag=0.115.0-ubi \
   --set otelcolInstrumentation.statefulset.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
-  --set otelcolInstrumentation.statefulset.image.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
+  --set otelcolInstrumentation.statefulset.image.tag=4554d43dba204e3ec8e91b36442a438f10234fa0cb4db7fb7880b257a6485112 \
   --set otelevents.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
-  --set otelevents.image.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
+  --set otelevents.image.tag=4554d43dba204e3ec8e91b36442a438f10234fa0cb4db7fb7880b257a6485112 \
   --set otellogs.daemonset.initContainers.changeowner.image.repository=public.ecr.aws/sumologic/busybox@sha256 \
   --set otellogs.daemonset.initContainers.changeowner.image.tag=209bc8e0b1d958fc699f3bb75b1248544e372ad35cdc46c991bd1698f641e1f9 \
   --set otellogs.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
-  --set otellogs.image.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
+  --set otellogs.image.tag=4554d43dba204e3ec8e91b36442a438f10234fa0cb4db7fb7880b257a6485112 \
   --set pvcCleaner.job.image.repository=public.ecr.aws/sumologic/kubernetes-tools-kubectl@sha256 \
   --set pvcCleaner.job.image.tag=89ae5ef9c85f6a01d520c8e237e614131cdc81a09f2eade54c9b091b2993e856 \
   --set sumologic.metrics.collector.otelcol.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
-  --set sumologic.metrics.collector.otelcol.image.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
+  --set sumologic.metrics.collector.otelcol.image.tag=4554d43dba204e3ec8e91b36442a438f10234fa0cb4db7fb7880b257a6485112 \
   --set sumologic.metrics.remoteWriteProxy.image.repository=public.ecr.aws/sumologic/nginx-unprivileged@sha256 \
   --set sumologic.metrics.remoteWriteProxy.image.tag=9aef85eed423d0bf6bce16eb0dce3d56d18c0aa7929627ed4fe7aef7aa749c1f \
   --set sumologic.otelcolImage.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
-  --set sumologic.otelcolImage.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
+  --set sumologic.otelcolImage.tag=4554d43dba204e3ec8e91b36442a438f10234fa0cb4db7fb7880b257a6485112 \
   --set sumologic.setup.job.image.repository=public.ecr.aws/sumologic/kubernetes-setup@sha256 \
   --set sumologic.setup.job.image.tag=21819dcc791144843ebed17abf7304e2cefd711995027a8737f2d9ae14418811 \
   --set sumologic.setup.job.initContainerImage.repository=public.ecr.aws/sumologic/busybox@sha256 \
@@ -73,6 +73,6 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set telegraf-operator.image.repository=public.ecr.aws/sumologic/telegraf-operator-ubi \
   --set telegraf-operator.image.sidecarImage=public.ecr.aws/sumologic/telegraf@sha256:75efd2e509c6017ea0fc5c9103ce068cbc89087b16506a4ef48cb5ff00eab84e \
   --set tracesGateway.deployment.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
-  --set tracesGateway.deployment.image.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb \
+  --set tracesGateway.deployment.image.tag=4554d43dba204e3ec8e91b36442a438f10234fa0cb4db7fb7880b257a6485112 \
   --set tracesSampler.deployment.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector@sha256 \
-  --set tracesSampler.deployment.image.tag=fd5c8b496f522ae91279ff96ef977d12815c55e2b15519a27705f27286507bcb
+  --set tracesSampler.deployment.image.tag=4554d43dba204e3ec8e91b36442a438f10234fa0cb4db7fb7880b257a6485112

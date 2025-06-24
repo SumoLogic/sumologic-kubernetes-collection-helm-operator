@@ -26,11 +26,15 @@ sed -i.bak 's#public.ecr.aws/sumologic/telegraf-operator@sha256:ff958222be01c0c3
 # busybox image has not tag set in collection
 sed -i.bak 's/busybox:1.33.0/busybox/g' helm_operator_templates.yaml
 
-# Remove lines with certificates genareted for opentelemetry operatora
+# Remove lines with certificates genareted for opentelemetry operator
 sed -i.bak '/tls.crt:/d' helm_operator_templates.yaml
 sed -i.bak '/tls.crt:/d' helm_chart_templates.yaml
 sed -i.bak '/tls.key:/d' helm_operator_templates.yaml
 sed -i.bak '/tls.key:/d' helm_chart_templates.yaml
+
+
+wc -l helm_operator_templates.yaml
+wc -l helm_chart_templates.yaml
 
 DIFF="$(diff <(yq -P 'sort_keys(..)' -o=props helm_operator_templates.yaml) <(yq -P 'sort_keys(..)' -o=props helm_chart_templates.yaml))"
 check_diff "${DIFF}"
