@@ -8,7 +8,7 @@ readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
 source "${ROOT_DIR}/tests/functions.sh"
 
 readonly NAMESPACE="sumologic-system"
-readonly TIME=300
+readonly TIME=500
 
 helm repo add sumologic https://sumologic.github.io/sumologic-kubernetes-collection
 helm repo update
