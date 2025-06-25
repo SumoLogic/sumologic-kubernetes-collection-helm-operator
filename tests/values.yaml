@@ -4,12 +4,6 @@ sumologic:
   endpoint: "http://receiver-mock.receiver-mock:3000/terraform/api/"
   scc:
     create: true
-  metrics:
-    enabled: false
-  traces:
-    enabled: false
-  events:
-    enabled: false
 
 otellogs:
   daemonset:
