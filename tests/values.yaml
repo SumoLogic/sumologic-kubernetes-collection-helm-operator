@@ -23,7 +23,7 @@ otellogs:
           privileged: true
 
 tailing-sidecar-operator:
-  enabled: false
+  enabled: true
   scc:
     create: true
 
@@ -72,7 +72,7 @@ kube-prometheus-stack:
     - openshift-user-workload-monitoring
 
 metrics-server:
-  enabled: false
+  enabled: true
   apiService:
     create: false
   global:
@@ -85,4 +85,4 @@ metrics-server:
         adaptSecurityContext: auto
 
 telegraf-operator:
-  enabled: false
+  enabled: true
