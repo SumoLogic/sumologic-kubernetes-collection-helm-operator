@@ -4,6 +4,12 @@ sumologic:
   endpoint: "http://receiver-mock.receiver-mock:3000/terraform/api/"
   scc:
     create: true
+  metrics:
+    enabled: false
+  traces:
+    enabled: false
+  events:
+    enabled: false
 
 otellogs:
   daemonset:
@@ -17,7 +23,7 @@ otellogs:
           privileged: true
 
 tailing-sidecar-operator:
-  enabled: true
+  enabled: false
   scc:
     create: true
 
@@ -66,7 +72,7 @@ kube-prometheus-stack:
     - openshift-user-workload-monitoring
 
 metrics-server:
-  enabled: true
+  enabled: false
   apiService:
     create: false
   global:
@@ -79,4 +85,4 @@ metrics-server:
         adaptSecurityContext: auto
 
 telegraf-operator:
-  enabled: true
+  enabled: false

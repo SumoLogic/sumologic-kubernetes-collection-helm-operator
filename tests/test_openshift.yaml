@@ -27,10 +27,12 @@ spec:
       create: true
 
   kube-prometheus-stack:
-    prometheus-node-exporter:
-      service:
-        port: 9200
-        targetPort: 9200
+    nodeExporter:
+    enabled: false
+    #prometheus-node-exporter:
+    #  service:
+    #    port: 9200
+    #    targetPort: 9200
 
     prometheusOperator:
       denyNamespaces:
