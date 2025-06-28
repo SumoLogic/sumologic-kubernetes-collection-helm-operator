@@ -5,11 +5,11 @@ sumologic:
   scc:
     create: true
   metrics:
-    enabled: false
+    enabled: true
   traces:
-    enabled: false
+    enabled: true
   events:
-    enabled: false
+    enabled: true
 
 otellogs:
   daemonset:
