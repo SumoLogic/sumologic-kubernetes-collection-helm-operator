@@ -9,6 +9,12 @@ spec:
     endpoint: "http://receiver-mock.receiver-mock:3000/terraform/api/"
     scc:
       create: true
+    metrics:
+      enabled: true
+    traces:
+      enabled: false
+    events:
+      enabled: true
 
   otellogs:
     daemonset:
@@ -80,4 +86,4 @@ spec:
       create: false
 
   telegraf-operator:
-    enabled: true
+    enabled: false
