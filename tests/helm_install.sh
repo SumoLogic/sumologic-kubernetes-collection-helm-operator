@@ -66,7 +66,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set tailing-sidecar-operator.kubeRbacProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy \
   --set tailing-sidecar-operator.kubeRbacProxy.image.tag=v0.18.2-ubi \
    --set tailing-sidecar-operator.operator.image.repository=ghcr.io/samiura/tailing-sidecar-operator@sha256 \
-  --set tailing-sidecar-operator.operator.image.tag=f21beb89c104f86f85d40ae356c8939f9c428ddb8372080ef84618e752178469 \
+  --set tailing-sidecar-operator.operator.image.tag=c4471678f800ad7dc0e05e62f21a672f80c1091fa8c4f7706a0321c1e7cf9630 \
   --set tailing-sidecar-operator.sidecar.image.repository=public.ecr.aws/sumologic/tailing-sidecar \
   --set tailing-sidecar-operator.sidecar.image.tag=0.16.0-ubi \
   --set telegraf-operator.image.repository=public.ecr.aws/sumologic/telegraf-operator-ubi \
