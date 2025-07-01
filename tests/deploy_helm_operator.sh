@@ -10,7 +10,7 @@ source "${ROOT_DIR}/tests/functions.sh"
 readonly DEPLOYMENT_TYPE="${DEPLOYMENT_TYPE:=default}"
 readonly IMG="${IMG:=registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:4.9.0-3}"
 readonly NAMESPACE="sumologic-system"
-readonly TIME=300
+readonly TIME=100
 
 # Change container registry in bundle.yaml to public.ecr.aws and ghcr.io to not login to registry.connect.redhat.com
 ./tests/replace_components_images.sh
@@ -33,7 +33,7 @@ kubectl describe pods -n sumologic-system
 helm get manifest -n "${NAMESPACE}" test-openshift > helm_operator_templates.yaml
 
 kubectl delete -f tests/test_openshift.yaml -n sumologic-system
-make undeploy
+#make undeploy
 
-kubectl delete ns "${NAMESPACE}"
-wait_for_ns_termination "${NAMESPACE}" "${TIME}"
+#kubectl delete ns "${NAMESPACE}"
+#wait_for_ns_termination "${NAMESPACE}" "${TIME}"
