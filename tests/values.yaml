@@ -7,7 +7,7 @@ sumologic:
   metrics:
     enabled: true
   traces:
-    enabled: false
+    enabled: true
   events:
     enabled: true
 
@@ -85,4 +85,4 @@ metrics-server:
         adaptSecurityContext: auto
 
 telegraf-operator:
-  enabled: false
+  enabled: true
