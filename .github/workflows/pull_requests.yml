@@ -58,7 +58,7 @@ jobs:
       - name: Install Helm in tested version
         run: |
           sudo mkdir /opt/helm3
-          sudo curl "https://get.helm.sh/helm-v3.8.2-linux-amd64.tar.gz" | tar -xz -C /opt/helm3
+          sudo curl "https://get.helm.sh/helm-v3.18.2-linux-amd64.tar.gz" | tar -xz -C /opt/helm3
           sudo rm /usr/local/bin/helm
           sudo ln -s /opt/helm3/linux-amd64/helm /usr/bin/helm3
           sudo ln -s /usr/bin/helm3 /usr/bin/helm
@@ -68,17 +68,14 @@ jobs:
         run: kustomize version
       - uses: AbsaOSS/k3d-action@v2
         id: single-cluster
-        name: Create single k3d Cluster
+        name: Create single k3d Cluster 
         with:
           cluster-name: "k3s-default"
           args: >-
             --agents 2
-            --servers-memory 8G 
-            --agents-memory 4G
             --no-lb
-            --k3s-arg "--no-deploy=traefik,servicelb,metrics-server@server:*"
-            --k3s-arg "--kubelet-arg=eviction-hard=imagefs.available<1%,nodefs.available<1%@agent:*"
-            --k3s-arg "--kubelet-arg=eviction-minimum-reclaim=imagefs.available=1%,nodefs.available=1%@agent:*"
+            --k3s-arg "--no-deploy=traefik,servicelb,metrics-server@server:*" 
+
 
       - name: Checkout submodules
         run: git submodule update --init
