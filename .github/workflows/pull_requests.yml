@@ -72,7 +72,7 @@ jobs:
         with:
           cluster-name: "k3s-default"
           args: >-
-            --agents 1
+            --agents 3
             --no-lb
             --k3s-arg "--no-deploy=traefik,servicelb,metrics-server@server:*"
       - name: Checkout submodules
