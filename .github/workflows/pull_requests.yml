@@ -72,9 +72,14 @@ jobs:
         with:
           cluster-name: "k3s-default"
           args: >-
-            --agents 3
+            --agents 2
+            --servers-memory 8G 
+            --agents-memory 4G
             --no-lb
             --k3s-arg "--no-deploy=traefik,servicelb,metrics-server@server:*"
+            --k3s-arg "--kubelet-arg=eviction-hard=imagefs.available<1%,nodefs.available<1%@agent:*"
+            --k3s-arg "--kubelet-arg=eviction-minimum-reclaim=imagefs.available=1%,nodefs.available=1%@agent:*"
+
       - name: Checkout submodules
         run: git submodule update --init
       - name: Build helm operator image
