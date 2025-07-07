@@ -60,7 +60,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set sumologic.otelcolImage.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
   --set sumologic.otelcolImage.tag=0.118.0-sumo-0-ubi \
   --set sumologic.setup.job.image.repository=ghcr.io/samiura/sumologic-kubernetes-setup@sha256 \
-  --set sumologic.setup.job.image.tag=c1bd9e78d07a2abe4b5f8fb15315f3ec35bc52dc5a0d546186a64e8124a79e9a   \
+  --set sumologic.setup.job.image.tag=78db69e240e7002c2ad6d0647e2c0f5a8dc95afd95f279fdaa6b863e6e35034e \
   --set sumologic.setup.job.initContainerImage.repository=public.ecr.aws/sumologic/busybox@sha256 \
   --set sumologic.setup.job.initContainerImage.tag=209bc8e0b1d958fc699f3bb75b1248544e372ad35cdc46c991bd1698f641e1f9 \
   --set tailing-sidecar-operator.kubeRbacProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
