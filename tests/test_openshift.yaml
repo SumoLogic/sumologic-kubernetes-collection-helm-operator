@@ -33,13 +33,10 @@ spec:
       create: true
 
   kube-prometheus-stack:
-    nodeExporter:
-    enabled: false
-    #prometheus-node-exporter:
-    #  service:
-    #    port: 9200
-    #    targetPort: 9200
-
+    prometheus-node-exporter:
+      service:
+        port: 9200
+        targetPort: 9200
     prometheusOperator:
       denyNamespaces:
       - openshift-apiserver
