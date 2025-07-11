@@ -33,6 +33,7 @@ kubectl describe pods -n sumologic-system
 helm get manifest -n "${NAMESPACE}" test-openshift > helm_operator_templates.yaml
 
 kubectl delete -f tests/test_openshift.yaml -n sumologic-system
+#make undeploy
 
 #kubectl delete ns "${NAMESPACE}"
 #wait_for_ns_termination "${NAMESPACE}" "${TIME}"
