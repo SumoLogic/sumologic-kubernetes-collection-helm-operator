@@ -70,7 +70,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set tailing-sidecar-operator.sidecar.image.repository=public.ecr.aws/sumologic/tailing-sidecar@sha256 \
   --set tailing-sidecar-operator.sidecar.image.tag=738d653a78dc415243ab3627db9135768175fb7f51d0803566f5d9e824c8744b \
   --set telegraf-operator.image.repository=public.ecr.aws/sumologic/telegraf@sha256 \
-  --set telegraf-operator.image.sidecarImage=75efd2e509c6017ea0fc5c9103ce068cbc89087b16506a4ef48cb5ff00eab84e \
+  --set telegraf-operator.image.sidecarImage=public.ecr.aws/sumologic/telegraf@sha256:75efd2e509c6017ea0fc5c9103ce068cbc89087b16506a4ef48cb5ff00eab84e \
   --set tracesGateway.deployment.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
   --set tracesGateway.deployment.image.tag=0.118.0-sumo-0-ubi \
   --set tracesSampler.deployment.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
