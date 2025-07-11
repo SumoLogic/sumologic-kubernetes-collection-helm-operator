@@ -12,5 +12,5 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
 - name: controller
-  newName: ghcr.io/samiura/sumologic-kubernetes-collection-helm-operator
-  newTag: 4.13.0
+  newName: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator
+  newTag: 4.9.0-3
