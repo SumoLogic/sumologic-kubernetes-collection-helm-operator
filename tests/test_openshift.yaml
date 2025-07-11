@@ -1,3 +1,4 @@
+
 apiVersion: helm-operator.sumologic.com/v1alpha1
 kind: SumologicCollection
 metadata:
@@ -9,12 +10,6 @@ spec:
     endpoint: "http://receiver-mock.receiver-mock:3000/terraform/api/"
     scc:
       create: true
-    metrics:
-      enabled: true
-    traces:
-      enabled: true
-    events:
-      enabled: true
 
   otellogs:
     daemonset:
@@ -37,6 +32,7 @@ spec:
       service:
         port: 9200
         targetPort: 9200
+
     prometheusOperator:
       denyNamespaces:
       - openshift-apiserver
