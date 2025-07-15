@@ -1,12 +1,13 @@
 # Build the manager binary
-FROM  quay.io/operator-framework/helm-operator:v1.40.0
+FROM registry.access.redhat.com/ubi9/ubi-minimal:9.6
+FROM quay.io/operator-framework/helm-operator:v1.40.0
 
 ARG VERSION=${VERSION}
 ARG RELEASE_NUMBER=${RELEASE_NUMBER}
 ARG HELM_VERSION=3.18.3
 
 LABEL name="Sumologic Kubernetes Collection Helm Operator"
-LABEL maintainer="collection@sumologic.com"
+LABEL maintainer="opensource-collection-team@sumologic.com"
 LABEL vendor="sumologic"
 LABEL version=${VERSION}
 LABEL release=${RELEASE_NUMBER}
@@ -22,7 +23,7 @@ RUN wget "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" && \
     mv linux-amd64/helm /usr/local/bin/helm
 
 ENV HOME=/opt/helm
-COPY licenses /licenses
+ADD https://raw.githubusercontent.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/refs/heads/main/licenses/LICENSE
 COPY watches.yaml ${HOME}/watches.yaml
 COPY helm-charts/sumologic-kubernetes-collection/deploy/helm/sumologic  ${HOME}/helm-charts/sumologic
 
