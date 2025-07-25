@@ -8,7 +8,7 @@ readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
 source "${ROOT_DIR}/tests/functions.sh"
 
 readonly DEPLOYMENT_TYPE="${DEPLOYMENT_TYPE:=default}"
-readonly IMG="${IMG:=registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:4.13.0-rc.0}"
+readonly IMG="${IMG:=registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:4.13.0-0}"
 readonly NAMESPACE="sumologic-system"
 readonly TIME=300
 
