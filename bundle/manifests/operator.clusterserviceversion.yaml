@@ -23,7 +23,7 @@ metadata:
       \       }\n            }\n        }\n    }\n]"
     capabilities: Basic Install
     categories: Logging & Tracing,Monitoring
-    containerImage: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:8deedbf22c39e251d001f593425471d0e6706707198ce8b288648202244aa55b
+    containerImage: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:5a0ef3c96bbd405a0c94cb098fbf78d3c79dd3ee70e386444f20e4ebb2706422
     createdAt: '2024-07-19T10:48:00Z'
     operators.operatorframework.io/builder: operator-sdk-v1.6.1+git
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
@@ -507,7 +507,7 @@ spec:
     name: Sumo Logic
     url: https://www.sumologic.com/
   relatedImages:
-  - image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:8deedbf22c39e251d001f593425471d0e6706707198ce8b288648202244aa55b
+  - image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:5a0ef3c96bbd405a0c94cb098fbf78d3c79dd3ee70e386444f20e4ebb2706422
     name: sumologic-kubernetes-collection-helm-operator
   - image: registry.connect.redhat.com/sumologic/autoinstrumentation-dotnet@sha256:f4f385c4489c74b5c43f2fe6b6620a9eb8d9ecab470567236b3c45f636106640
     name: RELATED_IMAGE_AUTOINSTRUMENTATION_DOTNET
