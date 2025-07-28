@@ -23,7 +23,7 @@ RUN wget "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" && \
     mv linux-amd64/helm /usr/local/bin/helm
 
 ENV HOME=/opt/helm
-ADD https://raw.githubusercontent.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/refs/heads/main/licenses/LICENSE licenses/LICENSE
+COPY licenses/LICENSE ${HOME}/licenses/LICENSE
 COPY watches.yaml ${HOME}/watches.yaml
 COPY helm-charts/sumologic-kubernetes-collection/deploy/helm/sumologic  ${HOME}/helm-charts/sumologic
 
