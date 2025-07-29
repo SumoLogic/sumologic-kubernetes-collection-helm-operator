@@ -42,7 +42,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set opentelemetry-operator.manager.collectorImage.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
   --set opentelemetry-operator.manager.collectorImage.tag=0.118.0-sumo-0-ubi \
   --set opentelemetry-operator.manager.image.repository=public.ecr.aws/sumologic/opentelemetry-operator@sha256 \
-  --set opentelemetry-operator.manager.image.tag=e9934702dee31674e5f94ba06425c29897068db7ee8a5aec96bc6ac46ed3c727 \
+  --set opentelemetry-operator.manager.image.tag=a714dd6995f5c3f479488c8ca281fe1a5dd92b1103c4b00b9c68f47826172267 \
   --set otelcolInstrumentation.statefulset.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
   --set otelcolInstrumentation.statefulset.image.tag=0.118.0-sumo-0-ubi \
   --set otelevents.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
