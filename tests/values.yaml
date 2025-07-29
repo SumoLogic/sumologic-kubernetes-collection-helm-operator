@@ -21,6 +21,13 @@ tailing-sidecar-operator:
   scc:
     create: true
 
+opentelemetry-operator:
+  admissionWebhooks:
+    create: false
+  manager:
+    env:
+      ENABLE_WEBHOOKS: "false"
+
 kube-prometheus-stack:
   prometheus-node-exporter:
     service:

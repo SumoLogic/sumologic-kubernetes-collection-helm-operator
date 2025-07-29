@@ -10,8 +10,8 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set instrumentation.instrumentationJobImage.image.tag=d3155b864cc74f327adedf7d013a8f0fcb11c2e73a5655b7cafa848824e80172 \
   --set kube-prometheus-stack.kube-state-metrics.image.repository=public.ecr.aws/sumologic/kube-state-metrics@sha256 \
   --set kube-prometheus-stack.kube-state-metrics.image.tag=3551ededa327a35db798ec8286cd843580e3ae395d2231e041e8c4b7621127ee \
-  --set kube-prometheus-stack.prometheus-node-exporter.image.repository=public.ecr.aws/sumologic/node-exporter \
-  --set kube-prometheus-stack.prometheus-node-exporter.image.tag=1.8.2-ubi \
+  --set kube-prometheus-stack.prometheus-node-exporter.image.repository=public.ecr.aws/sumologic/node-exporter@sha256 \
+  --set kube-prometheus-stack.prometheus-node-exporter.image.tag=11e9e604432a66d9b388cb1bf70eac077c7f0372d1264342ef927d76b8ef0272 \
   --set kube-prometheus-stack.prometheus.prometheusSpec.image.repository=public.ecr.aws/sumologic/prometheus@sha256 \
   --set kube-prometheus-stack.prometheus.prometheusSpec.image.sha=4e483f18b2fc1642a32c6a41a802e5351627173710fec674d461a0e4109568a7 \
   --set kube-prometheus-stack.prometheus.prometheusSpec.image.tag=v2.39.0-ubi \
@@ -41,8 +41,8 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set opentelemetry-operator.manager.autoInstrumentationImage.python.tag=f0fa45fa45e64c7df88f21181ae18ee96fe83cd3988258663d0806ea6f39e6bb \
   --set opentelemetry-operator.manager.collectorImage.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
   --set opentelemetry-operator.manager.collectorImage.tag=0.118.0-sumo-0-ubi \
-  --set opentelemetry-operator.manager.image.repository=public.ecr.aws/sumologic/opentelemetry-operator \
-  --set opentelemetry-operator.manager.image.tag=0.115.0-ubi \
+  --set opentelemetry-operator.manager.image.repository=public.ecr.aws/sumologic/opentelemetry-operator@sha256 \
+  --set opentelemetry-operator.manager.image.tag=5587fe5b7ebfa57ad320ad2521103f908317388d1741c40e5f7be5ed9e5f9ad7 \
   --set otelcolInstrumentation.statefulset.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
   --set otelcolInstrumentation.statefulset.image.tag=0.118.0-sumo-0-ubi \
   --set otelevents.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
