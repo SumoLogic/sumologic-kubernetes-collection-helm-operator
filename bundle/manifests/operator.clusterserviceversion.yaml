@@ -23,7 +23,7 @@ metadata:
       \       }\n            }\n        }\n    }\n]"
     capabilities: Basic Install
     categories: Logging & Tracing,Monitoring
-    containerImage: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:5a0ef3c96bbd405a0c94cb098fbf78d3c79dd3ee70e386444f20e4ebb2706422
+    containerImage: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:fa5142986cd343ce9c1a2067c997bba59c6af4e712c9cddef310599229828063
     createdAt: '2024-07-19T10:48:00Z'
     operators.operatorframework.io/builder: operator-sdk-v1.6.1+git
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
@@ -39,7 +39,7 @@ metadata:
     features.operators.openshift.io/token-auth-gcp: 'false'
     features.operators.openshift.io/cnf: 'false'
     features.operators.openshift.io/csi: 'false'
-  name: sumologic-kubernetes-collection-helm-operator.v4.13.0-0
+  name: sumologic-kubernetes-collection-helm-operator.v4.13.0-1
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -430,7 +430,7 @@ spec:
                   value: registry.connect.redhat.com/sumologic/telegraf@sha256:75efd2e509c6017ea0fc5c9103ce068cbc89087b16506a4ef48cb5ff00eab84e
                 - name: RELATED_IMAGE_THANOS
                   value: registry.connect.redhat.com/sumologic/thanos@sha256:16faf7191668e86d8b576bba055dd0cbdeb009635976b9e07bd00f926032f11c
-                image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:4.13.0-0
+                image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:4.13.0-1
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -507,7 +507,7 @@ spec:
     name: Sumo Logic
     url: https://www.sumologic.com/
   relatedImages:
-  - image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:5a0ef3c96bbd405a0c94cb098fbf78d3c79dd3ee70e386444f20e4ebb2706422
+  - image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:fa5142986cd343ce9c1a2067c997bba59c6af4e712c9cddef310599229828063
     name: sumologic-kubernetes-collection-helm-operator
   - image: registry.connect.redhat.com/sumologic/autoinstrumentation-dotnet@sha256:f4f385c4489c74b5c43f2fe6b6620a9eb8d9ecab470567236b3c45f636106640
     name: RELATED_IMAGE_AUTOINSTRUMENTATION_DOTNET
@@ -553,4 +553,4 @@ spec:
     name: RELATED_IMAGE_TELEGRAF
   - image: registry.connect.redhat.com/sumologic/thanos@sha256:16faf7191668e86d8b576bba055dd0cbdeb009635976b9e07bd00f926032f11c
     name: RELATED_IMAGE_THANOS
-  version: 4.13.0-0
+  version: 4.13.0-1
