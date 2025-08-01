@@ -8,7 +8,7 @@ This project was generated using [Operator SDK][operator-sdk].
 
 | Sumo Logic Kubernetes Collection Helm Operator version | OpenShift version                                                      |
 |--------------------------------------------------------|------------------------------------------------------------------------|
-| v4.13.0-2                                              | 4.13<br/>4.14<br/>4.15<br/>4.16<br/>4.17<br/>4.18<br/><br>4.19<br/>.   |
+| v4.13.0-2                                              | 4.13<br/>4.14<br/>4.15<br/>4.16<br/>4.17<br/>4.18<br/>4.19<br/>        |
 | v4.13.0-1                                              | 4.13<br/>4.14<br/>4.15<br/>4.16<br/>4.17<br/>4.18<br/>                 |
 | v4.13.0-0 [**Deprecated]                               | 4.13<br/>4.14<br/>4.15<br/>4.16<br/>4.17<br/>4.18<br/>                 | 
 | v4.9.0-3                                               | 4.13<br/>4.14<br/>4.15<br/>4.16<br/>4.17<br/>4.18<br/>                 |
