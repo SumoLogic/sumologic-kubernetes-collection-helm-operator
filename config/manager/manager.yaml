@@ -62,7 +62,7 @@ spec:
         - name: RELATED_IMAGE_NODE_EXPORTER
           value: registry.connect.redhat.com/sumologic/node-exporter:1.8.2-ubi
         - name: RELATED_IMAGE_OPENTELEMETRY_OPERATOR
-          value: registry.connect.redhat.com/sumologic/opentelemetry-operator:0.115.0-ubi
+          value: registry.connect.redhat.com/sumologic/opentelemetry-operator@sha256:5587fe5b7ebfa57ad320ad2521103f908317388d1741c40e5f7be5ed9e5f9ad7
         - name: RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER
           value: registry.connect.redhat.com/sumologic/prometheus-config-reloader@sha256:0b605d36782afd8f50fd631d0e9c7b19d39ce962af89b7a737b2f09a8ceff291
         - name: RELATED_IMAGE_PROMETHEUS_OPERATOR
