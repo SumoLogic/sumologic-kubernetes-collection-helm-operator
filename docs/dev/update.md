@@ -189,7 +189,7 @@ mv generated_bundle.yaml bundle.yaml
 
 1. Test new Helm Operator version, please use [this](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/blob/main/docs/dev/test.md) instruction (please omit first step and use images created for the new Helm Operator version).
 
-1. Submit Helm Operator image for certification in [http://connect.redhat.com/](http://connect.redhat.com/).
+1. Submit Helm Operator image for certification in [http://connect.redhat.com/](http://connect.redhat.com/). Please use the instructions here [https://connect.redhat.com/component/view/608aaab7ebd9cca472b09434/images/setup-preflight] to certify the image. Please note, you will need a Redhat (>8.0) or Fedora (>34.0) machine to undergo the steps. 
 
 1. Update Helm Operator image in ClusterServiceVersion, please see example [pull request](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/pull/129).
 
