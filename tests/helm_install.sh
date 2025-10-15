@@ -7,7 +7,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   -n sumologic-system \
   --create-namespace -f "${ROOT_DIR}/tests/values.yaml" \
   --set instrumentation.instrumentationJobImage.image.repository=public.ecr.aws/sumologic/kubernetes-tools-kubectl@sha256 \
-  --set instrumentation.instrumentationJobImage.image.tag=d3155b864cc74f327adedf7d013a8f0fcb11c2e73a5655b7cafa848824e80172 \
+  --set instrumentation.instrumentationJobImage.image.tag=319cddcd7fafa8413642cb10392996fb7d039a80859930e68897452655dc14c9 \
   --set kube-prometheus-stack.kube-state-metrics.image.repository=public.ecr.aws/sumologic/kube-state-metrics@sha256 \
   --set kube-prometheus-stack.kube-state-metrics.image.tag=3551ededa327a35db798ec8286cd843580e3ae395d2231e041e8c4b7621127ee \
   --set kube-prometheus-stack.prometheus-node-exporter.image.repository=public.ecr.aws/sumologic/node-exporter \
@@ -25,7 +25,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set kube-prometheus-stack.prometheusOperator.thanosImage.sha=5f132bb32e337ed474cb031ae1fcb0320e493097e81ba6915bd1f5361687529a \
   --set kube-prometheus-stack.prometheusOperator.thanosImage.tag=v0.28.0-ubi \
   --set metadata.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
-  --set metadata.image.tag=0.118.0-sumo-0-ubi \
+  --set metadata.image.tag=0.130.1-sumo-0-ubi \
   --set metrics-server.image.registry=public.ecr.aws/sumologic \
   --set metrics-server.image.repository=metrics-server@sha256 \
   --set metrics-server.image.tag=65d2a3ddc4b4183f438fa18b655079c93c905cb9e3b8c54977336205dc1fff07 \
@@ -66,9 +66,9 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set tailing-sidecar-operator.kubeRbacProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
   --set tailing-sidecar-operator.kubeRbacProxy.image.tag=e1f49fcf5b7e86d9eb49c16dbbf9484cb486f55f999fd51d7c738c3b1f2666cf \
    --set tailing-sidecar-operator.operator.image.repository=public.ecr.aws/sumologic/tailing-sidecar-operator@sha256 \
-  --set tailing-sidecar-operator.operator.image.tag=c16b8b18e9b263fc3eb24059bba512bcfc3201b32105af6e5518392826ddd66c \
+  --set tailing-sidecar-operator.operator.image.tag=4628d97510d09bb6b976b5e5806adb8b37ab0b474547bd67057f8199c89fc635 \
   --set tailing-sidecar-operator.sidecar.image.repository=public.ecr.aws/sumologic/tailing-sidecar@sha256 \
-  --set tailing-sidecar-operator.sidecar.image.tag=738d653a78dc415243ab3627db9135768175fb7f51d0803566f5d9e824c8744b \
+  --set tailing-sidecar-operator.sidecar.image.tag=19236b3cfa7a977fa17976271296da2aabf8d93fd9850fd53d46fa33b605be10 \
   --set telegraf-operator.image.repository=public.ecr.aws/sumologic/telegraf-operator-ubi \
   --set telegraf-operator.image.sidecarImage=public.ecr.aws/sumologic/telegraf@sha256:75efd2e509c6017ea0fc5c9103ce068cbc89087b16506a4ef48cb5ff00eab84e \
   --set tracesGateway.deployment.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
