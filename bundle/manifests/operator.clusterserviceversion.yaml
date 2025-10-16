@@ -39,7 +39,7 @@ metadata:
     features.operators.openshift.io/token-auth-gcp: 'false'
     features.operators.openshift.io/cnf: 'false'
     features.operators.openshift.io/csi: 'false'
-  name: sumologic-kubernetes-collection-helm-operator.v4.13.0-1
+  name: sumologic-kubernetes-collection-helm-operator.v4.13.0-2
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
