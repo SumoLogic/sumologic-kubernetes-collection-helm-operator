@@ -16,7 +16,7 @@ readonly TIME=300
 ./tests/replace_components_images.sh
 
 # Change image in bundle.yaml to image
-sed -i.bak "s#registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:4.13.0-2#${IMG}#g" bundle.yaml
+sed -i.bak "s#registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:4.13.0-1#${IMG}#g" bundle.yaml
 
 kubectl apply -f bundle.yaml
 
