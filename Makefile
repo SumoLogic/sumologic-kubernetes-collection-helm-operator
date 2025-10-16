@@ -42,7 +42,7 @@ IMAGE_TAG_BASE ?= sumologic.com/operator
 BUNDLE_IMG ?= $(IMAGE_TAG_BASE)-bundle:v$(VERSION)
 
 # Image URL to use all building/pushing image targets
-IMG ?= registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:4.13.0-2
+IMG ?= registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:4.13.0-1
 
 all: docker-build
 
