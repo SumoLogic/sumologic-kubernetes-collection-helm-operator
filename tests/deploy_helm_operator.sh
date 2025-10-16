@@ -8,7 +8,7 @@ readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
 source "${ROOT_DIR}/tests/functions.sh"
 
 readonly DEPLOYMENT_TYPE="${DEPLOYMENT_TYPE:=default}"
-readonly IMG="${IMG:=registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:4.16.0-0-rc.0}"
+readonly IMG="${IMG:=registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:4.13.0-2}"
 readonly NAMESPACE="sumologic-system"
 readonly TIME=300
 
@@ -16,7 +16,7 @@ readonly TIME=300
 ./tests/replace_components_images.sh
 
 # Change image in bundle.yaml to image
-sed -i.bak "s#registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:4.16.0-0-rc.0#${IMG}#g" bundle.yaml
+sed -i.bak "s#registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:4.13.0-2#${IMG}#g" bundle.yaml
 
 kubectl apply -f bundle.yaml
 
