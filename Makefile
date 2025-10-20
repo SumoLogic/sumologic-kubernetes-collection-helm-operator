@@ -9,7 +9,7 @@ VERSION ?= 0.0.1
 RELEASE_NUMBER ?= 0
 
 # Sumo Logic Kubernetes Collection Chart branch name
-COLLECTION_BRANCH ?= release-v4.13
+COLLECTION_BRANCH ?= release-v4.16
 
 # CHANNELS define the bundle channels used in the bundle.
 # Add a new line here if you would like to change its default config. (E.g CHANNELS = "preview,fast,stable")
@@ -42,7 +42,7 @@ IMAGE_TAG_BASE ?= sumologic.com/operator
 BUNDLE_IMG ?= $(IMAGE_TAG_BASE)-bundle:v$(VERSION)
 
 # Image URL to use all building/pushing image targets
-IMG ?= registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:4.13.0-1
+IMG ?= registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator:4.16.0-0-rc.0
 
 all: docker-build
 
