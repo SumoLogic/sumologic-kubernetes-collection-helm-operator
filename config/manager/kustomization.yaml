@@ -14,4 +14,3 @@ images:
 - name: controller
   newName: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator
   newTag: 4.16.0-0
-  
