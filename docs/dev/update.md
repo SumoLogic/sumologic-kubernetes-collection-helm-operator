@@ -2,7 +2,36 @@
 
 This document describes steps required to update the Sumo Logic Kubernetes Collection Helm Operator.
 
-## Components images update
+## Components images update (New method)
+
+We need to certify new component images for updated components(ex. otel collector image) on openshift platform
+
+1. Identify modified/upgraded components using sumologic-kubernetes-collection changelog.
+
+1. Build and certify components container images, make steps from [this][container_certification_new] list.
+
+1. Once components are certified in openshift, update the new image hash for modified components. [Ref PR][https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/pull/173].
+
+1. Generate new version of [watches.yaml][watches.yaml]:
+
+   ```bash
+   make generate-watches
+   ```
+
+   It will generate `watches_new.yaml`, generally watches.yaml won't be changed at all, so compare watches_new.yaml and watches.yaml and proceed with replace only when there is diff.
+
+1. Add new appropriate transformations of `RELATED_IMAGE_<COMPONENT>` variables for new keys in the `watches_new.yaml`.
+   Configuration in `watches.yaml` should set image related keys from `values.yaml` using environmental variables containing image with `sha256`.
+
+1. Replace old version of watches.yaml with the new version:
+
+   ```bash
+   mv watches_new.yaml watches.yaml
+   ```
+
+1. Prepare the commit with component images update.
+
+## Components images update (Old)
 
 1. Build and certify components container images, make steps from [this][container_cerification] list.
 
@@ -92,6 +121,7 @@ This document describes steps required to update the Sumo Logic Kubernetes Colle
 1. Prepare the commit with component images update.
 
 [container_cerification]: https://github.com/SumoLogic/sumologic-openshift-images/blob/main/README.md#container-certification
+[container_certification_new]: https://github.com/SumoLogic/sumologic-openshift-images/blob/main/README.md#container-certification-preferred-method
 [sumologic-openshift-images]: https://github.com/SumoLogic/sumologic-openshift-images
 [watches.yaml]: https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/blob/main/watches.yaml
 
