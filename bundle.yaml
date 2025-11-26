@@ -492,7 +492,7 @@ spec:
         - name: RELATED_IMAGE_AUTOINSTRUMENTATION_DOTNET
           value: registry.connect.redhat.com/sumologic/autoinstrumentation-dotnet@sha256:f4f385c4489c74b5c43f2fe6b6620a9eb8d9ecab470567236b3c45f636106640
         - name: RELATED_IMAGE_AUTOINSTRUMENTATION_JAVA
-          value: registry.connect.redhat.com/sumologic/autoinstrumentation-java@sha256:sha256:757841fb1cf34b5dd687f93200badcaf7f2e923b9752e8ebcc7dc97d30e23bf4
+          value: registry.connect.redhat.com/sumologic/autoinstrumentation-java@sha256:757841fb1cf34b5dd687f93200badcaf7f2e923b9752e8ebcc7dc97d30e23bf4
         - name: RELATED_IMAGE_AUTOINSTRUMENTATION_NODEJS
           value: registry.connect.redhat.com/sumologic/autoinstrumentation-nodejs@sha256:c206eef4fdecaa58b4f01e5e7f0dbd74e9606eab2b4debf47461d36191e248d1
         - name: RELATED_IMAGE_AUTOINSTRUMENTATION_PYTHON
