@@ -191,7 +191,8 @@ mv generated_bundle.yaml bundle.yaml
 
    - Prepare release pull request with changes necessary to create new version of Helm operator
       (update version, names, description, creation date),
-      see [example pull request](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/pull/35).
+      see [example pull request for rc release](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/pull/35),
+      [example for final release version](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/pull/176/files).
 
    - Create the release tag for commit with Helm Chart version change, e.g.
 
@@ -217,8 +218,6 @@ mv generated_bundle.yaml bundle.yaml
       - Compare changes since the last release.
       - Prepare release notes.
 
-1. Test new Helm Operator version, please use [this](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/blob/main/docs/dev/test.md) instruction (please omit first step and use images created for the new Helm Operator version).
-
 1. Submit Helm Operator image for certification in [http://connect.redhat.com/](http://connect.redhat.com/). Please use the instructions here [https://connect.redhat.com/component/view/608aaab7ebd9cca472b09434/images/setup-preflight] to certify the image. Please note, you will need a Redhat (>8.0) or Fedora (>34.0) machine to undergo the steps.
    - Example commands upload the operator to redhat container registry(quay.io) and certify them using preflight. Below are just handy commands, refer [redhat certification manual](https://connect.redhat.com/component/view/608aaab7ebd9cca472b09434/images/setup-preflight) to get complete details and then use below commands for reference.
 
@@ -237,7 +236,11 @@ mv generated_bundle.yaml bundle.yaml
      ```
      
 
-1. Update Helm Operator image in ClusterServiceVersion, please see example [pull request](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/pull/129).
+1. Update Helm Operator image in ClusterServiceVersion, please see example [pull request](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/pull/129). Once above steps are done for release candidate version, You will be able to see the rc build in openshift components repo. Create PR for updating the release candidate image in ClusterServiceVersion. Once PR is merged, retag release candidate starting from step 1. Why we are doing this is because, only when updating the release candidate's certified component's image, we will be able to be do local testing.
+
+1. Test new Helm Operator RC version, please use [this](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/blob/main/docs/dev/test.md) instruction (please omit first step and use images created for the new Helm Operator version).
+
+1. Once rc testing is completed, go back to step 1 and tag the actual release tag and certify it. Once it's certified proceed with further release steps below.
 
 1. Prepare pull request to [certified-operators](https://github.com/redhat-openshift-ecosystem/certified-operators), please see [example pull request](https://github.com/redhat-openshift-ecosystem/certified-operators/pull/2754).
 
