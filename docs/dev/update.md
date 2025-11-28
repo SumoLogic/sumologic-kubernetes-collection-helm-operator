@@ -2,6 +2,12 @@
 
 This document describes steps required to update the Sumo Logic Kubernetes Collection Helm Operator.
 
+## Prerequisites
+
+Access to redhat connect is required before proceeding with component images update step
+- Join Redhat support slack channel #op-assist-sumologic. Post in #pd-priv-opensource-collection channel, someone from the team will add you.
+- If you don't have access to https://connect.redhat.com, Raise a helpdesk ticket to get you added under Sumologic Org's account and also to assocaite your Github account to redhat.
+
 ## Components images update (New method)
 
 We need to certify new component images for updated components(ex. otel collector image) on openshift platform
