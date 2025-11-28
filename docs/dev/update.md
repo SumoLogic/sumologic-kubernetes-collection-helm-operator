@@ -225,7 +225,23 @@ mv generated_bundle.yaml bundle.yaml
 
 1. Test new Helm Operator version, please use [this](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/blob/main/docs/dev/test.md) instruction (please omit first step and use images created for the new Helm Operator version).
 
-1. Submit Helm Operator image for certification in [http://connect.redhat.com/](http://connect.redhat.com/). Please use the instructions here [https://connect.redhat.com/component/view/608aaab7ebd9cca472b09434/images/setup-preflight] to certify the image. Please note, you will need a Redhat (>8.0) or Fedora (>34.0) machine to undergo the steps. 
+1. Submit Helm Operator image for certification in [http://connect.redhat.com/](http://connect.redhat.com/). Please use the instructions here [https://connect.redhat.com/component/view/608aaab7ebd9cca472b09434/images/setup-preflight] to certify the image. Please note, you will need a Redhat (>8.0) or Fedora (>34.0) machine to undergo the steps.
+   - Example commands upload the operator to redhat container registry(quay.io) and certify them using preflight. Below are just handy commands, refer [redhat certification manual](https://connect.redhat.com/component/view/608aaab7ebd9cca472b09434/images/setup-preflight) to get complete details and then use below commands for reference.
+
+     - Upload image to Container registry
+     ```bash
+     docker login -u redhat-isv-containers+608aaab7ebd9cca472b09434-robot quay.io (Get login password from redhat component page)
+     docker pull public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator:latest
+     docker tag b22d52f29f8f quay.io/redhat-isv-containers/608aaab7ebd9cca472b09434:4.17.1-0
+     docker push quay.io/redhat-isv-containers/608aaab7ebd9cca472b09434:4.17.1-0
+     ```
+
+     - Submit for certification using preflight
+     ```bash
+     podman login --username redhat-isv-containers+608aaab7ebd9cca472b09434-robot --password ******* --authfile ./temp-authfile.json quay.io
+     preflight check container quay.io/redhat-isv-containers/608aaab7ebd9cca472b09434:4.17.1-0  --submit  --pyxis-api-token=******  --certification-component-id=608aaab7ebd9cca472b09434  --docker-config=./temp-authfile.json
+     ```
+     
 
 1. Update Helm Operator image in ClusterServiceVersion, please see example [pull request](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/pull/129).
 
