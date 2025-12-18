@@ -1,0 +1,288 @@
+name: Phase 3 - Update Operator with SHA256 Digests
+
+on:
+  workflow_dispatch:
+    inputs:
+      phase2_run_id:
+        description: 'Phase 2 workflow run ID (from sumologic-openshift-images repo)'
+        required: true
+        type: string
+      helm_chart_version:
+        description: 'Helm chart version (e.g., 4.18.0)'
+        required: true
+        type: string
+      branch_name:
+        description: 'Branch name for PR (optional, default: prepare_{version})'
+        required: false
+        type: string
+        default: ''
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  update-operator:
+    runs-on: ubuntu-22.04
+    
+    steps:
+      - name: Checkout Operator Repository
+        uses: actions/checkout@v4
+        with:
+          repository: SumoLogic/sumologic-kubernetes-collection-helm-operator
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: true
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install Dependencies
+        run: |
+          pip install pyyaml
+          sudo apt-get update && sudo apt-get install -y jq
+      
+      - name: Download Phase 2 Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: certified-images
+          run-id: ${{ inputs.phase2_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: SumoLogic/sumologic-openshift-images
+      
+      - name: Verify Certified Images
+        id: verify
+        run: |
+          if [ ! -f certified_images.json ]; then
+            echo "❌ certified_images.json not found"
+            exit 1
+          fi
+          
+          SUCCESS_COUNT=$(jq '[.certified_images[] | select(.certification_status == "success")] | length' certified_images.json)
+          TOTAL_COUNT=$(jq '.certified_images | length' certified_images.json)
+          
+          echo "Total images: ${TOTAL_COUNT}, Successful: ${SUCCESS_COUNT}"
+          
+          if [ "${SUCCESS_COUNT}" -eq 0 ]; then
+            echo "❌ No successfully certified images found"
+            exit 1
+          fi
+          
+          echo "success_count=${SUCCESS_COUNT}" >> $GITHUB_OUTPUT
+          echo "total_count=${TOTAL_COUNT}" >> $GITHUB_OUTPUT
+      
+      - name: Convert Certified Images to Update Script Format
+        run: |
+          python3 scripts/convert_certified_images.py \
+            --input certified_images.json \
+            --output images.txt
+          echo "Generated images.txt with $(wc -l < images.txt) entries"
+      
+      - name: Create Branch
+        id: branch
+        run: |
+          BRANCH="${{ inputs.branch_name }}"
+          if [ -z "${BRANCH}" ]; then
+            BRANCH="prepare_${{ inputs.helm_chart_version }}"
+          fi
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "${BRANCH}"
+          
+          echo "branch=${BRANCH}" >> $GITHUB_OUTPUT
+      
+      - name: Update Component Images
+        run: |
+          python3 scripts/update_images.py \
+            --images-file images.txt \
+            --operator-repo-dir ./ \
+            --create-new-file True
+      
+      - name: Verify Generated Files
+        run: |
+          FILES=(
+            "bundle/manifests/operator.clusterserviceversion_new.yaml"
+            "config/manager/manager_new.yaml"
+            "tests/replace_components_images_new.sh"
+            "tests/helm_install_new.sh"
+          )
+          
+          for file in "${FILES[@]}"; do
+            if [ ! -f "${file}" ]; then
+              echo "❌ ${file} not found"
+              exit 1
+            fi
+          done
+          echo "All files generated successfully"
+      
+      - name: Replace Old Files with New Versions
+        run: |
+          mv bundle/manifests/operator.clusterserviceversion_new.yaml \
+             bundle/manifests/operator.clusterserviceversion.yaml
+          mv config/manager/manager_new.yaml \
+             config/manager/manager.yaml
+          mv tests/replace_components_images_new.sh \
+             tests/replace_components_images.sh
+          mv tests/helm_install_new.sh \
+             tests/helm_install.sh
+          chmod +x tests/helm_install.sh tests/replace_components_images.sh
+      
+      - name: Update Helm Chart Version in Test Scripts
+        run: sed -i "s/--version [0-9]\+\.[0-9]\+\.[0-9]\+/--version ${{ inputs.helm_chart_version }}/g" tests/helm_install.sh
+      
+      - name: Update Helm Submodule
+        run: |
+          cd helm-charts/sumologic-kubernetes-collection
+          git fetch --tags origin
+          
+          if ! git checkout "v${{ inputs.helm_chart_version }}"; then
+            echo "❌ Failed to checkout v${{ inputs.helm_chart_version }}"
+            git tag | grep "v${{ inputs.helm_chart_version }}" || echo "No matching tags found"
+            exit 1
+          fi
+          
+          cd ../..
+          git add helm-charts/sumologic-kubernetes-collection
+      
+      - name: Generate watches.yaml
+        run: |
+          make generate-watches
+          
+          if [ ! -f watches_new.yaml ]; then
+            echo "❌ watches_new.yaml not generated"
+            exit 1
+          fi
+          
+          if [ -f watches.yaml ] && diff -u watches.yaml watches_new.yaml > watches.diff; then
+            rm watches_new.yaml
+          else
+            echo "⚠️ watches_new.yaml requires manual review"
+          fi
+      
+      - name: Update bundle.yaml
+        run: |
+          make generate-bundle
+          
+          if [ ! -f generated_bundle.yaml ]; then
+            echo "❌ generated_bundle.yaml not generated"
+            exit 1
+          fi
+          
+          mv generated_bundle.yaml bundle.yaml
+      
+      - name: Commit Changes
+        run: |
+          git add bundle/manifests/operator.clusterserviceversion.yaml \
+                  config/manager/manager.yaml \
+                  bundle.yaml \
+                  tests/replace_components_images.sh \
+                  tests/helm_install.sh \
+                  helm-charts/sumologic-kubernetes-collection
+          
+          [ -f watches_new.yaml ] && git add watches_new.yaml
+          
+          git commit -m "chore: update Sumologic Collection Helm Chart to ${{ inputs.helm_chart_version }}"
+      
+      - name: Push Branch
+        run: git push origin "${{ steps.branch.outputs.branch }}"
+      
+      - name: Create Pull Request
+        id: create_pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const watchesNewExists = fs.existsSync('watches_new.yaml');
+            
+            const { data: pr } = await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `chore: update operator images to helm chart v${{ inputs.helm_chart_version }}`,
+              head: '${{ steps.branch.outputs.branch }}',
+              base: 'main',
+              body: `## Update Helm Operator for v${{ inputs.helm_chart_version }}
+            
+            Updates component images with certified SHA256 digests from OpenShift certification.
+            
+            **Images certified:** ${{ steps.verify.outputs.success_count }} / ${{ steps.verify.outputs.total_count }}
+            
+            ### Files Updated
+            
+            - \`config/manager/manager.yaml\`
+            - \`bundle/manifests/operator.clusterserviceversion.yaml\`
+            - \`bundle.yaml\`
+            - \`tests/replace_components_images.sh\`
+            - \`tests/helm_install.sh\`
+            - \`helm-charts/sumologic-kubernetes-collection\` (submodule → v${{ inputs.helm_chart_version }})
+            ${watchesNewExists ? '\n⚠️ **Action Required:** Review and merge \`watches_new.yaml\` if changes are needed' : ''}
+            
+            ### Testing
+            
+            ${watchesNewExists ? `1. Review \`watches_new.yaml\` for new RELATED_IMAGE_* transformations\n2. ` : '1. '}Run \`make test && make deploy-helm-chart\`
+            ${watchesNewExists ? '3. ' : '2. '}Verify operator deployment on test cluster
+            
+            ### Automation
+            
+            - [Phase 2 Certification](https://github.com/SumoLogic/sumologic-openshift-images/actions/runs/${{ inputs.phase2_run_id }})
+            - [Phase 3 Update](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            
+            ### 📚 Related Documentation
+            
+            - [Update Process](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/blob/main/docs/dev/update.md)
+            - [Helm Chart v${{ inputs.helm_chart_version }} Release Notes](https://github.com/SumoLogic/sumologic-kubernetes-collection/releases/tag/v${{ inputs.helm_chart_version }})
+            
+            ---
+            
+            **Auto-generated by Phase 3 automation** 🤖
+            `
+            });
+            
+            console.log(`✅ PR created: ${pr.html_url}`);
+            return pr.number;
+      
+      - name: Output Summary
+        run: |
+          echo "## ✅ Phase 3 Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🎉 Pull Request Created Successfully" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 **[View PR #${{ steps.create_pr.outputs.result }}](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/pull/${{ steps.create_pr.outputs.result }})**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** \`${{ steps.branch.outputs.branch }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Helm Chart Version:** ${{ inputs.helm_chart_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Images Updated:** ${{ steps.verify.outputs.success_count }} / ${{ steps.verify.outputs.total_count }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Phase 2 Run:** [${{ inputs.phase2_run_id }}](https://github.com/SumoLogic/sumologic-openshift-images/actions/runs/${{ inputs.phase2_run_id }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f watches_new.yaml ]; then
+            echo "### ⚠️  Manual Review Required" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Please review \`watches_new.yaml\` and merge if changes are needed." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "### 📝 Updated Files" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ \`config/manager/manager.yaml\`" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ \`bundle/manifests/operator.clusterserviceversion.yaml\`" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ \`bundle.yaml\`" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ \`tests/replace_components_images.sh\`" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ \`tests/helm_install.sh\`" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ \`helm-charts/sumologic-kubernetes-collection\` (submodule)" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f watches_new.yaml ]; then
+            echo "- ⚠️  \`watches_new.yaml\` (needs review)" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🚀 Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "1. Review the PR" >> $GITHUB_STEP_SUMMARY
+          echo "2. Run tests locally" >> $GITHUB_STEP_SUMMARY
+          echo "3. Deploy to test cluster" >> $GITHUB_STEP_SUMMARY
+          echo "4. Merge when ready" >> $GITHUB_STEP_SUMMARY
