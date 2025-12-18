@@ -8,6 +8,8 @@
 """
 
 import argparse
+import os
+import re
 import subprocess
 import yaml
 
@@ -175,23 +177,23 @@ def update_envs(envs: list, new_image_envs) -> list:
     """
     not_image_envs = []
     existing_image_envs = {}
-    
+
     # Separate non-image envs and create a map of existing image envs
     for env in envs:
         if ENV_PREFIX not in env["name"]:
             not_image_envs.append(env)
         else:
             existing_image_envs[env["name"]] = env
-    
+
     # Update existing images with new values or add new ones
     for new_env in new_image_envs:
         existing_image_envs[new_env["name"]] = new_env
-    
+
     # Return: non-image envs + all image envs (existing + updated + new)
     return not_image_envs + list(existing_image_envs.values())
 
 
-def update_cluster_service_version(file_path: str, new_related_images: list, new_image_envs: list, create_new_file):
+def update_cluster_service_version(file_path: str, new_related_images: list, new_image_envs: list, create_new_file):  # pylint: disable=too-many-locals
     """Updates components images in bundle/manifests/operator.clusterserviceversion.yaml
 
     Args:
@@ -212,11 +214,11 @@ def update_cluster_service_version(file_path: str, new_related_images: list, new
                 helm_operator_image = img
             else:
                 existing_images_map[img["name"]] = img
-        
+
         # Update existing images with new values or add new ones
         for new_img in new_related_images:
             existing_images_map[new_img["name"]] = new_img
-        
+
         # Reconstruct the list: helm operator first, then all others
         updated_images = [helm_operator_image] + list(existing_images_map.values())
         cluster_service_version["spec"]["relatedImages"] = updated_images
@@ -259,16 +261,13 @@ def update_manager(file_path: str, new_image_envs: list, create_new_file):
             yaml.safe_dump_all(new_contents, manager_file_new)
 
 
-def update_replace_components_images(image_file_path: str, create_new_file: bool):
+def update_replace_components_images(image_file_path: str, create_new_file: bool):  # pylint: disable=too-many-locals
     """Updates components images in tests/replace_components_images.sh
 
     Args:
         file_path (str): path to the output of get_images_sha256.sh, see: https://github.com/SumoLogic/sumologic-openshift-images/blob/main/scripts/get_images_sha256.sh
         create_new_file (bool): determines whether new file should be created or the exiting file should be overwritten
     """
-    import os
-    import re
-    
     # Read existing sed commands if file exists
     existing_commands = {}
     if os.path.exists(REPLACE_COMPONENTS_IMAGES_PATH):
@@ -281,7 +280,7 @@ def update_replace_components_images(image_file_path: str, create_new_file: bool
                     if match:
                         component = match.group(1)
                         existing_commands[component] = line
-    
+
     # Build new commands from input file
     new_commands = {}
     for image_with_tag, image_with_sha256 in pairwise(get_lines(image_file_path)):
@@ -294,10 +293,10 @@ def update_replace_components_images(image_file_path: str, create_new_file: bool
                 component, _ = image_with_tag.removeprefix(RED_HAT_REGISTRY).split(":")
                 public_ecr_image_with_sha256 = f"{PUBLIC_ECR_REGISTRY}{component}@{digest}"
                 new_commands[component] = f'sed -i.bak "s#{image_with_sha256}#{public_ecr_image_with_sha256}#g" bundle.yaml'
-    
+
     # Merge: update existing with new, keep rest
     existing_commands.update(new_commands)
-    
+
     # Write to file
     new_file_path = create_new_file_path(REPLACE_COMPONENTS_IMAGES_PATH, create_new_file, ".sh")
     with open(new_file_path, "w", encoding="utf-8") as new_file:
@@ -425,8 +424,6 @@ def parse_args():
 
 
 if __name__ == "__main__":
-    import os
-    
     args = parse_args()
 
     related_images_list, image_envs_list = generate_image_lists(args.images_file)
