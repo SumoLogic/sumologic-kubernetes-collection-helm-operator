@@ -1,5 +1,9 @@
 name: Phase 3 - Update Operator with SHA256 Digests
 
+permissions:
+  contents: write
+  pull-requests: write
+
 on:
   workflow_dispatch:
     inputs:

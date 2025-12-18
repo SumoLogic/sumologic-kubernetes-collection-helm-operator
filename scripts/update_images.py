@@ -276,7 +276,7 @@ def update_replace_components_images(image_file_path: str, create_new_file: bool
                 line = line.strip()
                 if line.startswith("sed -i.bak"):
                     # Extract component name from Red Hat registry URL (handles both :tag and @sha256 formats)
-                    match = re.search(r'registry\.connect\.redhat\.com/sumologic/([^:@]+)', line)
+                    match = re.search(r"registry\.connect\.redhat\.com/sumologic/([^:@]+)", line)
                     if match:
                         component = match.group(1)
                         existing_commands[component] = line
