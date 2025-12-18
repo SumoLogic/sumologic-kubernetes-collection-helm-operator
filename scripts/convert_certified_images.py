@@ -17,7 +17,7 @@ import argparse
 import sys
 
 
-def convert_certified_images_to_text(json_file:  str, output_file: str):
+def convert_certified_images_to_text(json_file: str, output_file: str):
     """
     Convert certified_images.json to text format expected by update_images.py
 
@@ -25,22 +25,22 @@ def convert_certified_images_to_text(json_file:  str, output_file: str):
         json_file: Path to certified_images.json from Phase 2
         output_file: Path to output text file
     """
-    with open(json_file, 'r', encoding='utf-8') as f:
+    with open(json_file, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     lines = []
     skipped = []
 
-    for img in data['certified_images']:
+    for img in data["certified_images"]:
         # Skip failed or pending certifications
-        if img['certification_status'] != 'success':
+        if img["certification_status"] != "success":
             skipped.append(f"{img['name']} - Status: {img['certification_status']}")
             continue
 
         # Extract components
-        name = img['name']
-        version = img['version']
-        sha256 = img['sha256']
+        name = img["name"]
+        version = img["version"]
+        sha256 = img["sha256"]
 
         # Validate required fields
         if not name or not version or not sha256:
@@ -53,7 +53,7 @@ def convert_certified_images_to_text(json_file:  str, output_file: str):
 
         # Line 2: registry.connect.redhat.com/sumologic/{name}:@{sha256}
         # Remove 'sha256:' prefix if present
-        sha256_clean = sha256.replace('sha256:', '')
+        sha256_clean = sha256.replace("sha256:", "")
         image_with_sha = f"registry.connect.redhat.com/sumologic/{name}:@sha256:{sha256_clean}"
 
         lines.append(image_with_tag)
@@ -63,13 +63,13 @@ def convert_certified_images_to_text(json_file:  str, output_file: str):
     if skipped:
         print("⚠️  Skipped images:", file=sys.stderr)
         for skip in skipped:
-            print(f"   - {skip}", file=sys. stderr)
+            print(f"   - {skip}", file=sys.stderr)
 
     # Write to output file
-    with open(output_file, 'w', encoding='utf-8') as f:
-        f.write('\n'. join(lines))
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines))
         if lines:  # Add final newline only if there's content
-            f.write('\n')
+            f.write("\n")
 
     print(f"✅ Converted {len(lines)//2} images to {output_file}")
 
@@ -79,23 +79,13 @@ def convert_certified_images_to_text(json_file:  str, output_file: str):
 
 def parse_args():
     """Parse command line arguments"""
-    parser = argparse.ArgumentParser(
-        description='Convert certified_images.json to update_images.py format'
-    )
-    parser.add_argument(
-        '--input',
-        required=True,
-        help='Path to certified_images.json'
-    )
-    parser.add_argument(
-        '--output',
-        default='images.txt',
-        help='Path to output file (default: images.txt)'
-    )
+    parser = argparse.ArgumentParser(description="Convert certified_images.json to update_images.py format")
+    parser.add_argument("--input", required=True, help="Path to certified_images.json")
+    parser.add_argument("--output", default="images.txt", help="Path to output file (default: images.txt)")
     return parser.parse_args()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = parse_args()
     count = convert_certified_images_to_text(args.input, args.output)
 
