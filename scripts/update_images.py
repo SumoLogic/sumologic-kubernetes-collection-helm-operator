@@ -174,10 +174,21 @@ def update_envs(envs: list, new_image_envs) -> list:
         list: update list of list of environment variables
     """
     not_image_envs = []
+    existing_image_envs = {}
+    
+    # Separate non-image envs and create a map of existing image envs
     for env in envs:
         if ENV_PREFIX not in env["name"]:
             not_image_envs.append(env)
-    return not_image_envs + new_image_envs
+        else:
+            existing_image_envs[env["name"]] = env
+    
+    # Update existing images with new values or add new ones
+    for new_env in new_image_envs:
+        existing_image_envs[new_env["name"]] = new_env
+    
+    # Return: non-image envs + all image envs (existing + updated + new)
+    return not_image_envs + list(existing_image_envs.values())
 
 
 def update_cluster_service_version(file_path: str, new_related_images: list, new_image_envs: list, create_new_file):
@@ -193,9 +204,22 @@ def update_cluster_service_version(file_path: str, new_related_images: list, new
         cluster_service_version = yaml.safe_load(cluster_service_version_file)
         images = cluster_service_version["spec"]["relatedImages"]
 
-        helm_operator_image = get_helm_operator_image(images)
-        new_related_images.insert(0, helm_operator_image)
-        cluster_service_version["spec"]["relatedImages"] = new_related_images
+        # Create a map of existing related images by name
+        existing_images_map = {}
+        helm_operator_image = None
+        for img in images:
+            if img["name"] == "sumologic-kubernetes-collection-helm-operator":
+                helm_operator_image = img
+            else:
+                existing_images_map[img["name"]] = img
+        
+        # Update existing images with new values or add new ones
+        for new_img in new_related_images:
+            existing_images_map[new_img["name"]] = new_img
+        
+        # Reconstruct the list: helm operator first, then all others
+        updated_images = [helm_operator_image] + list(existing_images_map.values())
+        cluster_service_version["spec"]["relatedImages"] = updated_images
 
         containers = cluster_service_version["spec"]["install"]["spec"]["deployments"][0]["spec"]["template"]["spec"]["containers"]
         # pylint: disable=C0200
@@ -242,7 +266,24 @@ def update_replace_components_images(image_file_path: str, create_new_file: bool
         file_path (str): path to the output of get_images_sha256.sh, see: https://github.com/SumoLogic/sumologic-openshift-images/blob/main/scripts/get_images_sha256.sh
         create_new_file (bool): determines whether new file should be created or the exiting file should be overwritten
     """
-    cmd_lines = []
+    import os
+    import re
+    
+    # Read existing sed commands if file exists
+    existing_commands = {}
+    if os.path.exists(REPLACE_COMPONENTS_IMAGES_PATH):
+        with open(REPLACE_COMPONENTS_IMAGES_PATH, encoding="utf-8") as existing_file:
+            for line in existing_file:
+                line = line.strip()
+                if line.startswith("sed -i.bak"):
+                    # Extract component name from Red Hat registry URL (handles both :tag and @sha256 formats)
+                    match = re.search(r'registry\.connect\.redhat\.com/sumologic/([^:@]+)', line)
+                    if match:
+                        component = match.group(1)
+                        existing_commands[component] = line
+    
+    # Build new commands from input file
+    new_commands = {}
     for image_with_tag, image_with_sha256 in pairwise(get_lines(image_file_path)):
         public_ecr_image_with_tag = image_with_tag.replace(RED_HAT_REGISTRY, PUBLIC_ECR_REGISTRY)
         docker_output = subprocess.run(["docker", "pull", public_ecr_image_with_tag], stdout=subprocess.PIPE, check=False)
@@ -252,13 +293,17 @@ def update_replace_components_images(image_file_path: str, create_new_file: bool
                 digest = line.removeprefix("Digest:").strip()
                 component, _ = image_with_tag.removeprefix(RED_HAT_REGISTRY).split(":")
                 public_ecr_image_with_sha256 = f"{PUBLIC_ECR_REGISTRY}{component}@{digest}"
-                cmd_lines.append(f'sed -i.bak "s#{image_with_sha256}#{public_ecr_image_with_sha256}#g" bundle.yaml')
-
-        new_file_path = create_new_file_path(REPLACE_COMPONENTS_IMAGES_PATH, create_new_file, ".sh")
-        with open(new_file_path, "w", encoding="utf-8") as new_file:
-            new_file.write(BASH_HEADER)
-            for cmd in cmd_lines:
-                new_file.write(f"{cmd}\n")
+                new_commands[component] = f'sed -i.bak "s#{image_with_sha256}#{public_ecr_image_with_sha256}#g" bundle.yaml'
+    
+    # Merge: update existing with new, keep rest
+    existing_commands.update(new_commands)
+    
+    # Write to file
+    new_file_path = create_new_file_path(REPLACE_COMPONENTS_IMAGES_PATH, create_new_file, ".sh")
+    with open(new_file_path, "w", encoding="utf-8") as new_file:
+        new_file.write(BASH_HEADER)
+        for cmd in existing_commands.values():
+            new_file.write(f"{cmd}\n")
 
 
 def get_image_digest(image_with_tag: str) -> str:
@@ -380,16 +425,18 @@ def parse_args():
 
 
 if __name__ == "__main__":
+    import os
+    
     args = parse_args()
 
-    # related_images_list, image_envs_list = generate_image_lists(args.images_file)
+    related_images_list, image_envs_list = generate_image_lists(args.images_file)
 
-    # csv_path = os.path.join(args.operator_repo_dir, CLUSTER_SERVICE_VERSION_PATH)
-    # update_cluster_service_version(csv_path, related_images_list, image_envs_list, args.create_new_file)
+    csv_path = os.path.join(args.operator_repo_dir, CLUSTER_SERVICE_VERSION_PATH)
+    update_cluster_service_version(csv_path, related_images_list, image_envs_list, args.create_new_file)
 
-    # m_path = os.path.join(args.operator_repo_dir, MANAGER_PATH)
-    # update_manager(m_path, image_envs_list, args.create_new_file)
+    m_path = os.path.join(args.operator_repo_dir, MANAGER_PATH)
+    update_manager(m_path, image_envs_list, args.create_new_file)
 
-    # update_replace_components_images(args.images_file, args.create_new_file)
+    update_replace_components_images(args.images_file, args.create_new_file)
 
     update_helm_install(args.images_file, args.create_new_file)
