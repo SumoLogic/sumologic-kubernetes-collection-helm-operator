@@ -1,0 +1,277 @@
+name: Build, Certify & Publish Operator
+
+on:
+  workflow_dispatch:
+    inputs:
+      operator_version:
+        description: 'Operator version (e.g., 2.1.1-0-rc.0 or 2.1.1-0)'
+        required: true
+        type: string
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build-certify-publish:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Install Dependencies
+        run: |
+          pip install pyyaml
+          sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Detect Release Type
+        id: detect
+        run: |
+          VERSION="${{ inputs.operator_version }}"
+          
+          if [[ "${VERSION}" =~ -rc[\.\-][0-9]+$ ]] || [[ "${VERSION}" =~ \.rc\.[0-9]+$ ]]; then
+            RELEASE_TYPE="rc"
+            IS_PRERELEASE="true"
+          else
+            RELEASE_TYPE="final"
+            IS_PRERELEASE="false"
+          fi
+          
+          echo "release_type=${RELEASE_TYPE}" >> $GITHUB_OUTPUT
+          echo "is_prerelease=${IS_PRERELEASE}" >> $GITHUB_OUTPUT
+
+      - name: Fetch Operator Project ID
+        id: get_project_id
+        run: |
+          PRODUCT_ID="6075d88c2b962feb86bea730"
+          OPERATOR_NAME="sumologic-kubernetes-collection-helm-operator"
+          
+          echo "🔍 Fetching operator project ID from Red Hat API..."
+          
+          # Fetch all container projects under the product
+          RESPONSE=$(curl -sH "X-API-KEY: ${{ secrets.RED_HAT_API_KEY }}" \
+            "https://catalog.redhat.com/api/containers/v1/product-listings/id/${PRODUCT_ID}/projects/certification")
+          
+          # Extract project ID for the operator by name
+          PROJECT_ID=$(echo "${RESPONSE}" | jq -r \
+            ".data[] | select(.container.name == \"${OPERATOR_NAME}\") | ._id")
+          
+          if [ -z "${PROJECT_ID}" ] || [ "${PROJECT_ID}" == "null" ]; then
+            echo "❌ Failed to fetch operator project ID"
+            echo "Response: ${RESPONSE}"
+            exit 1
+          fi
+          
+          echo "project_id=${PROJECT_ID}" >> $GITHUB_OUTPUT
+          echo "✅ Operator Project ID: ${PROJECT_ID}"
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Build Operator Image
+        run: |
+          VERSION="${{ inputs.operator_version }}"
+          docker build -t "sumologic-operator:${VERSION}" -f Dockerfile .
+          echo "✅ Image built"
+
+      - name: Fetch Quay.io Credentials
+        id: quay_creds
+        run: |
+          PROJECT_ID="${{ steps.get_project_id.outputs.project_id }}"
+          MAX_ATTEMPTS=10
+          ATTEMPT=0
+
+          echo "🔑 Fetching Quay.io credentials from Red Hat API..."
+          
+          # Retry loop (same as openshift-images repo)
+          while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+            ATTEMPT=$((ATTEMPT + 1))
+            
+            RESPONSE=$(curl -sH "X-API-KEY: ${{ secrets.RED_HAT_API_KEY }}" \
+              "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${PROJECT_ID}/secrets")
+            
+            REGISTRY_KEY=$(echo "${RESPONSE}" | jq -r '.registry_key // empty')
+            DOCKER_CONFIG=$(echo "${RESPONSE}" | jq -r '.docker_config_json // empty')
+            
+            if [ -n "${REGISTRY_KEY}" ] && [ "${REGISTRY_KEY}" != "null" ]; then
+              echo "registry_key=${REGISTRY_KEY}" >> $GITHUB_OUTPUT
+
+              # Save docker config
+              mkdir -p ${HOME}/.docker
+              echo "${DOCKER_CONFIG}" > ${HOME}/.docker/config.json
+              
+              echo "✅ Quay.io credentials obtained"
+              exit 0
+            fi
+
+            echo "⚠️ Attempt ${ATTEMPT}/${MAX_ATTEMPTS}: Failed to get credentials, retrying in 3 seconds..."
+            sleep 3
+          done
+          
+          echo "❌ Failed to obtain Quay.io credentials after ${MAX_ATTEMPTS} attempts"
+          exit 1
+
+      - name: Login to Quay.io
+        run: |
+          PROJECT_ID="${{ steps.get_project_id.outputs.project_id }}"
+          REGISTRY_KEY="${{ steps.quay_creds.outputs.registry_key }}"
+          
+          echo "${REGISTRY_KEY}" | \
+            docker login -u "redhat-isv-containers+${PROJECT_ID}-robot" quay.io --password-stdin
+          
+          echo "✅ Logged in to Quay.io"
+      
+      - name: Push to Quay.io
+        run: |
+          VERSION="${{ inputs.operator_version }}"
+          PROJECT_ID="${{ steps.get_project_id.outputs.project_id }}"
+
+          QUAY_IMAGE="quay.io/redhat-isv-containers/${PROJECT_ID}:${VERSION}"
+          
+          docker tag "sumologic-operator:${VERSION}" "${QUAY_IMAGE}"
+          docker push "${QUAY_IMAGE}"
+          
+          echo "quay_image=${QUAY_IMAGE}" >> $GITHUB_ENV
+          echo "✅ Image pushed to Quay.io"
+
+      - name: Install Preflight
+        run: |
+          curl -Lo preflight https://github.com/redhat-openshift-ecosystem/openshift-preflight/releases/latest/download/preflight-linux-amd64
+          chmod +x preflight
+          sudo mv preflight /usr/local/bin/
+      
+      - name: Run Preflight Certification
+        run: |
+          PROJECT_ID="${{ steps.get_project_id.outputs.project_id }}"
+          
+          preflight check container "${quay_image}" \
+            --submit \
+            --pyxis-api-token="${{ secrets.RED_HAT_API_KEY }}" \
+            --certification-project-id="${PROJECT_ID}" \
+            --docker-config="${HOME}/.docker/config.json"
+          
+          echo "✅ Certification submitted"
+      
+      - name: Wait for Certification
+        id: wait_cert
+        run: |
+          VERSION="${{ inputs.operator_version }}"
+          OPERATOR_NAME="sumologic-kubernetes-collection-helm-operator"
+          MAX_ATTEMPTS=60
+          ATTEMPT=0
+          
+          echo "⏳ Waiting for certification (max 10 minutes)..."
+          
+          echo "${{ secrets.RED_HAT_REGISTRY_TOKEN }}" | \
+            docker login registry.connect.redhat.com \
+              --username "${{ secrets.RED_HAT_REGISTRY_USERNAME }}" \
+              --password-stdin
+          
+          while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+            ATTEMPT=$((ATTEMPT + 1))
+            
+            if docker manifest inspect "registry.connect.redhat.com/sumologic/${OPERATOR_NAME}:${VERSION}" >/dev/null 2>&1; then
+              echo "✅ Certified!"
+              echo "certified=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+
+            sleep 10
+          done
+          
+          echo "⚠️ Certification pending"
+          echo "certified=false" >> $GITHUB_OUTPUT
+
+      - name: Get Digest
+        id: get_digest
+        if: steps.wait_cert.outputs.certified == 'true'
+        run: |
+          VERSION="${{ inputs.operator_version }}"
+          OPERATOR_NAME="sumologic-kubernetes-collection-helm-operator"
+          
+          DIGEST=$(docker manifest inspect \
+            "registry.connect.redhat.com/sumologic/${OPERATOR_NAME}:${VERSION}" \
+            | jq -r '.config.digest')
+          
+          FULL_REF="registry.connect.redhat.com/sumologic/${OPERATOR_NAME}@${DIGEST}"
+          
+          echo "digest=${DIGEST}" >> $GITHUB_OUTPUT
+          echo "full_ref=${FULL_REF}" >> $GITHUB_OUTPUT
+      
+      - name: Update CSV
+        if: steps.wait_cert.outputs.certified == 'true'
+        run: |
+          CSV_FILE="bundle/manifests/operator.clusterserviceversion.yaml"
+          OPERATOR_NAME="sumologic-kubernetes-collection-helm-operator"
+          DEPLOYMENT_NAME="sumologic-helm-operator"
+          FULL_REF="${{ steps.get_digest.outputs.full_ref }}"
+          VERSION="${{ inputs.operator_version }}"
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          BRANCH="update-digest-${VERSION}"
+          git checkout -b "${BRANCH}"
+          
+          yq eval ".metadata.annotations.containerImage = \"${FULL_REF}\"" -i "${CSV_FILE}"
+          yq eval "(.spec.install.spec.deployments[] | select(.name == \"${DEPLOYMENT_NAME}\") | .spec.template.spec.containers[] | select(.name == \"operator\") | .image) = \"${FULL_REF}\"" -i "${CSV_FILE}"
+          yq eval "(.spec.relatedImages[] | select(.name == \"${OPERATOR_NAME}\") | .image) = \"${FULL_REF}\"" -i "${CSV_FILE}"
+          
+          git add bundle/manifests/operator.clusterserviceversion.yaml
+          git commit -m "chore: update operator image with certified digest for v${VERSION}"
+          git push -u origin "${BRANCH}"
+      
+      - name: Create Digest PR
+        id: digest_pr
+        if: steps.wait_cert.outputs.certified == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const version = '${{ inputs.operator_version }}';
+            const digest = '${{ steps.get_digest.outputs.digest }}';
+
+            const { data: pr } = await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `chore: update operator image with certified digest for v${version}`,
+              head: `update-digest-${version}`,
+              base: 'main',
+              body: `Updates CSV with Red Hat certified digest.\n\n**Digest:** \`${digest}\`\n\n⚠️ **Manual review and merge required** - After merging, create a release tag and GitHub release manually.`
+            });
+            
+            core.info(`✅ PR created: #${pr.number}`);
+            return pr.number;
+
+      - name: Output Summary
+        run: |
+          VERSION="${{ inputs.operator_version }}"
+          PROJECT_ID="${{ steps.get_project_id.outputs.project_id }}"
+          CERTIFIED="${{ steps.wait_cert.outputs.certified }}"
+          
+          echo "## ✅ Phase 5 Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${VERSION}" >> $GITHUB_STEP_SUMMARY
+          echo "**Type:** ${{ steps.detect.outputs.release_type }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Project ID:** ${PROJECT_ID}" >> $GITHUB_STEP_SUMMARY
+          echo "**Certified:** ${CERTIFIED}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${CERTIFIED}" = "true" ]; then
+            echo "### ✅ PR Created" >> $GITHUB_STEP_SUMMARY
+            echo "A pull request has been created with the certified digest." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### 📋 Next Steps (Manual)" >> $GITHUB_STEP_SUMMARY
+            echo "1. Review and merge the digest update PR" >> $GITHUB_STEP_SUMMARY
+            echo "2. Create a git tag: \`git tag -a v${VERSION} -m 'Release v${VERSION}' && git push origin v${VERSION}\`" >> $GITHUB_STEP_SUMMARY
+            echo "3. Create a GitHub release from the tag" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ⚠️ Manual Steps Required" >> $GITHUB_STEP_SUMMARY
+            echo "Certification pending. Once approved:" >> $GITHUB_STEP_SUMMARY
+            echo "1. Manually update CSV with the certified digest" >> $GITHUB_STEP_SUMMARY
+            echo "2. Create and merge a PR with the changes" >> $GITHUB_STEP_SUMMARY
+            echo "3. Create a git tag and GitHub release" >> $GITHUB_STEP_SUMMARY
+          fi
