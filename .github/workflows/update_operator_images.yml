@@ -1,4 +1,4 @@
-name: Phase 3 - Update Operator with SHA256 Digests
+name: Update Operator with SHA256 Digests
 
 permissions:
   contents: write
