@@ -24,6 +24,7 @@ REPLACE_COMPONENTS_IMAGES_PATH = "tests/replace_components_images.sh"
 HELM_INSTALL_SCRIPT_PATH = "tests/helm_install.sh"
 BASH_HEADER = "#!/usr/bin/env bash\n\n"
 
+
 def get_helm_install_command_header(helm_chart_version: str) -> str:
     """Generate helm install command header with dynamic version.
     Args:
@@ -32,6 +33,7 @@ def get_helm_install_command_header(helm_chart_version: str) -> str:
         str: Formatted helm install command header
     """
     return f"""readonly ROOT_DIR="$(dirname "$(dirname "${{0}}")")"\n\nhelm upgrade --install test-openshift sumologic/sumologic \\\n  --version {helm_chart_version} \\\n  -n sumologic-system \\\n  --create-namespace -f "${{ROOT_DIR}}/tests/values.yaml" \\\n"""
+
 
 # COMPONENTS_CONFIG_MAP maps helm chart configuration keys into components names
 COMPONENTS_CONFIG_MAP = {
