@@ -2,9 +2,10 @@
 """Updates operator version in all necessary files for a new release."""
 
 import argparse
+import os
 import re
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
@@ -53,7 +54,7 @@ def update_csv(csv_file, version, operator_name):
 
     csv_data["spec"]["version"] = version
     csv_data["metadata"]["name"] = f"{operator_name}.v{version}"
-    csv_data["metadata"]["annotations"]["createdAt"] = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    csv_data["metadata"]["annotations"]["createdAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     operator_image = f"registry.connect.redhat.com/sumologic/{operator_name}:{version}"
     csv_data["metadata"]["annotations"]["containerImage"] = operator_image
@@ -165,8 +166,12 @@ def main():
     update_kustomization(repo_dir / "config/manager/kustomization.yaml", version)
     update_deploy_test_script(repo_dir / "tests/deploy_helm_operator.sh", version, operator_name)
 
-    print(f"::set-output name=release_type::{release_type}")
-    print(f"::set-output name=previous_version::{previous_version}")
+    # Write outputs to GITHUB_OUTPUT
+    github_output = os.getenv("GITHUB_OUTPUT")
+    if github_output:
+        with open(github_output, "a", encoding="utf-8") as f:
+            f.write(f"release_type={release_type}\n")
+            f.write(f"previous_version={previous_version}\n")
 
 
 if __name__ == "__main__":
