@@ -1,0 +1,130 @@
+name: Prepare Operator Release
+
+permissions:
+  contents: write
+  pull-requests: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      operator_version:
+        description: 'Operator version (e.g., 2.1.1-0-rc.0 for RC, 2.1.1-0 for final)'
+        required: true
+        type: string
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-22.04
+
+    outputs:
+      pr_number: ${{ steps.create_pr.outputs.result }}
+      release_type: ${{ steps.update.outputs.release_type }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: pip install pyyaml
+
+      - name: Create Release Branch
+        id: branch
+        run: |
+          VERSION="${{ inputs.operator_version }}"
+
+          if [[ "${VERSION}" =~ [-\.]rc[\.\-][0-9]+$ ]]; then
+            BASE_VERSION=$(echo "${VERSION}" | sed -E 's/[-\.]rc\.[0-9]+$//')
+            BRANCH="prepare-release-v${BASE_VERSION}"
+          else
+            BRANCH="prepare-release-v${VERSION}"
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git ls-remote --heads origin "${BRANCH}" | grep -q "${BRANCH}"; then
+            git fetch origin "${BRANCH}"
+            git checkout "${BRANCH}"
+            git pull origin "${BRANCH}"
+          else
+            git checkout -b "${BRANCH}"
+          fi
+
+          echo "branch=${BRANCH}" >> $GITHUB_OUTPUT
+
+      - name: Update Version in Files
+        id: update
+        run: |
+          python3 scripts/update_operator_version.py \
+            --operator-version "${{ inputs.operator_version }}" \
+            --operator-repo-dir ./
+
+      - name: Commit and Push
+        run: |
+          VERSION="${{ inputs.operator_version }}"
+          RELEASE_TYPE="${{ steps.update.outputs.release_type }}"
+
+          git add bundle/manifests/operator.clusterserviceversion.yaml
+          git add Makefile
+          git add bundle.yaml
+          git add config/manager/kustomization.yaml
+          git add tests/deploy_helm_operator.sh
+
+          if ! git diff --cached --quiet; then
+            [ "${RELEASE_TYPE}" = "rc" ] && MSG="chore: prepare release ${VERSION} (RC)" || MSG="chore: prepare release ${VERSION}"
+            git commit -m "${MSG}"
+            git push -u origin "${{ steps.branch.outputs.branch }}"
+          fi
+
+      - name: Create Pull Request
+        id: create_pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const version = '${{ inputs.operator_version }}';
+            const releaseType = '${{ steps.update.outputs.release_type }}';
+            const previousVersion = '${{ steps.update.outputs.previous_version }}';
+            const isRC = releaseType === 'rc';
+
+            const { data: pr } = await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `chore: prepare release ${version}${isRC ? ' (RC)' : ''}`,
+              head: '${{ steps.branch.outputs.branch }}',
+              base: 'main',
+              body: `## Prepare Operator Release ${version}
+
+                **Type:** ${isRC ? 'Release Candidate' : 'Final Release'}
+                **Replaces:** v${previousVersion}
+
+                ### Changes
+                - Updated operator version to ${version}
+                - Updated image references to Red Hat registry
+                - Updated kustomization
+
+                ### Next Steps
+                1. Review and merge this PR
+                2. Run Phase 5 to build and certify
+
+                ---`
+            });
+            return pr.number;
+
+      - name: Output Summary
+        run: |
+          echo "## ✅ Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**PR:** [#${{ steps.create_pr.outputs.result }}](https://github.com/${{ github.repository }}/pull/${{ steps.create_pr.outputs.result }})" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ inputs.operator_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Type:** ${{ steps.update.outputs.release_type }}" >> $GITHUB_STEP_SUMMARY
