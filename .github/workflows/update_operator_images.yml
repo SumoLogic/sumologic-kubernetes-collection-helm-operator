@@ -94,7 +94,8 @@ jobs:
           python3 scripts/update_images.py \
             --images-file images.txt \
             --operator-repo-dir ./ \
-            --create-new-file True
+            --create-new-file True \
+            --helm-chart-version "${{ inputs.helm_chart_version }}"
       
       - name: Verify Generated Files
         run: |
@@ -124,9 +125,6 @@ jobs:
           mv tests/helm_install_new.sh \
              tests/helm_install.sh
           chmod +x tests/helm_install.sh tests/replace_components_images.sh
-      
-      - name: Update Helm Chart Version in Test Scripts
-        run: sed -i "s/--version [0-9]\+\.[0-9]\+\.[0-9]\+/--version ${{ inputs.helm_chart_version }}/g" tests/helm_install.sh
       
       - name: Update Helm Submodule
         run: |

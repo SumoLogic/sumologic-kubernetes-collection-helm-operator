@@ -24,12 +24,14 @@ REPLACE_COMPONENTS_IMAGES_PATH = "tests/replace_components_images.sh"
 HELM_INSTALL_SCRIPT_PATH = "tests/helm_install.sh"
 BASH_HEADER = "#!/usr/bin/env bash\n\n"
 
-HELM_INSTALL_COMMAND_HEADER = """readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
-
-helm upgrade --install test-openshift sumologic/sumologic \\
-  --version 4.17.1 \\
-  -n sumologic-system \\
-  --create-namespace -f "${ROOT_DIR}/tests/values.yaml" \\\n"""
+def get_helm_install_command_header(helm_chart_version: str) -> str:
+    """Generate helm install command header with dynamic version.
+    Args:
+        helm_chart_version (str): Helm chart version to use
+    Returns:
+        str: Formatted helm install command header
+    """
+    return f"""readonly ROOT_DIR="$(dirname "$(dirname "${{0}}")")"\n\nhelm upgrade --install test-openshift sumologic/sumologic \\\n  --version {helm_chart_version} \\\n  -n sumologic-system \\\n  --create-namespace -f "${{ROOT_DIR}}/tests/values.yaml" \\\n"""
 
 # COMPONENTS_CONFIG_MAP maps helm chart configuration keys into components names
 COMPONENTS_CONFIG_MAP = {
@@ -340,11 +342,13 @@ def prepare_components_images_map(file_path: str) -> dict:
     return components_images
 
 
-def update_helm_install(image_file_path: str, create_new_file: bool):
+def update_helm_install(image_file_path: str, create_new_file: bool, helm_chart_version: str):
     """Updates helm install command in tests/helm_install.sh"
 
     Args:
-        file_path (str): path to the output of get_images_sha256.sh, see: https://github.com/SumoLogic/sumologic-openshift-images/blob/main/scripts/get_images_sha256.sh
+        image_file_path (str): path to the output of get_images_sha256.sh, see: https://github.com/SumoLogic/sumologic-openshift-images/blob/main/scripts/get_images_sha256.sh
+        create_new_file (bool): whether to create a new file or overwrite existing
+        helm_chart_version (str): Helm chart version to use in the install command
     """
     # pylint: disable=R0912,R0914
     image_config_keys = get_image_keys()
@@ -397,7 +401,8 @@ def update_helm_install(image_file_path: str, create_new_file: bool):
 
     new_file_path = create_new_file_path(HELM_INSTALL_SCRIPT_PATH, create_new_file, ".sh")
     with open(new_file_path, "w", encoding="utf-8") as new_file:
-        file_content = BASH_HEADER + HELM_INSTALL_COMMAND_HEADER + "\n".join(set_args)
+        helm_install_header = get_helm_install_command_header(helm_chart_version)
+        file_content = BASH_HEADER + helm_install_header + "\n".join(set_args)
         file_content = file_content.removesuffix(" \\")  # remove last \ after last helm install argument
         new_file.write(f"{file_content}\n")
 
@@ -420,6 +425,11 @@ def parse_args():
         help="determines whether new file should be created or the exiting file should be overwritten",
         default=True,
     )
+    parser.add_argument(
+        "--helm-chart-version",
+        help="Helm chart version to use in the install command (e.g., 4.18.0)",
+        required=True,
+    )
     return parser.parse_args()
 
 
@@ -436,4 +446,4 @@ if __name__ == "__main__":
 
     update_replace_components_images(args.images_file, args.create_new_file)
 
-    update_helm_install(args.images_file, args.create_new_file)
+    update_helm_install(args.images_file, args.create_new_file, args.helm_chart_version)
