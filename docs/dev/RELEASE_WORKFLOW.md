@@ -99,13 +99,6 @@ Phase 6: Marketplace Submission → MANUAL
    - Update the `com.redhat.openshift.versions` annotation
    - Example: `"v4.12-v4.16"` → `"v4.13-v4.17"`
 
-3. **Commit changes**
-   ```bash
-   git add Dockerfile bundle/metadata/annotations.yaml
-   git commit -m "chore: Update Dockerfile dependencies and OpenShift versions"
-   git push origin main
-   ```
-
 ---
 
 ### Phase 4: Prepare Operator Release (AUTOMATED)
@@ -127,7 +120,7 @@ Phase 6: Marketplace Submission → MANUAL
 **Output**: PR with version updates
 
 **Action Required After PR Merge**:
-1. Create and push release tag:
+1. Create and push release tag (required for Phase 5):
    ```bash
    git tag -a v4.18.0-0-rc.0 -m "Release v4.18.0-0-rc.0"
    git push origin v4.18.0-0-rc.0
@@ -137,7 +130,6 @@ Phase 6: Marketplace Submission → MANUAL
    git checkout -b release-v4.18.0
    git push origin release-v4.18.0
    ```
-3. Draft GitHub release with changelog
 
 ---
 
@@ -163,13 +155,15 @@ Phase 6: Marketplace Submission → MANUAL
 **Action Required**:
 
 **For RC Versions**:
-1. Merge PR
-2. Test RC version (see [test.md](dev/test.md))
-3. If tests pass: Retag as final (go back to Phase 4 with final version)
+1. Merge PR with certified image SHA256
+2. Draft GitHub release with changelog
+3. Test RC version (see [test.md](./test.md))
+4. If tests pass: Go back to Phase 4 with final version
 
 **For Final Versions**:
-1. Merge PR
-2. Proceed to Phase 6
+1. Merge PR with certified image SHA256
+2. Draft GitHub release with changelog
+3. Proceed to Phase 6
 
 ---
 
@@ -180,7 +174,7 @@ Phase 6: Marketplace Submission → MANUAL
 #### For RC Versions (e.g., 4.18.0-0-rc.0):
 
 1. **Test new Helm Operator RC version**
-   - Use [testing instructions](dev/test.md) (omit first step and use images created for the new Helm Operator version)
+   - Use [testing instructions](./test.md) (omit first step and use images created for the new Helm Operator version)
    - Run comprehensive tests on OpenShift cluster
 
 2. **Once RC testing is completed**
@@ -222,8 +216,8 @@ Phase 6: Marketplace Submission → MANUAL
 ## Resources
 
 **Documentation**:
-- [Testing Guide](dev/test.md)
-- [Old Manual Process](dev/update.md) (reference only)
+- [Testing Guide](./test.md)
+- [Old Manual Process](./update.md) (reference only)
 
 **Contacts**:
 - Slack: `#op-assist-sumologic` (Red Hat support)
