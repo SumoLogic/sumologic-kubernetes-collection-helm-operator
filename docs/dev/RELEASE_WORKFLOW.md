@@ -144,11 +144,9 @@ Phase 6: Marketplace Submission → MANUAL
 1. Builds operator image
 2. Pushes to Quay.io
 3. Runs preflight certification
-4. Polls for certification status (60 min timeout)
+4. Polls for certification status (10 min timeout)
 5. Updates CSV with certified image SHA256
 6. Creates PR with certified image
-
-**Duration**: ~30-60 minutes
 
 **Output**: PR with certified operator SHA256
 
