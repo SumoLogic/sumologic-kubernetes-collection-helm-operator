@@ -422,6 +422,7 @@ data:
       healthProbeBindAddress: :8081
     metrics:
       bindAddress: 127.0.0.1:8080
+
     leaderElection:
       leaderElect: true
       resourceName: 811c9dc5.sumologic.com
@@ -508,7 +509,7 @@ spec:
         - name: RELATED_IMAGE_KUBERNETES_TOOLS_KUBECTL
           value: registry.connect.redhat.com/sumologic/kubernetes-tools-kubectl@sha256:319cddcd7fafa8413642cb10392996fb7d039a80859930e68897452655dc14c9
         - name: RELATED_IMAGE_METRICS_SERVER
-          value: registry.connect.redhat.com/sumologic/metrics-server@sha256:65d2a3ddc4b4183f438fa18b655079c93c905cb9e3b8c54977336205dc1fff07
+          value: registry.connect.redhat.com/sumologic/metrics-server@sha256:aade7cec3bd8e4d92891aeec6ccb832b648324ebec8aee009b4f6c629e327582
         - name: RELATED_IMAGE_NGINX_UNPRIVILEGED
           value: registry.connect.redhat.com/sumologic/nginx-unprivileged@sha256:7260555d16c94c4fe1e016626b4cb8a5c0de6b700e2eea28744331fb298f71ae
         - name: RELATED_IMAGE_NODE_EXPORTER
@@ -522,11 +523,11 @@ spec:
         - name: RELATED_IMAGE_PROMETHEUS
           value: registry.connect.redhat.com/sumologic/prometheus@sha256:0ef6eaf570a40499dd5de92a79593e950bc771b014e0ee6ff7419b4b82a36fcc
         - name: RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR
-          value: registry.connect.redhat.com/sumologic/sumologic-otel-collector@sha256:5b9f01f2eafe3b33d60f5100b96a1d9a36b7519f7048186cccb6ce07562ae168
+          value: registry.connect.redhat.com/sumologic/sumologic-otel-collector@sha256:ab4fce2a87b8db142916d3f1d80ef3e3e4a08d735b86e051b24ac4eabf4595a2
         - name: RELATED_IMAGE_TAILING_SIDECAR_OPERATOR
-          value: registry.connect.redhat.com/sumologic/tailing-sidecar-operator@sha256:4628d97510d09bb6b976b5e5806adb8b37ab0b474547bd67057f8199c89fc635
+          value: registry.connect.redhat.com/sumologic/tailing-sidecar-operator@sha256:0f1de6965ab949bd324329098bdd2c82104f32ca2c9023dde0d448f31599db11
         - name: RELATED_IMAGE_TAILING_SIDECAR
-          value: registry.connect.redhat.com/sumologic/tailing-sidecar@sha256:19236b3cfa7a977fa17976271296da2aabf8d93fd9850fd53d46fa33b605be10
+          value: registry.connect.redhat.com/sumologic/tailing-sidecar@sha256:a6561330df15b4bc0083eb3f3ef22775c0b1d5ed283da7e612604a14e9bb2810
         - name: RELATED_IMAGE_TELEGRAF_OPERATOR
           value: registry.connect.redhat.com/sumologic/telegraf-operator@sha256:ff958222be01c0c3966474463e43bbd5bcf348790dd34bb761718cb1cea2d793
         - name: RELATED_IMAGE_TELEGRAF
