@@ -51,10 +51,10 @@ def convert_certified_images_to_text(json_file: str, output_file: str):
         # Line 1: registry.connect.redhat.com/sumologic/{name}:{version}-ubi
         image_with_tag = f"registry.connect.redhat.com/sumologic/{name}:{version}-ubi"
 
-        # Line 2: registry.connect.redhat.com/sumologic/{name}:@sha256:{sha256}
+        # Line 2: registry.connect.redhat.com/sumologic/{name}@sha256:{sha256}
         # Remove 'sha256:' prefix if present
         sha256_clean = sha256.replace("sha256:", "")
-        image_with_sha = f"registry.connect.redhat.com/sumologic/{name}:@sha256:{sha256_clean}"
+        image_with_sha = f"registry.connect.redhat.com/sumologic/{name}@sha256:{sha256_clean}"
 
         lines.append(image_with_tag)
         lines.append(image_with_sha)
