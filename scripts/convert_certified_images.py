@@ -31,10 +31,10 @@ def convert_certified_images_to_text(json_file: str, output_file: str):
     lines = []
     skipped = []
 
-    for img in data["certified_images"]:
+    for img in data["images"]:
         # Skip failed or pending certifications
-        if img["certification_status"] != "success":
-            skipped.append(f"{img['name']} - Status: {img['certification_status']}")
+        if img["status"] != "success":
+            skipped.append(f"{img['name']} - Status: {img['status']}")
             continue
 
         # Extract components
