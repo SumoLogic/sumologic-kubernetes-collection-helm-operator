@@ -48,9 +48,8 @@ def convert_certified_images_to_text(json_file: str, output_file: str):
             continue
 
         # Generate the two lines expected by update_images.py
-        # Line 1: registry.connect.redhat.com/sumologic/{name}:{version}
-        # Note: version already includes -ubi suffix from Phase 2
-        image_with_tag = f"registry.connect.redhat.com/sumologic/{name}:{version}"
+        # Line 1: registry.connect.redhat.com/sumologic/{name}:{version}-ubi
+        image_with_tag = f"registry.connect.redhat.com/sumologic/{name}:{version}-ubi"
 
         # Line 2: registry.connect.redhat.com/sumologic/{name}:@sha256:{sha256}
         # Remove 'sha256:' prefix if present
