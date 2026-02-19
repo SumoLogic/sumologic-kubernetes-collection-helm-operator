@@ -345,68 +345,42 @@ def prepare_components_images_map(file_path: str) -> dict:
 
 
 def update_helm_install(image_file_path: str, create_new_file: bool, helm_chart_version: str):
-    """Updates helm install command in tests/helm_install.sh"
+    """Updates helm install command in tests/helm_install.sh - only updates certified images
 
     Args:
         image_file_path (str): path to the output of get_images_sha256.sh, see: https://github.com/SumoLogic/sumologic-openshift-images/blob/main/scripts/get_images_sha256.sh
         create_new_file (bool): whether to create a new file or overwrite existing
         helm_chart_version (str): Helm chart version to use in the install command
     """
-    # pylint: disable=R0912,R0914
-    image_config_keys = get_image_keys()
-    components_images = prepare_components_images_map(image_file_path)
-    set_args = []
-
-    for image_config in image_config_keys:
-        image_config_root = ".".join(image_config.split(".")[:-1])
-
-        if image_config_root not in COMPONENTS_CONFIG_MAP:
-            print(f"WARNING: missing key in components map, key: {image_config_root}")
-            continue
-
-        component = COMPONENTS_CONFIG_MAP[image_config_root]
-
-        if component not in components_images:
-            print(f"WARNING: missing key in components_images, key: {component}")
-            set_arg = f"  --set {image_config}='' \\"
-            set_args.append(set_arg)
-            continue
-
-        config = image_config.split(".")[-1]
-        if config == "repository":
-            if image_config_root + ".registry" not in image_config_keys:
-                set_arg = f"  --set {image_config}={PUBLIC_ECR_REGISTRY}{component}@sha256 \\"
-            else:
-                set_arg = f"  --set {image_config}={component}@sha256 \\"
-        elif config == "tag":
-            if image_config_root + ".sha" not in image_config_keys:
-                public_ecr_image_with_tag = components_images[component]["image_with_tag"].replace(RED_HAT_REGISTRY, PUBLIC_ECR_REGISTRY)
-                tag = get_image_digest(public_ecr_image_with_tag)
-            else:
-                tag = components_images[component]["tag"]
-
-            set_arg = f"  --set {image_config}={tag} \\"
-        elif config == "registry":
-            registry = PUBLIC_ECR_REGISTRY[:-1]
-            set_arg = f"  --set {image_config}={registry} \\"
-        elif config == "sha":
-            sha = components_images[component]["sha"]
-            set_arg = f"  --set {image_config}={sha} \\"
-        elif config == "sidecarImage":
-            # special case for telegraf-operator.image.sidecarImage
-            component = component.removesuffix("-operator")
-            sidecar = components_images[component]["image_with_sha256"]
-            set_arg = f"  --set {image_config}={sidecar} \\"
-        else:
-            set_arg = f"  --set {image_config}='' \\"
-        set_args.append(set_arg)
-
-    new_file_path = create_new_file_path(HELM_INSTALL_SCRIPT_PATH, create_new_file, ".sh")
-    with open(new_file_path, "w", encoding="utf-8") as new_file:
-        helm_install_header = get_helm_install_command_header(helm_chart_version)
-        file_content = BASH_HEADER + helm_install_header + "\n".join(set_args)
-        file_content = file_content.removesuffix(" \\")  # remove last \ after last helm install argument
-        new_file.write(f"{file_content}\n")
+    # Use the standalone script for more robust updates
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    update_script = os.path.join(script_dir, "update_helm_install.py")
+    
+    output_path = create_new_file_path(HELM_INSTALL_SCRIPT_PATH, create_new_file, ".sh")
+    
+    cmd = [
+        "python3",
+        update_script,
+        "--images-file", image_file_path,
+        "--helm-install", HELM_INSTALL_SCRIPT_PATH,
+        "--helm-chart-version", helm_chart_version,
+        "--output", output_path
+    ]
+    
+    print(f"Running: {' '.join(cmd)}")
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    
+    # Print stderr (contains progress messages)
+    if result.stderr:
+        print(result.stderr)
+    
+    if result.returncode != 0:
+        print(f"ERROR: Failed to update helm_install.sh")
+        if result.stdout:
+            print(result.stdout)
+        return
+    
+    print(f"✅ Updated helm_install.sh -> {output_path}")
 
 
 def parse_args():
