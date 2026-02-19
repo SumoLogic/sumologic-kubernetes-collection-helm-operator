@@ -52,7 +52,7 @@ def update_helm_install(helm_install_path, certified_components, helm_chart_vers
                 if updated_line != line:
                     update_count += 1
         
-        # Extract component from repository URL
+        # Extract component from repository URL (but don't modify it)
         repo_match = re.search(r'\.repository=([^\s\\]+)', line)
         if repo_match:
             repo_url = repo_match.group(1)
@@ -70,21 +70,25 @@ def update_helm_install(helm_install_path, certified_components, helm_chart_vers
             
             if component:
                 current_component = component if component in certified_components else None
-                
-                # Add @sha256 to certified component repositories (if not already present)
-                if current_component and '@sha256' not in line:
-                    updated_line = line.rstrip(' \\\n') + '@sha256 \\\n'
-                    if updated_line != line:
-                        update_count += 1
             else:
                 current_component = None
         
-        # Update .tag field with VERSION
+        # Update .tag field - use SHA if original has SHA (64 hex chars), otherwise use VERSION
         elif '.tag=' in line and current_component:
             tag_match = re.search(r'\.tag=([^\s\\]+)', line)
             if tag_match:
-                new_tag = certified_components[current_component]['version']
-                if tag_match.group(1) != new_tag:
+                current_tag = tag_match.group(1)
+                # Check if current tag is a SHA hash (64 hex characters)
+                is_sha_format = len(current_tag) == 64 and all(c in '0123456789abcdef' for c in current_tag.lower())
+                
+                if is_sha_format:
+                    # Original uses SHA in .tag field, so update with SHA
+                    new_tag = certified_components[current_component]['sha']
+                else:
+                    # Original uses version in .tag field, so update with version
+                    new_tag = certified_components[current_component]['version']
+                
+                if current_tag != new_tag:
                     updated_line = re.sub(r'\.tag=[^\s\\]+', f'.tag={new_tag}', line)
                     update_count += 1
         
