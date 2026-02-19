@@ -58,8 +58,8 @@ jobs:
             exit 1
           fi
           
-          SUCCESS_COUNT=$(jq '[.certified_images[] | select(.certification_status == "success")] | length' certified_images.json)
-          TOTAL_COUNT=$(jq '.certified_images | length' certified_images.json)
+          SUCCESS_COUNT=$(jq '[.images[] | select(.status == "success")] | length' certified_images.json)
+          TOTAL_COUNT=$(jq '.images | length' certified_images.json)
           
           echo "Total images: ${TOTAL_COUNT}, Successful: ${SUCCESS_COUNT}"
           
