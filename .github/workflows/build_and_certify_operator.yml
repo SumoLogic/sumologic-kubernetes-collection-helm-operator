@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-22.04
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout Repository
@@ -177,19 +178,15 @@ jobs:
             RESPONSE=$(curl -sH "X-API-KEY: ${{ secrets.RED_HAT_API_KEY }}" \
               "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${PROJECT_ID}/images?page_size=100")
             
-            # Find the image with matching tag
-            IMAGE_DATA=$(echo "${RESPONSE}" | jq -r --arg VERSION "${VERSION}" \
-              '.data[] | select(.repositories[].tags[] | contains($VERSION)) | select(.certified == true)')
+            # Find the first certified image with matching tag
+            DIGEST=$(echo "${RESPONSE}" | jq -r --arg VERSION "${VERSION}" \
+              '[.data[] | select(.repositories[].tags[]?.name == $VERSION) | select(.certified == true)] | first | .docker_image_digest // empty')
             
-            if [ -n "${IMAGE_DATA}" ]; then
-              DIGEST=$(echo "${IMAGE_DATA}" | jq -r '.docker_image_digest')
-              
-              if [ -n "${DIGEST}" ] && [ "${DIGEST}" != "null" ]; then
-                echo "✅ Certified! Digest: ${DIGEST}"
-                echo "certified=true" >> $GITHUB_OUTPUT
-                echo "digest=${DIGEST}" >> $GITHUB_OUTPUT
-                exit 0
-              fi
+            if [ -n "${DIGEST}" ] && [ "${DIGEST}" != "null" ]; then
+              echo "✅ Certified! Digest: ${DIGEST}"
+              echo "certified=true" >> $GITHUB_OUTPUT
+              echo "digest=${DIGEST}" >> $GITHUB_OUTPUT
+              exit 0
             fi
             
             echo "⏳ Attempt ${ATTEMPT}/${MAX_ATTEMPTS}: Image not yet certified, waiting 10 seconds..."
@@ -228,9 +225,18 @@ jobs:
           BRANCH="update-digest-${VERSION}"
           git checkout -b "${BRANCH}"
           
-          yq eval ".metadata.annotations.containerImage = \"${FULL_REF}\"" -i "${CSV_FILE}"
-          yq eval "(.spec.install.spec.deployments[] | select(.name == \"${DEPLOYMENT_NAME}\") | .spec.template.spec.containers[] | select(.name == \"operator\") | .image) = \"${FULL_REF}\"" -i "${CSV_FILE}"
-          yq eval "(.spec.relatedImages[] | select(.name == \"${OPERATOR_NAME}\") | .image) = \"${FULL_REF}\"" -i "${CSV_FILE}"
+          # Use sed to preserve file formatting (avoid yq reformatting issues)
+          # Get the old image reference to replace
+          OLD_REF=$(grep -m1 "registry.connect.redhat.com/sumologic/${OPERATOR_NAME}@sha256:" "${CSV_FILE}" | sed 's/.*\(registry.connect.redhat.com[^"]*\).*/\1/')
+          
+          # Replace all occurrences of the old reference with the new one
+          sed -i "s|${OLD_REF}|${FULL_REF}|g" "${CSV_FILE}"
+          
+          # Also update bundle.yaml if it exists
+          if [ -f "bundle.yaml" ]; then
+            sed -i "s|${OLD_REF}|${FULL_REF}|g" "bundle.yaml"
+            git add bundle.yaml
+          fi
           
           git add bundle/manifests/operator.clusterserviceversion.yaml
           git commit -m "chore: update operator image with certified digest for v${VERSION}"
@@ -275,10 +281,11 @@ jobs:
             echo "### ✅ PR Created" >> $GITHUB_STEP_SUMMARY
             echo "A pull request has been created with the certified digest." >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### 📋 Next Steps (Manual)" >> $GITHUB_STEP_SUMMARY
+            echo "### 📋 Next Steps" >> $GITHUB_STEP_SUMMARY
             echo "1. Review and merge the digest update PR" >> $GITHUB_STEP_SUMMARY
-            echo "2. Create a git tag: \`git tag -a v${VERSION} -m 'Release v${VERSION}' && git push origin v${VERSION}\`" >> $GITHUB_STEP_SUMMARY
-            echo "3. Create a GitHub release from the tag" >> $GITHUB_STEP_SUMMARY
+            echo "2. Test the operator on OpenShift cluster" >> $GITHUB_STEP_SUMMARY
+            echo "3. Create a git tag: \`git tag -a v${VERSION} -m 'Release v${VERSION}' && git push origin v${VERSION}\`" >> $GITHUB_STEP_SUMMARY
+            echo "4. Create a GitHub release from the tag" >> $GITHUB_STEP_SUMMARY
           else
             echo "### ⚠️ Manual Steps Required" >> $GITHUB_STEP_SUMMARY
             echo "Certification pending. Once approved:" >> $GITHUB_STEP_SUMMARY
