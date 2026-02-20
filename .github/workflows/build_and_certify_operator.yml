@@ -26,6 +26,12 @@ jobs:
           fetch-depth: 0
           submodules: true
 
+      - name: Update Submodules
+        run: |
+          git submodule update --init --recursive
+          ls -la helm-charts/sumologic-kubernetes-collection/
+          echo "✅ Submodules updated"
+
       - name: Install Dependencies
         run: |
           pip install pyyaml
