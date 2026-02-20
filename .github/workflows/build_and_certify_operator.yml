@@ -51,24 +51,8 @@ jobs:
       - name: Fetch Operator Project ID
         id: get_project_id
         run: |
-          PRODUCT_ID="6075d88c2b962feb86bea730"
-          OPERATOR_NAME="sumologic-kubernetes-collection-helm-operator"
-          
-          echo "🔍 Fetching operator project ID from Red Hat API..."
-          
-          # Fetch all container projects under the product
-          RESPONSE=$(curl -sH "X-API-KEY: ${{ secrets.RED_HAT_API_KEY }}" \
-            "https://catalog.redhat.com/api/containers/v1/product-listings/id/${PRODUCT_ID}/projects/certification")
-          
-          # Extract project ID for the operator by name
-          PROJECT_ID=$(echo "${RESPONSE}" | jq -r \
-            ".data[] | select(.container.name == \"${OPERATOR_NAME}\") | ._id")
-          
-          if [ -z "${PROJECT_ID}" ] || [ "${PROJECT_ID}" == "null" ]; then
-            echo "❌ Failed to fetch operator project ID"
-            echo "Response: ${RESPONSE}"
-            exit 1
-          fi
+          # Operator project ID from Red Hat Connect Portal
+          PROJECT_ID="608aaab7ebd9cca472b09434"
           
           echo "project_id=${PROJECT_ID}" >> $GITHUB_OUTPUT
           echo "✅ Operator Project ID: ${PROJECT_ID}"
