@@ -82,18 +82,20 @@ jobs:
 
           echo "🔑 Fetching Quay.io credentials from Red Hat API..."
           
-          # Retry loop (same as openshift-images repo)
+          # Retry loop
           while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
             ATTEMPT=$((ATTEMPT + 1))
             
             RESPONSE=$(curl -sH "X-API-KEY: ${{ secrets.RED_HAT_API_KEY }}" \
               "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${PROJECT_ID}/secrets")
             
-            REGISTRY_KEY=$(echo "${RESPONSE}" | jq -r '.registry_key // empty')
+            REGISTRY_PASSWORD=$(echo "${RESPONSE}" | jq -r '.registry_credentials.password // empty')
+            REGISTRY_USERNAME=$(echo "${RESPONSE}" | jq -r '.registry_credentials.username // empty')
             DOCKER_CONFIG=$(echo "${RESPONSE}" | jq -r '.docker_config_json // empty')
             
-            if [ -n "${REGISTRY_KEY}" ] && [ "${REGISTRY_KEY}" != "null" ]; then
-              echo "registry_key=${REGISTRY_KEY}" >> $GITHUB_OUTPUT
+            if [ -n "${REGISTRY_PASSWORD}" ] && [ "${REGISTRY_PASSWORD}" != "null" ]; then
+              echo "registry_password=${REGISTRY_PASSWORD}" >> $GITHUB_OUTPUT
+              echo "registry_username=${REGISTRY_USERNAME}" >> $GITHUB_OUTPUT
 
               # Save docker config
               mkdir -p ${HOME}/.docker
@@ -112,11 +114,11 @@ jobs:
 
       - name: Login to Quay.io
         run: |
-          PROJECT_ID="${{ steps.get_project_id.outputs.project_id }}"
-          REGISTRY_KEY="${{ steps.quay_creds.outputs.registry_key }}"
+          REGISTRY_USERNAME="${{ steps.quay_creds.outputs.registry_username }}"
+          REGISTRY_PASSWORD="${{ steps.quay_creds.outputs.registry_password }}"
           
-          echo "${REGISTRY_KEY}" | \
-            docker login -u "redhat-isv-containers+${PROJECT_ID}-robot" quay.io --password-stdin
+          echo "${REGISTRY_PASSWORD}" | \
+            docker login -u "${REGISTRY_USERNAME}" quay.io --password-stdin
           
           echo "✅ Logged in to Quay.io"
       
