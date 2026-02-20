@@ -148,7 +148,7 @@ jobs:
           preflight check container "${quay_image}" \
             --submit \
             --pyxis-api-token="${{ secrets.RED_HAT_API_KEY }}" \
-            --certification-project-id="${PROJECT_ID}" \
+            --certification-component-id="${PROJECT_ID}" \
             --docker-config="${HOME}/.docker/config.json"
           
           echo "✅ Certification submitted"
