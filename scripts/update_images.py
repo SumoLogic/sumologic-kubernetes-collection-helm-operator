@@ -13,8 +13,6 @@ import re
 import subprocess
 import yaml
 
-from get_image_config_keys import get_image_keys
-
 RED_HAT_REGISTRY = "registry.connect.redhat.com/sumologic/"
 PUBLIC_ECR_REGISTRY = "public.ecr.aws/sumologic/"
 ENV_PREFIX = "RELATED_IMAGE_"
@@ -355,9 +353,9 @@ def update_helm_install(image_file_path: str, create_new_file: bool, helm_chart_
     # Use the standalone script for more robust updates
     script_dir = os.path.dirname(os.path.abspath(__file__))
     update_script = os.path.join(script_dir, "update_helm_install.py")
-    
+
     output_path = create_new_file_path(HELM_INSTALL_SCRIPT_PATH, create_new_file, ".sh")
-    
+
     cmd = [
         "python3",
         update_script,
@@ -366,20 +364,20 @@ def update_helm_install(image_file_path: str, create_new_file: bool, helm_chart_
         "--helm-chart-version", helm_chart_version,
         "--output", output_path
     ]
-    
+
     print(f"Running: {' '.join(cmd)}")
-    result = subprocess.run(cmd, capture_output=True, text=True)
-    
+    result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+
     # Print stderr (contains progress messages)
     if result.stderr:
         print(result.stderr)
-    
+
     if result.returncode != 0:
-        print(f"ERROR: Failed to update helm_install.sh")
+        print("ERROR: Failed to update helm_install.sh")
         if result.stdout:
             print(result.stdout)
         return
-    
+
     print(f"✅ Updated helm_install.sh -> {output_path}")
 
 
