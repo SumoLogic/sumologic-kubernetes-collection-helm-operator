@@ -70,8 +70,15 @@ jobs:
       - name: Build Operator Image
         run: |
           VERSION="${{ inputs.operator_version }}"
-          docker build -t "sumologic-operator:${VERSION}" -f Dockerfile .
-          echo "✅ Image built"
+          RELEASE_NUMBER="1"
+          
+          docker build \
+            --build-arg VERSION="${VERSION}" \
+            --build-arg RELEASE_NUMBER="${RELEASE_NUMBER}" \
+            -t "sumologic-operator:${VERSION}" \
+            -f Dockerfile .
+          
+          echo "✅ Image built with VERSION=${VERSION} RELEASE_NUMBER=${RELEASE_NUMBER}"
 
       - name: Fetch Quay.io Credentials
         id: quay_creds
@@ -157,30 +164,39 @@ jobs:
         id: wait_cert
         run: |
           VERSION="${{ inputs.operator_version }}"
-          OPERATOR_NAME="sumologic-kubernetes-collection-helm-operator"
+          PROJECT_ID="${{ steps.get_project_id.outputs.project_id }}"
           MAX_ATTEMPTS=60
           ATTEMPT=0
           
           echo "⏳ Waiting for certification (max 10 minutes)..."
           
-          echo "${{ secrets.RED_HAT_REGISTRY_TOKEN }}" | \
-            docker login registry.connect.redhat.com \
-              --username "${{ secrets.RED_HAT_REGISTRY_USERNAME }}" \
-              --password-stdin
-          
           while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
             ATTEMPT=$((ATTEMPT + 1))
             
-            if docker manifest inspect "registry.connect.redhat.com/sumologic/${OPERATOR_NAME}:${VERSION}" >/dev/null 2>&1; then
-              echo "✅ Certified!"
-              echo "certified=true" >> $GITHUB_OUTPUT
-              exit 0
+            # Query Pyxis API for image certification status
+            RESPONSE=$(curl -sH "X-API-KEY: ${{ secrets.RED_HAT_API_KEY }}" \
+              "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${PROJECT_ID}/images?page_size=100")
+            
+            # Find the image with matching tag
+            IMAGE_DATA=$(echo "${RESPONSE}" | jq -r --arg VERSION "${VERSION}" \
+              '.data[] | select(.repositories[].tags[] | contains($VERSION)) | select(.certified == true)')
+            
+            if [ -n "${IMAGE_DATA}" ]; then
+              DIGEST=$(echo "${IMAGE_DATA}" | jq -r '.docker_image_digest')
+              
+              if [ -n "${DIGEST}" ] && [ "${DIGEST}" != "null" ]; then
+                echo "✅ Certified! Digest: ${DIGEST}"
+                echo "certified=true" >> $GITHUB_OUTPUT
+                echo "digest=${DIGEST}" >> $GITHUB_OUTPUT
+                exit 0
+              fi
             fi
-
+            
+            echo "⏳ Attempt ${ATTEMPT}/${MAX_ATTEMPTS}: Image not yet certified, waiting 10 seconds..."
             sleep 10
           done
           
-          echo "⚠️ Certification pending"
+          echo "⚠️ Certification pending after ${MAX_ATTEMPTS} attempts"
           echo "certified=false" >> $GITHUB_OUTPUT
 
       - name: Get Digest
@@ -189,15 +205,13 @@ jobs:
         run: |
           VERSION="${{ inputs.operator_version }}"
           OPERATOR_NAME="sumologic-kubernetes-collection-helm-operator"
-          
-          DIGEST=$(docker manifest inspect \
-            "registry.connect.redhat.com/sumologic/${OPERATOR_NAME}:${VERSION}" \
-            | jq -r '.config.digest')
+          DIGEST="${{ steps.wait_cert.outputs.digest }}"
           
           FULL_REF="registry.connect.redhat.com/sumologic/${OPERATOR_NAME}@${DIGEST}"
           
           echo "digest=${DIGEST}" >> $GITHUB_OUTPUT
           echo "full_ref=${FULL_REF}" >> $GITHUB_OUTPUT
+          echo "✅ Full reference: ${FULL_REF}"
       
       - name: Update CSV
         if: steps.wait_cert.outputs.certified == 'true'
