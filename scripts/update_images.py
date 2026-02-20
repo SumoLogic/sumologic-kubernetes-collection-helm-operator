@@ -359,10 +359,14 @@ def update_helm_install(image_file_path: str, create_new_file: bool, helm_chart_
     cmd = [
         "python3",
         update_script,
-        "--images-file", image_file_path,
-        "--helm-install", HELM_INSTALL_SCRIPT_PATH,
-        "--helm-chart-version", helm_chart_version,
-        "--output", output_path
+        "--images-file",
+        image_file_path,
+        "--helm-install",
+        HELM_INSTALL_SCRIPT_PATH,
+        "--helm-chart-version",
+        helm_chart_version,
+        "--output",
+        output_path,
     ]
 
     print(f"Running: {' '.join(cmd)}")
