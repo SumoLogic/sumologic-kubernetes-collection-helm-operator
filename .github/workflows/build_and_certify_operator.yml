@@ -177,19 +177,15 @@ jobs:
             RESPONSE=$(curl -sH "X-API-KEY: ${{ secrets.RED_HAT_API_KEY }}" \
               "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${PROJECT_ID}/images?page_size=100")
             
-            # Find the image with matching tag and certified status
-            IMAGE_DATA=$(echo "${RESPONSE}" | jq -r --arg VERSION "${VERSION}" \
-              '.data[] | select(.repositories[].tags[]?.name == $VERSION) | select(.certified == true)')
+            # Find the first certified image with matching tag
+            DIGEST=$(echo "${RESPONSE}" | jq -r --arg VERSION "${VERSION}" \
+              '[.data[] | select(.repositories[].tags[]?.name == $VERSION) | select(.certified == true)] | first | .docker_image_digest // empty')
             
-            if [ -n "${IMAGE_DATA}" ]; then
-              DIGEST=$(echo "${IMAGE_DATA}" | jq -r '.docker_image_digest')
-              
-              if [ -n "${DIGEST}" ] && [ "${DIGEST}" != "null" ]; then
-                echo "✅ Certified! Digest: ${DIGEST}"
-                echo "certified=true" >> $GITHUB_OUTPUT
-                echo "digest=${DIGEST}" >> $GITHUB_OUTPUT
-                exit 0
-              fi
+            if [ -n "${DIGEST}" ] && [ "${DIGEST}" != "null" ]; then
+              echo "✅ Certified! Digest: ${DIGEST}"
+              echo "certified=true" >> $GITHUB_OUTPUT
+              echo "digest=${DIGEST}" >> $GITHUB_OUTPUT
+              exit 0
             fi
             
             echo "⏳ Attempt ${ATTEMPT}/${MAX_ATTEMPTS}: Image not yet certified, waiting 10 seconds..."
