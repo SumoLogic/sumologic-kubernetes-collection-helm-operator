@@ -177,9 +177,9 @@ jobs:
             RESPONSE=$(curl -sH "X-API-KEY: ${{ secrets.RED_HAT_API_KEY }}" \
               "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${PROJECT_ID}/images?page_size=100")
             
-            # Find the image with matching tag
+            # Find the image with matching tag and certified status
             IMAGE_DATA=$(echo "${RESPONSE}" | jq -r --arg VERSION "${VERSION}" \
-              '.data[] | select(.repositories[].tags[] | contains($VERSION)) | select(.certified == true)')
+              '.data[] | select(.repositories[].tags[]?.name == $VERSION) | select(.certified == true)')
             
             if [ -n "${IMAGE_DATA}" ]; then
               DIGEST=$(echo "${IMAGE_DATA}" | jq -r '.docker_image_digest')
