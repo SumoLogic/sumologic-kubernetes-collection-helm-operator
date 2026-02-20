@@ -1,9 +1,7 @@
 resources:
 - manager.yaml
-
 generatorOptions:
   disableNameSuffixHash: true
-
 configMapGenerator:
 - files:
   - controller_manager_config.yaml
@@ -13,5 +11,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator
-  newTag: 4.17.1-0
-  
+  newTag: 4.21.0-0-rc.0
