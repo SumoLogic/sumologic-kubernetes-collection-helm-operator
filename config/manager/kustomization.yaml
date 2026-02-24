@@ -11,4 +11,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator
-  newTag: 4.21.0-0-rc.0
+  newTag: 4.21.0-0
