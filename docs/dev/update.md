@@ -6,7 +6,7 @@ This document describes steps required to update the Sumo Logic Kubernetes Colle
 
 Access to redhat connect is required before proceeding with component images update step
 - Join Redhat support slack channel #op-assist-sumologic. Post in #pd-priv-opensource-collection channel, someone from the team will add you.
-- If you don't have access to https://connect.redhat.com, Raise a helpdesk ticket to get you added under Sumologic Org's account and also to assocaite your Github account to redhat.
+- If you don't have access to https://connect.redhat.com, Raise a helpdesk ticket to get you added under Sumologic Org's account and also to assocaite your Github account to redhat. Associating your github account to redhat can be done by any existing team member using redhat connect console (Components -> sumologic-kubernetes-collection-helm-operator-bundle -> Repository Information -> Authorized Github User accounts).
 
 ## Components images update (New method)
 
