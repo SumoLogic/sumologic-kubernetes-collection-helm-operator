@@ -161,7 +161,8 @@ Phase 6: Marketplace Submission → MANUAL
 **For Final Versions**:
 1. Merge PR with certified image SHA256
 2. Draft GitHub release with changelog
-3. Proceed to Phase 6
+3. Test the final version as RC
+4. Proceed to Phase 6
 
 ---
 
@@ -181,6 +182,12 @@ Phase 6: Marketplace Submission → MANUAL
    - Once certified, proceed with marketplace steps below
 
 #### For Final Versions (e.g., 4.18.0-0):
+
+- **Test final version as RC**
+
+**Before submitting marketplace PRs**:
+- You need to be an operator owner to raise PRs to certified-operators and redhat-marketplace-operators repositories
+- To get added as an operator owner, ask an existing team member to add you via Red Hat Connect Console (Components → sumologic-kubernetes-collection-helm-operator-bundle → Repository Information → Authorized Github User accounts)
 
 1. **Prepare pull request to certified-operators**
    - Repository: https://github.com/redhat-openshift-ecosystem/certified-operators
