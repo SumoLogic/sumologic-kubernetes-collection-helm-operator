@@ -209,13 +209,12 @@ jobs:
           echo "digest=${DIGEST}" >> $GITHUB_OUTPUT
           echo "full_ref=${FULL_REF}" >> $GITHUB_OUTPUT
           echo "✅ Full reference: ${FULL_REF}"
-      
+
       - name: Update CSV
         if: steps.wait_cert.outputs.certified == 'true'
         run: |
           CSV_FILE="bundle/manifests/operator.clusterserviceversion.yaml"
           OPERATOR_NAME="sumologic-kubernetes-collection-helm-operator"
-          DEPLOYMENT_NAME="sumologic-helm-operator"
           FULL_REF="${{ steps.get_digest.outputs.full_ref }}"
           VERSION="${{ inputs.operator_version }}"
           
@@ -226,15 +225,12 @@ jobs:
           git checkout -b "${BRANCH}"
           
           # Use sed to preserve file formatting (avoid yq reformatting issues)
-          # Get the old image reference to replace
-          OLD_REF=$(grep -m1 "registry.connect.redhat.com/sumologic/${OPERATOR_NAME}@sha256:" "${CSV_FILE}" | sed 's/.*\(registry.connect.redhat.com[^"]*\).*/\1/')
-          
-          # Replace all occurrences of the old reference with the new one
-          sed -i "s|${OLD_REF}|${FULL_REF}|g" "${CSV_FILE}"
+          # Replace only digest-form operator image references (avoid tag substitutions)
+          sed -i "s|registry.connect.redhat.com/sumologic/${OPERATOR_NAME}@sha256:[a-f0-9]\{64\}|${FULL_REF}|g" "${CSV_FILE}"
           
           # Also update bundle.yaml if it exists
           if [ -f "bundle.yaml" ]; then
-            sed -i "s|${OLD_REF}|${FULL_REF}|g" "bundle.yaml"
+            sed -i "s|registry.connect.redhat.com/sumologic/${OPERATOR_NAME}@sha256:[a-f0-9]\{64\}|${FULL_REF}|g" "bundle.yaml"
             git add bundle.yaml
           fi
           
