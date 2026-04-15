@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Update FBC channel.yaml and prune N-3 bundles on each release."""
 import argparse
 import re
 import sys
@@ -117,6 +118,7 @@ def validate_upgrade_path(data: dict) -> None:
 
 
 def main() -> None:
+    """Parse arguments and orchestrate channel update and pruning."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--version", required=True)
     parser.add_argument("--previous-version", required=True)
