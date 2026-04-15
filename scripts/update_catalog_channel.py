@@ -15,7 +15,8 @@ CATALOG_DIR = Path("catalog") / OPERATOR_PACKAGE
 def load_channel(channel_file: Path) -> dict:
     """Load channel.yaml as a dict."""
     with open(channel_file, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
+        data = yaml.safe_load(f)
+    return {} if data is None else data
 
 
 def save_channel(channel_file: Path, data: dict) -> None:

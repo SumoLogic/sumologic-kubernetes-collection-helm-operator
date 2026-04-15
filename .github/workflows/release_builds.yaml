@@ -86,15 +86,7 @@ jobs:
       - name: Determine previous version from FBC channel
         id: prev_version
         run: |
-          PREVIOUS_VERSION=$(python3 -c "
-          import yaml
-          with open('catalog/sumologic-kubernetes-collection-helm-operator/channel.yaml') as f:
-              data = yaml.safe_load(f)
-          entries = data['entries']
-          all_replaces = {e['replaces'] for e in entries if 'replaces' in e}
-          head = next(e for e in entries if e['name'] not in all_replaces)
-          print(head['name'].split('.v')[-1])
-          ")
+          PREVIOUS_VERSION=$(python3 -c "import yaml; ch=yaml.safe_load(open('catalog/sumologic-kubernetes-collection-helm-operator/channel.yaml')); entries=ch['entries']; r={e['replaces'] for e in entries if 'replaces' in e}; print(next(e for e in entries if e['name'] not in r)['name'].split('.v')[-1])")
           echo "previous_version=${PREVIOUS_VERSION}" >> $GITHUB_OUTPUT
           echo "Previous version: ${PREVIOUS_VERSION}"
 
