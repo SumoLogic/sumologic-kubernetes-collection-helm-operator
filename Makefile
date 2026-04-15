@@ -209,6 +209,9 @@ BUNDLE_IMGS ?= $(BUNDLE_IMG)
 # The image tag given to the resulting catalog image (e.g. make catalog-build CATALOG_IMG=example.com/operator-catalog:v0.2.0).
 CATALOG_IMG ?= $(IMAGE_TAG_BASE)-catalog:v$(VERSION)
 
+CATALOG_DIR ?= catalog
+OPERATOR_PACKAGE ?= sumologic-kubernetes-collection-helm-operator
+
 # Set CATALOG_BASE_IMG to an existing catalog image tag to add $BUNDLE_IMGS to that image.
 ifneq ($(origin CATALOG_BASE_IMG), undefined)
 FROM_INDEX_OPT := --from-index $(CATALOG_BASE_IMG)
@@ -218,9 +221,32 @@ endif
 # This recipe invokes 'opm' in 'semver' bundle add mode. For more information on add modes, see:
 # https://github.com/operator-framework/community-operators/blob/7f1438c/docs/packaging-operator.md#updating-your-existing-operator
 .PHONY: catalog-build
-catalog-build: opm ## Build a catalog image.
+catalog-build: opm ## Build a catalog image (deprecated SQLite format, kept for reference).
 	$(OPM) index add --container-tool docker --mode semver --tag $(CATALOG_IMG) --bundles $(BUNDLE_IMGS) $(FROM_INDEX_OPT)
 	sed -i.backup "s#public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator-catalog:latest#${CATALOG_IMG}#g" tests/catalogsource.yaml
+
+.PHONY: catalog-render-fbc
+catalog-render-fbc: opm ## Render BUNDLE_IMGS into the FBC catalog directory (appends; run once per new bundle).
+	@mkdir -p $(CATALOG_DIR)/$(OPERATOR_PACKAGE)
+	@for img in $$(echo "$(BUNDLE_IMGS)" | tr ',' ' '); do \
+	  echo "Rendering $$img ..."; \
+	  $(OPM) render "$$img" --output=yaml \
+	    >> $(CATALOG_DIR)/$(OPERATOR_PACKAGE)/bundles.yaml; \
+	done
+	@echo "Done. Run 'make catalog-validate-fbc' to check the upgrade graph."
+
+.PHONY: catalog-validate-fbc
+catalog-validate-fbc: opm ## Validate the FBC catalog directory (upgrade graph integrity).
+	$(OPM) validate $(CATALOG_DIR)
+	@echo "✅ Catalog is valid."
+
+.PHONY: catalog-build-fbc
+catalog-build-fbc: opm catalog-validate-fbc ## Build a catalog image from the FBC catalog directory.
+	rm -f $(CATALOG_DIR).Dockerfile
+	$(OPM) generate dockerfile $(CATALOG_DIR)
+	docker build -f $(CATALOG_DIR).Dockerfile -t $(CATALOG_IMG) .
+	sed -i.backup "s#public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator-catalog:latest#$(CATALOG_IMG)#g" tests/catalogsource.yaml
+	@echo "✅ Built $(CATALOG_IMG). Run 'make catalog-push' then apply tests/catalogsource.yaml."
 
 # Push the catalog image.
 .PHONY: catalog-push

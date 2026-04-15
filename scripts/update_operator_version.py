@@ -47,7 +47,7 @@ def validate_version_format(version, release_type):
             sys.exit(1)
 
 
-def update_csv(csv_file, version, operator_name):
+def update_csv(csv_file, version, operator_name, previous_version=None):
     """Update ClusterServiceVersion file."""
     with open(csv_file, "r", encoding="utf-8") as f:
         csv_data = yaml.safe_load(f)
@@ -58,6 +58,10 @@ def update_csv(csv_file, version, operator_name):
 
     operator_image = f"registry.connect.redhat.com/sumologic/{operator_name}:{version}"
     csv_data["metadata"]["annotations"]["containerImage"] = operator_image
+
+    # Set spec.replaces so OLM can build the upgrade path N-1 → N
+    if previous_version:
+        csv_data["spec"]["replaces"] = f"{operator_name}.v{previous_version}"
 
     for deployment in csv_data["spec"]["install"]["spec"]["deployments"]:
         if deployment["name"] == operator_name:
@@ -160,7 +164,7 @@ def main():
     validate_version_format(version, release_type)
     previous_version = get_previous_version_from_csv(csv_file)
 
-    update_csv(csv_file, version, operator_name)
+    update_csv(csv_file, version, operator_name, previous_version=previous_version)
     update_makefile(repo_dir / "Makefile", version, operator_name)
     update_bundle_yaml(repo_dir / "bundle.yaml", version, operator_name)
     update_kustomization(repo_dir / "config/manager/kustomization.yaml", version)
