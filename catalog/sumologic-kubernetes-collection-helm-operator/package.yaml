@@ -1,0 +1,3 @@
+schema: olm.package
+name: sumologic-kubernetes-collection-helm-operator
+defaultChannel: alpha

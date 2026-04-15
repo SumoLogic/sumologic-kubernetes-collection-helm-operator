@@ -14,6 +14,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pull-requests: write
     env:
       OPERATOR_IMAGE_NAME: sumologic-kubernetes-collection-helm-operator
       BUNDLE_IMAGE_NAME: sumologic-kubernetes-collection-helm-operator-bundle
@@ -80,19 +83,66 @@ jobs:
       - name: Push 'latest' tag for bundle image
         run: make docker-push IMG=${ECR_URL}/${BUNDLE_IMAGE_NAME}:${LATEST_TAG}
 
+      - name: Determine previous version from FBC channel
+        id: prev_version
+        run: |
+          PREVIOUS_VERSION=$(python3 -c "
+          import yaml
+          with open('catalog/sumologic-kubernetes-collection-helm-operator/channel.yaml') as f:
+              data = yaml.safe_load(f)
+          entries = data['entries']
+          all_replaces = {e['replaces'] for e in entries if 'replaces' in e}
+          head = next(e for e in entries if e['name'] not in all_replaces)
+          print(head['name'].split('.v')[-1])
+          ")
+          echo "previous_version=${PREVIOUS_VERSION}" >> $GITHUB_OUTPUT
+          echo "Previous version: ${PREVIOUS_VERSION}"
+
+      - name: Update FBC channel.yaml with new version
+        run: |
+          python3 scripts/update_catalog_channel.py \
+            --version ${{ steps.extract_tag.outputs.tag }} \
+            --previous-version ${{ steps.prev_version.outputs.previous_version }} \
+            --prune
+
       - name: Log in to AWS Public ECR to publish catalog
         run: make login-ecr
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_CATALOG }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_CATALOG }}
 
-      - name: Build and push catalog image
-        run: make catalog-build catalog-push \
-          CATALOG_IMG=${ECR_URL}/${CATALOG_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }} \
-          BUNDLE_IMGS=${ECR_URL}/${BUNDLE_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }}
+      - name: Render new bundle into FBC catalog directory
+        run: |
+          make catalog-render-fbc \
+            BUNDLE_IMGS=${ECR_URL}/${BUNDLE_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }}
+
+      - name: Build and push catalog image (FBC)
+        run: make catalog-build-fbc catalog-push \
+          CATALOG_IMG=${ECR_URL}/${CATALOG_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }}
 
       - name: Set 'latest' tag for catalog image
         run: docker tag ${ECR_URL}/${CATALOG_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }} ${ECR_URL}/${CATALOG_IMAGE_NAME}:${LATEST_TAG}
 
       - name: Push 'latest' tag for catalog image
         run: make docker-push IMG=${ECR_URL}/${CATALOG_IMAGE_NAME}:${LATEST_TAG}
+
+      - name: Create PR with updated FBC catalog
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="catalog-update-v${{ steps.extract_tag.outputs.tag }}"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git checkout -b "${BRANCH}"
+          git add catalog/
+          if git diff --cached --quiet; then
+            echo "No catalog changes to commit — skipping PR."
+            exit 0
+          fi
+          git commit -m "chore: update FBC catalog for v${{ steps.extract_tag.outputs.tag }}"
+          git push origin "${BRANCH}"
+          gh pr create \
+            --title "chore: update FBC catalog for v${{ steps.extract_tag.outputs.tag }}" \
+            --body "Automated catalog update for v${{ steps.extract_tag.outputs.tag }}. Review and merge before next release." \
+            --base main \
+            --head "${BRANCH}"
