@@ -7,20 +7,25 @@
    This is an optional step, you can use also existing container images, please see information about
    [official container images](../container_images.md) and [developer container images](container_images.md).
 
+   First, render the bundle into the FBC catalog directory, then build and push the catalog image:
+
    ```bash
-   make catalog-build catalog-push CATALOG_IMG=<CATALOG_IMAGE> BUNDLE_IMGS=<BUNDLE_IMAGE_1>,<BUNDLE_IMAGE_2>
+   make catalog-render-fbc BUNDLE_IMGS=<BUNDLE_IMAGE>
+   make catalog-build-fbc catalog-push CATALOG_IMG=<CATALOG_IMAGE>
    ```
 
    e.g.
 
    ```bash
-   make catalog-build catalog-push \
-       CATALOG_IMG=ghcr.io/kkujawa-sumo/sumologic-kubernetes-collection-helm-operator-catalog:2.1.1-0-rc.0 \
-       BUNDLE_IMGS=public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator-bundle:2.1.1-0-rc.0
+   make catalog-render-fbc \
+       BUNDLE_IMGS=public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator-bundle:4.21.0-0
+
+   make catalog-build-fbc catalog-push \
+       CATALOG_IMG=public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator-catalog:fbc-test
    ```
 
-    **Notice**: Operator Package Manager (OPM) is required to build catalog image,
-    OPM is available in Vagrant environment for Helm Operator.
+   **Notice**: Operator Package Manager (OPM) is required. Run `make opm` to download it locally.
+   When building on Apple Silicon (arm64) for an amd64 cluster, use `docker buildx` with `--platform linux/amd64 --provenance=false`.
 
 1. Create `CatalogSource` e.g.
 
