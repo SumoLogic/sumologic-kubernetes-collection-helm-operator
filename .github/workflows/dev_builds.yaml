@@ -80,10 +80,14 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_CATALOG_DEV }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_CATALOG_DEV }}
 
-      - name: Build and push catalog image
-        run: make catalog-build catalog-push \
-          CATALOG_IMG=${ECR_URL}/${CATALOG_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }} \
-          BUNDLE_IMGS=${ECR_URL}/${BUNDLE_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }}
+      - name: Render new bundle into FBC catalog directory
+        run: |
+          make catalog-render-fbc \
+            BUNDLE_IMGS=${ECR_URL}/${BUNDLE_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }}
+
+      - name: Build and push catalog image (FBC)
+        run: make catalog-build-fbc catalog-push \
+          CATALOG_IMG=${ECR_URL}/${CATALOG_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }}
 
       - name: Set 'latest' tag for catalog image
         run: docker tag ${ECR_URL}/${CATALOG_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }} ${ECR_URL}/${CATALOG_IMAGE_NAME}:${LATEST_TAG}
