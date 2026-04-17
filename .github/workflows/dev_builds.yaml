@@ -80,11 +80,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_CATALOG_DEV }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_CATALOG_DEV }}
 
-      - name: Render new bundle into FBC catalog directory
-        run: |
-          make catalog-render-fbc \
-            BUNDLE_IMGS=${ECR_URL}/${BUNDLE_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }}
-
       - name: Build and push catalog image (FBC)
         run: make catalog-build-fbc catalog-push \
           CATALOG_IMG=${ECR_URL}/${CATALOG_IMAGE_NAME}:${{ steps.extract_tag.outputs.tag }}
