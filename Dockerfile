@@ -1,10 +1,10 @@
 # Build the manager binary
 FROM registry.access.redhat.com/ubi9/ubi-minimal:9.7
-FROM quay.io/operator-framework/helm-operator:v1.42.0
+FROM quay.io/operator-framework/helm-operator:v1.42.2
 
 ARG VERSION=${VERSION}
 ARG RELEASE_NUMBER=${RELEASE_NUMBER}
-ARG HELM_VERSION=3.20.0
+ARG HELM_VERSION=3.20.2
 
 LABEL name="Sumologic Kubernetes Collection Helm Operator"
 LABEL maintainer="opensource-collection-team@sumologic.com"
