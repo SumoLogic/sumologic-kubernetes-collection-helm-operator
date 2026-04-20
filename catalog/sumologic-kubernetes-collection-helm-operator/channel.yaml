@@ -2,9 +2,6 @@ schema: olm.channel
 name: alpha
 package: sumologic-kubernetes-collection-helm-operator
 entries:
-  # This is the FBC migration starting point.
-  # v4.21.0-0 has no 'replaces' because it is the root of the new upgrade chain.
-  # Older versions were served by the legacy SQLite catalog and did not have
-  # a published upgrade graph, so there is nothing to chain from.
-  # Each new release appends an entry with 'replaces: <previousVersion>'.
-  - name: sumologic-kubernetes-collection-helm-operator.v4.21.0-0
+- name: sumologic-kubernetes-collection-helm-operator.v4.21.0-0
+- name: sumologic-kubernetes-collection-helm-operator.v4.27.1-0-rc.0
+  replaces: sumologic-kubernetes-collection-helm-operator.v4.21.0-0
