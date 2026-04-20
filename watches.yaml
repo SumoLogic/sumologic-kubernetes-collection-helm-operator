@@ -40,13 +40,8 @@
       ":")._0 }}'
     metadata.image.tag: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR" | split ":")._1
       }}'
-    metrics-server.image.registry: '{{ ("$RELATED_IMAGE_METRICS_SERVER" | split "/")._0
-      }}'
-    metrics-server.image.repository: '{{ (("$RELATED_IMAGE_METRICS_SERVER" | split
-      ":")._0 | split "/")._1 }}/{{ (("$RELATED_IMAGE_METRICS_SERVER" | split ":")._0
-      | split "/")._2 }}'
-    metrics-server.image.tag: '{{ ("$RELATED_IMAGE_METRICS_SERVER" | split ":")._1
-      }}'
+    metrics-server.image.repository: '{{ ("$RELATED_IMAGE_METRICS_SERVER" | split ":")._0 }}'
+    metrics-server.image.tag: '{{ ("$RELATED_IMAGE_METRICS_SERVER" | split ":")._1 }}'
     opentelemetry-operator.kubeRBACProxy.image.repository: '{{ ("$RELATED_IMAGE_KUBE_RBAC_PROXY"
       | split ":")._0 }}'
     opentelemetry-operator.kubeRBACProxy.image.tag: '{{ ("$RELATED_IMAGE_KUBE_RBAC_PROXY"
