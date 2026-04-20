@@ -26,8 +26,7 @@ helm upgrade --install test-openshift sumologic/sumologic \
   --set kube-prometheus-stack.prometheusOperator.thanosImage.tag=v0.28.0-ubi \
   --set metadata.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
   --set metadata.image.tag=0.149.0-sumo-0-ubi \
-  --set metrics-server.image.registry=public.ecr.aws/sumologic \
-  --set metrics-server.image.repository=metrics-server@sha256 \
+  --set metrics-server.image.repository=public.ecr.aws/sumologic/metrics-server@sha256 \
   --set metrics-server.image.tag=134de194a3044ff2730452f105ebad8780fa7114a6d0b2af0158c6547e38cd8b \
   --set opentelemetry-operator.kubeRBACProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
   --set opentelemetry-operator.kubeRBACProxy.image.tag=a119a01cfc8930ff123a00c67faebe4200431e53a786ae8dd37ff1776e17409c \
