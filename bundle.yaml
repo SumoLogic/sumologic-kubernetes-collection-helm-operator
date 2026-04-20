@@ -469,7 +469,7 @@ spec:
         - --upstream=http://127.0.0.1:8080/
         - --logtostderr=true
         - --v=10
-        image: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:e1f49fcf5b7e86d9eb49c16dbbf9484cb486f55f999fd51d7c738c3b1f2666cf
+        image: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:a119a01cfc8930ff123a00c67faebe4200431e53a786ae8dd37ff1776e17409c
         name: kube-rbac-proxy
         ports:
         - containerPort: 8443
