@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Update FBC channel.yaml and prune N-3 bundles on each release."""
+
 import argparse
 import re
 import sys
 from pathlib import Path
 
 import yaml
-
 
 OPERATOR_PACKAGE = "sumologic-kubernetes-collection-helm-operator"
 CATALOG_DIR = Path("catalog") / OPERATOR_PACKAGE
@@ -89,9 +89,7 @@ def prune_channel(data: dict) -> str | None:
     return oldest
 
 
-def promote_rc_to_final(
-    data: dict, previous_version: str, bundles_file: Path
-) -> str:
+def promote_rc_to_final(data: dict, previous_version: str, bundles_file: Path) -> str:
     """
     When a final release follows an RC of the same base version, clean up the RC:
     1. Remove the RC entry from channel entries.
@@ -170,16 +168,9 @@ def main() -> None:
 
     # When promoting an RC to its final version, strip the RC from the catalog
     # first and use the RC's own predecessor as the 'replaces' target.
-    if (
-        not is_rc(args.version)
-        and is_rc(args.previous_version)
-        and base_of_rc(args.previous_version) == args.version
-    ):
+    if not is_rc(args.version) and is_rc(args.previous_version) and base_of_rc(args.previous_version) == args.version:
         actual_previous = promote_rc_to_final(data, args.previous_version, bundles_file)
-        print(
-            f"Promoting RC {args.previous_version} → final {args.version}, "
-            f"actual previous: {actual_previous or '(none)'}"
-        )
+        print(f"Promoting RC {args.previous_version} → final {args.version}, " f"actual previous: {actual_previous or '(none)'}")
     else:
         actual_previous = args.previous_version
 
