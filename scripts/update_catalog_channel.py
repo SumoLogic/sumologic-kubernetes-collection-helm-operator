@@ -120,8 +120,11 @@ def prune_bundles_yaml(bundles_file: Path, n3_csv_name: str) -> None:
     filtered = [c for c in chunks if not pattern.search(c)]
     if len(filtered) == len(chunks):
         return
+    content = sep.join(filtered)
+    if not content.endswith("\n"):
+        content += "\n"
     with open(bundles_file, "w", encoding="utf-8") as f:
-        f.write(sep.join(filtered))
+        f.write(content)
     print(f"Pruned bundle: {n3_csv_name}")
 
 
