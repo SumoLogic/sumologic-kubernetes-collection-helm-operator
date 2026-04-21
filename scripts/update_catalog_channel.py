@@ -30,6 +30,16 @@ def csv_name(version: str) -> str:
     return f"{OPERATOR_PACKAGE}.v{version}"
 
 
+def is_rc(version: str) -> bool:
+    """Return True if the version is a release candidate (contains -rc.N)."""
+    return bool(re.search(r"-rc\.\d+$", version))
+
+
+def base_of_rc(rc_version: str) -> str:
+    """Strip the -rc.N suffix to get the base release version."""
+    return re.sub(r"-rc\.\d+$", "", rc_version)
+
+
 def append_version(data: dict, version: str, previous_version: str) -> None:
     """Add a new channel entry for version with replaces pointing to previous_version."""
     entries: list = data.setdefault("entries", [])
@@ -77,6 +87,27 @@ def prune_channel(data: dict) -> str | None:
     data["entries"] = [e for e in entries if e["name"] != oldest]
     print(f"Pruned: {oldest}")
     return oldest
+
+
+def promote_rc_to_final(
+    data: dict, previous_version: str, bundles_file: Path
+) -> str:
+    """
+    When a final release follows an RC of the same base version, clean up the RC:
+    1. Remove the RC entry from channel entries.
+    2. Remove the RC bundle document from bundles.yaml.
+    3. Return the version the RC was replacing, to use as the new 'replaces'.
+    """
+    rc_csv = csv_name(previous_version)
+    entries: list = data.get("entries", [])
+    rc_entry = next((e for e in entries if e.get("name") == rc_csv), None)
+    actual_previous = ""
+    if rc_entry and "replaces" in rc_entry:
+        actual_previous = rc_entry["replaces"].split(".v")[-1]
+    data["entries"] = [e for e in entries if e.get("name") != rc_csv]
+    print(f"Removed RC entry from channel: {rc_csv}")
+    prune_bundles_yaml(bundles_file, rc_csv)
+    return actual_previous
 
 
 def prune_bundles_yaml(bundles_file: Path, n3_csv_name: str) -> None:
@@ -136,7 +167,23 @@ def main() -> None:
         sys.exit(1)
 
     data = load_channel(channel_file)
-    append_version(data, args.version, args.previous_version)
+
+    # When promoting an RC to its final version, strip the RC from the catalog
+    # first and use the RC's own predecessor as the 'replaces' target.
+    if (
+        not is_rc(args.version)
+        and is_rc(args.previous_version)
+        and base_of_rc(args.previous_version) == args.version
+    ):
+        actual_previous = promote_rc_to_final(data, args.previous_version, bundles_file)
+        print(
+            f"Promoting RC {args.previous_version} → final {args.version}, "
+            f"actual previous: {actual_previous or '(none)'}"
+        )
+    else:
+        actual_previous = args.previous_version
+
+    append_version(data, args.version, actual_previous)
     n3 = prune_channel(data) if args.prune else None
     validate_upgrade_path(data)
     save_channel(channel_file, data)
