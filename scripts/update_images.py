@@ -22,12 +22,11 @@ REPLACE_COMPONENTS_IMAGES_PATH = "tests/replace_components_images.sh"
 HELM_INSTALL_SCRIPT_PATH = "tests/helm_install.sh"
 BASH_HEADER = "#!/usr/bin/env bash\n\n"
 
-# These components use a version tag (not SHA) when referenced in public ECR.
-# The UBI suffix is stripped from the version when generating the replacement command.
+# opentelemetry-operator uses a plain version tag on ECR (no SHA, no -ubi suffix).
 COMPONENTS_USING_VERSION_TAG = {"opentelemetry-operator"}
 COMPONENTS_STRIP_UBI_SUFFIX = {"opentelemetry-operator"}
 
-# Auth proxy patch files that embed the kube-rbac-proxy container image directly.
+# Auth proxy patch files that embed the kube-rbac-proxy image directly.
 AUTH_PROXY_PATCH_PATHS = [
     "config/default/manager_auth_proxy_patch.yaml",
     "config/public_images/manager_auth_proxy_patch.yaml",
@@ -312,8 +311,7 @@ def update_replace_components_images(
         component, tag = image_with_tag.removeprefix(RED_HAT_REGISTRY).split(":")
 
         if component in COMPONENTS_USING_VERSION_TAG:
-            # Use a version-tag reference on ECR instead of a SHA digest.
-            # Strip the -ubi suffix for components that publish non-ubi images on ECR.
+            # Use version tag on ECR; strip -ubi suffix if needed.
             ecr_version = (
                 re.sub(r"-ubi$", "", tag)
                 if component in COMPONENTS_STRIP_UBI_SUFFIX
