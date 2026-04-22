@@ -227,7 +227,7 @@ jobs:
           # Update operator image digest and createdAt timestamp
           sed -i "s|registry.connect.redhat.com/sumologic/${OPERATOR_NAME}@sha256:[a-f0-9]\{64\}|${FULL_REF}|g" "${CSV_FILE}"
           CREATED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          sed -i "s|createdAt:.*|createdAt: '${CREATED_AT}'|g" "${CSV_FILE}"
+          sed -i "s|^\([[:space:]]*createdAt:\).*|\1 '${CREATED_AT}'|g" "${CSV_FILE}"
 
           if [ -f "bundle.yaml" ]; then
             sed -i "s|registry.connect.redhat.com/sumologic/${OPERATOR_NAME}@sha256:[a-f0-9]\{64\}|${FULL_REF}|g" "bundle.yaml"

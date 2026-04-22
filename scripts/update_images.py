@@ -308,12 +308,14 @@ def update_replace_components_images(image_file_path: str, create_new_file: bool
             docker_output = subprocess.run(
                 ["docker", "pull", public_ecr_image_with_tag],
                 stdout=subprocess.PIPE,
+                text=True,
                 check=False,
             )
 
-            for line in str(docker_output.stdout).split("\\n"):
-                if "Digest" in line:
-                    digest = line.removeprefix("Digest:").strip()
+            for line in docker_output.stdout.splitlines():
+                stripped = line.strip()
+                if stripped.startswith("Digest:"):
+                    digest = stripped.removeprefix("Digest:").strip()
                     public_ecr_image_with_sha256 = f"{PUBLIC_ECR_REGISTRY}{component}@{digest}"
                     new_commands[component] = f'sed -i.bak "s#{image_with_sha256}#{public_ecr_image_with_sha256}#g" bundle.yaml'
 
@@ -344,13 +346,15 @@ def update_auth_proxy_patches(images_map: dict, operator_repo_dir: str = "./"):
             continue
         with open(full_path, "r", encoding="utf-8") as f:
             content = f.read()
-        content = re.sub(
+        updated_content, replacements = re.subn(
             r"registry\.connect\.redhat\.com/sumologic/kube-rbac-proxy(?:@sha256:[a-f0-9]+|:[^\s]+)",
             new_image,
             content,
         )
+        if replacements == 0:
+            continue
         with open(full_path, "w", encoding="utf-8") as f:
-            f.write(content)
+            f.write(updated_content)
         print(f"Updated kube-rbac-proxy in {patch_path}")
 
 
@@ -361,12 +365,13 @@ def get_image_digest(image_with_tag: str) -> str:
     Returns:
         digest(str): digest for given image
     """
-    docker_output = subprocess.run(["docker", "pull", image_with_tag], stdout=subprocess.PIPE, check=False)
+    docker_output = subprocess.run(["docker", "pull", image_with_tag], stdout=subprocess.PIPE, text=True, check=False)
 
     digest = ""
-    for line in str(docker_output.stdout).split("\\n"):
-        if "Digest" in line:
-            digest = line.removeprefix("Digest:").strip()
+    for line in docker_output.stdout.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("Digest:"):
+            digest = stripped.removeprefix("Digest:").strip()
             digest = digest.removeprefix("sha256:")
     return digest
 
