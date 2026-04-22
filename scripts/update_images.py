@@ -22,6 +22,17 @@ REPLACE_COMPONENTS_IMAGES_PATH = "tests/replace_components_images.sh"
 HELM_INSTALL_SCRIPT_PATH = "tests/helm_install.sh"
 BASH_HEADER = "#!/usr/bin/env bash\n\n"
 
+# These components use a version tag (not SHA) when referenced in public ECR.
+# The UBI suffix is stripped from the version when generating the replacement command.
+COMPONENTS_USING_VERSION_TAG = {"opentelemetry-operator"}
+COMPONENTS_STRIP_UBI_SUFFIX = {"opentelemetry-operator"}
+
+# Auth proxy patch files that embed the kube-rbac-proxy container image directly.
+AUTH_PROXY_PATCH_PATHS = [
+    "config/default/manager_auth_proxy_patch.yaml",
+    "config/public_images/manager_auth_proxy_patch.yaml",
+]
+
 
 def get_helm_install_command_header(helm_chart_version: str) -> str:
     """Generate helm install command header with dynamic version.
@@ -133,7 +144,9 @@ def generate_image_lists(image_list_file: str):
     return related_images, image_envs
 
 
-def create_new_file_path(file_path: str, create_new_file: bool, extension=".yaml") -> str:
+def create_new_file_path(
+    file_path: str, create_new_file: bool, extension=".yaml"
+) -> str:
     """Creates path for the file with updated list of components images
 
     Args:
@@ -195,7 +208,9 @@ def update_envs(envs: list, new_image_envs) -> list:
     return not_image_envs + list(existing_image_envs.values())
 
 
-def update_cluster_service_version(file_path: str, new_related_images: list, new_image_envs: list, create_new_file):  # pylint: disable=too-many-locals
+def update_cluster_service_version(
+    file_path: str, new_related_images: list, new_image_envs: list, create_new_file
+):  # pylint: disable=too-many-locals
     """Updates components images in bundle/manifests/operator.clusterserviceversion.yaml
 
     Args:
@@ -225,7 +240,9 @@ def update_cluster_service_version(file_path: str, new_related_images: list, new
         updated_images = [helm_operator_image] + list(existing_images_map.values())
         cluster_service_version["spec"]["relatedImages"] = updated_images
 
-        containers = cluster_service_version["spec"]["install"]["spec"]["deployments"][0]["spec"]["template"]["spec"]["containers"]
+        containers = cluster_service_version["spec"]["install"]["spec"]["deployments"][
+            0
+        ]["spec"]["template"]["spec"]["containers"]
         # pylint: disable=C0200
         for i in range(len(containers)):
             name = containers[i]["name"]
@@ -255,7 +272,9 @@ def update_manager(file_path: str, new_image_envs: list, create_new_file):
                 new_contents.append(yaml_content)
             else:
                 envs = yaml_content["spec"]["template"]["spec"]["containers"][0]["env"]
-                yaml_content["spec"]["template"]["spec"]["containers"][0]["env"] = update_envs(envs, new_image_envs)
+                yaml_content["spec"]["template"]["spec"]["containers"][0]["env"] = (
+                    update_envs(envs, new_image_envs)
+                )
                 new_contents.append(yaml_content)
 
         new_file_path = create_new_file_path(file_path, create_new_file)
@@ -263,7 +282,9 @@ def update_manager(file_path: str, new_image_envs: list, create_new_file):
             yaml.safe_dump_all(new_contents, manager_file_new)
 
 
-def update_replace_components_images(image_file_path: str, create_new_file: bool):  # pylint: disable=too-many-locals
+def update_replace_components_images(
+    image_file_path: str, create_new_file: bool
+):  # pylint: disable=too-many-locals
     """Updates components images in tests/replace_components_images.sh
 
     Args:
@@ -278,7 +299,9 @@ def update_replace_components_images(image_file_path: str, create_new_file: bool
                 line = line.strip()
                 if line.startswith("sed -i.bak"):
                     # Extract component name from Red Hat registry URL (handles both :tag and @sha256 formats)
-                    match = re.search(r"registry\.connect\.redhat\.com/sumologic/([^:@]+)", line)
+                    match = re.search(
+                        r"registry\.connect\.redhat\.com/sumologic/([^:@]+)", line
+                    )
                     if match:
                         component = match.group(1)
                         existing_commands[component] = line
@@ -286,25 +309,77 @@ def update_replace_components_images(image_file_path: str, create_new_file: bool
     # Build new commands from input file
     new_commands = {}
     for image_with_tag, image_with_sha256 in pairwise(get_lines(image_file_path)):
-        public_ecr_image_with_tag = image_with_tag.replace(RED_HAT_REGISTRY, PUBLIC_ECR_REGISTRY)
-        docker_output = subprocess.run(["docker", "pull", public_ecr_image_with_tag], stdout=subprocess.PIPE, check=False)
+        component, tag = image_with_tag.removeprefix(RED_HAT_REGISTRY).split(":")
 
-        for line in str(docker_output.stdout).split("\\n"):
-            if "Digest" in line:
-                digest = line.removeprefix("Digest:").strip()
-                component, _ = image_with_tag.removeprefix(RED_HAT_REGISTRY).split(":")
-                public_ecr_image_with_sha256 = f"{PUBLIC_ECR_REGISTRY}{component}@{digest}"
-                new_commands[component] = f'sed -i.bak "s#{image_with_sha256}#{public_ecr_image_with_sha256}#g" bundle.yaml'
+        if component in COMPONENTS_USING_VERSION_TAG:
+            # Use a version-tag reference on ECR instead of a SHA digest.
+            # Strip the -ubi suffix for components that publish non-ubi images on ECR.
+            ecr_version = (
+                re.sub(r"-ubi$", "", tag)
+                if component in COMPONENTS_STRIP_UBI_SUFFIX
+                else tag
+            )
+            public_ecr_target = f"{PUBLIC_ECR_REGISTRY}{component}:{ecr_version}"
+            new_commands[component] = (
+                f'sed -i.bak "s#{image_with_sha256}#{public_ecr_target}#g" bundle.yaml'
+            )
+        else:
+            public_ecr_image_with_tag = image_with_tag.replace(
+                RED_HAT_REGISTRY, PUBLIC_ECR_REGISTRY
+            )
+            docker_output = subprocess.run(
+                ["docker", "pull", public_ecr_image_with_tag],
+                stdout=subprocess.PIPE,
+                check=False,
+            )
+
+            for line in str(docker_output.stdout).split("\\n"):
+                if "Digest" in line:
+                    digest = line.removeprefix("Digest:").strip()
+                    public_ecr_image_with_sha256 = (
+                        f"{PUBLIC_ECR_REGISTRY}{component}@{digest}"
+                    )
+                    new_commands[component] = (
+                        f'sed -i.bak "s#{image_with_sha256}#{public_ecr_image_with_sha256}#g" bundle.yaml'
+                    )
 
     # Merge: update existing with new, keep rest
     existing_commands.update(new_commands)
 
     # Write to file
-    new_file_path = create_new_file_path(REPLACE_COMPONENTS_IMAGES_PATH, create_new_file, ".sh")
+    new_file_path = create_new_file_path(
+        REPLACE_COMPONENTS_IMAGES_PATH, create_new_file, ".sh"
+    )
     with open(new_file_path, "w", encoding="utf-8") as new_file:
         new_file.write(BASH_HEADER)
         for cmd in existing_commands.values():
             new_file.write(f"{cmd}\n")
+
+
+def update_auth_proxy_patches(images_map: dict, operator_repo_dir: str = "./"):
+    """Update kube-rbac-proxy container image in auth proxy kustomize patch files.
+
+    Args:
+        images_map (dict): map from component name to image info (output of prepare_components_images_map)
+        operator_repo_dir (str): path to the repository root
+    """
+    if "kube-rbac-proxy" not in images_map:
+        return
+    new_image = images_map["kube-rbac-proxy"]["image_with_sha256"]
+    for patch_path in AUTH_PROXY_PATCH_PATHS:
+        full_path = os.path.join(operator_repo_dir, patch_path)
+        if not os.path.exists(full_path):
+            continue
+        with open(full_path, "r", encoding="utf-8") as f:
+            content = f.read()
+        content = re.sub(
+            r"registry\.connect\.redhat\.com/sumologic/kube-rbac-proxy(?:@sha256:[a-f0-9]+|:[^\s]+)",
+            new_image,
+            content,
+        )
+        with open(full_path, "w", encoding="utf-8") as f:
+            f.write(content)
+        print(f"Updated kube-rbac-proxy in {patch_path}")
 
 
 def get_image_digest(image_with_tag: str) -> str:
@@ -314,7 +389,9 @@ def get_image_digest(image_with_tag: str) -> str:
     Returns:
         digest(str): digest for given image
     """
-    docker_output = subprocess.run(["docker", "pull", image_with_tag], stdout=subprocess.PIPE, check=False)
+    docker_output = subprocess.run(
+        ["docker", "pull", image_with_tag], stdout=subprocess.PIPE, check=False
+    )
 
     digest = ""
     for line in str(docker_output.stdout).split("\\n"):
@@ -334,15 +411,22 @@ def prepare_components_images_map(file_path: str) -> dict:
     Returns
         dict: dict with information about container images
     """
-    components_images = {}
+    images_map = {}
     for image_with_tag, image_with_sha256 in pairwise(get_lines(file_path)):
         component, tag = image_with_tag.removeprefix(RED_HAT_REGISTRY).split(":")
         sha = image_with_sha256.split(":")[-1]
-        components_images[component] = {"image_with_tag": image_with_tag, "image_with_sha256": image_with_sha256, "tag": tag, "sha": sha}
-    return components_images
+        images_map[component] = {
+            "image_with_tag": image_with_tag,
+            "image_with_sha256": image_with_sha256,
+            "tag": tag,
+            "sha": sha,
+        }
+    return images_map
 
 
-def update_helm_install(image_file_path: str, create_new_file: bool, helm_chart_version: str):
+def update_helm_install(
+    image_file_path: str, create_new_file: bool, helm_chart_version: str
+):
     """Updates helm install command in tests/helm_install.sh - only updates certified images
 
     Args:
@@ -417,7 +501,9 @@ if __name__ == "__main__":
     related_images_list, image_envs_list = generate_image_lists(args.images_file)
 
     csv_path = os.path.join(args.operator_repo_dir, CLUSTER_SERVICE_VERSION_PATH)
-    update_cluster_service_version(csv_path, related_images_list, image_envs_list, args.create_new_file)
+    update_cluster_service_version(
+        csv_path, related_images_list, image_envs_list, args.create_new_file
+    )
 
     m_path = os.path.join(args.operator_repo_dir, MANAGER_PATH)
     update_manager(m_path, image_envs_list, args.create_new_file)
@@ -425,3 +511,6 @@ if __name__ == "__main__":
     update_replace_components_images(args.images_file, args.create_new_file)
 
     update_helm_install(args.images_file, args.create_new_file, args.helm_chart_version)
+
+    components_images = prepare_components_images_map(args.images_file)
+    update_auth_proxy_patches(components_images, args.operator_repo_dir)

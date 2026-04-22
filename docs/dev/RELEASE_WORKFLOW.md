@@ -119,18 +119,6 @@ Phase 6: Marketplace Submission → MANUAL
 
 **Output**: PR with version updates
 
-**Action Required After PR Merge**:
-1. Create and push release tag (required for Phase 5):
-   ```bash
-   git tag -a v4.18.0-0-rc.0 -m "Release v4.18.0-0-rc.0"
-   git push origin v4.18.0-0-rc.0
-   ```
-2. Create release branch (major/minor releases only):
-   ```bash
-   git checkout -b release-v4.18.0
-   git push origin release-v4.18.0
-   ```
-
 ---
 
 ### Phase 5: Build & Certify Operator (AUTOMATED)
@@ -150,16 +138,30 @@ Phase 6: Marketplace Submission → MANUAL
 
 **Output**: PR with certified operator SHA256
 
+**Action Required After PR Merge**:
+1. Create and push release tag (required for Phase 5):
+   ```bash
+   git tag -a v4.18.0-0-rc.0 -m "Release v4.18.0-0-rc.0"
+   git push origin v4.18.0-0-rc.0
+   ```
+2. Create release branch (major/minor releases only):
+   ```bash
+   git checkout -b release-v4.18.0
+   git push origin release-v4.18.0
+   ```
+
+**Output**: PR with updated catalog of new version (e.g. [#201](https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator/pull/201))
+
 **Action Required**:
 
 **For RC Versions**:
-1. Merge PR with certified image SHA256
+1. Merge PR with updated catalog
 2. Draft GitHub release with changelog
 3. Test RC version (see [test.md](./test.md))
 4. If tests pass: Go back to Phase 4 with final version
 
 **For Final Versions**:
-1. Merge PR with certified image SHA256
+1. Merge PR with updated catalog
 2. Draft GitHub release with changelog
 3. Test the final version as RC
 4. Proceed to Phase 6

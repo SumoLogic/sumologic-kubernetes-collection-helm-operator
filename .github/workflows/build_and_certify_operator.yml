@@ -225,12 +225,18 @@ jobs:
           git checkout -b "${BRANCH}"
           
           # Use sed to preserve file formatting (avoid yq reformatting issues)
-          # Replace only digest-form operator image references (avoid tag substitutions)
+          # Replace digest-form operator image references
           sed -i "s|registry.connect.redhat.com/sumologic/${OPERATOR_NAME}@sha256:[a-f0-9]\{64\}|${FULL_REF}|g" "${CSV_FILE}"
+          # Also replace tag-form references (in case prepare-release ran before certification)
+          sed -i "s|registry.connect.redhat.com/sumologic/${OPERATOR_NAME}:[0-9][^[:space:]'\"]*|${FULL_REF}|g" "${CSV_FILE}"
+          # Update createdAt to certification time
+          CREATED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          sed -i "s|createdAt:.*|createdAt: '${CREATED_AT}'|g" "${CSV_FILE}"
           
           # Also update bundle.yaml if it exists
           if [ -f "bundle.yaml" ]; then
             sed -i "s|registry.connect.redhat.com/sumologic/${OPERATOR_NAME}@sha256:[a-f0-9]\{64\}|${FULL_REF}|g" "bundle.yaml"
+            sed -i "s|registry.connect.redhat.com/sumologic/${OPERATOR_NAME}:[0-9][^[:space:]'\"]*|${FULL_REF}|g" "bundle.yaml"
             git add bundle.yaml
           fi
           

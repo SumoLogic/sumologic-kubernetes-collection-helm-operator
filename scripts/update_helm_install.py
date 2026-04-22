@@ -5,6 +5,10 @@ import argparse
 import re
 import sys
 
+# These components have a -ubi suffix in the Red Hat registry but are published
+# without it on public ECR. Strip the suffix when setting the tag in helm_install.sh.
+COMPONENTS_STRIP_UBI_SUFFIX = {"opentelemetry-operator"}
+
 
 def parse_images_file(images_file_path):
     """Parse images.txt and return dict of component -> {version, SHA256}."""
@@ -23,12 +27,17 @@ def parse_images_file(images_file_path):
         sha_match = re.search(r"@sha256:([a-f0-9]+)", lines[i + 1])
 
         if tag_match and sha_match:
-            components[tag_match.group(1)] = {"version": tag_match.group(2), "sha": sha_match.group(1)}
+            components[tag_match.group(1)] = {
+                "version": tag_match.group(2),
+                "sha": sha_match.group(1),
+            }
 
     return components
 
 
-def update_helm_install(helm_install_path, certified_components, helm_chart_version, output_path):
+def update_helm_install(
+    helm_install_path, certified_components, helm_chart_version, output_path
+):
     # pylint: disable=too-many-locals,too-many-branches,too-many-statements
     """Update helm_install.sh with certified images by parsing repository URLs."""
 
@@ -46,7 +55,10 @@ def update_helm_install(helm_install_path, certified_components, helm_chart_vers
         if "--version" in line and "helm upgrade" not in line:
             version_match = re.search(r"--version\s+([\d.]+)", line)
             if version_match:
-                updated_line = line.replace(f"--version {version_match.group(1)}", f"--version {helm_chart_version}")
+                updated_line = line.replace(
+                    f"--version {version_match.group(1)}",
+                    f"--version {helm_chart_version}",
+                )
                 if updated_line != line:
                     update_count += 1
 
@@ -67,7 +79,9 @@ def update_helm_install(helm_install_path, certified_components, helm_chart_vers
                     component = None
 
             if component:
-                current_component = component if component in certified_components else None
+                current_component = (
+                    component if component in certified_components else None
+                )
             else:
                 current_component = None
 
@@ -77,14 +91,20 @@ def update_helm_install(helm_install_path, certified_components, helm_chart_vers
             if tag_match:
                 current_tag = tag_match.group(1)
                 # Check if current tag is a SHA hash (64 hex characters)
-                is_sha_format = len(current_tag) == 64 and all(c in "0123456789abcdef" for c in current_tag.lower())
+                is_sha_format = len(current_tag) == 64 and all(
+                    c in "0123456789abcdef" for c in current_tag.lower()
+                )
 
                 if is_sha_format:
                     # Original uses SHA in .tag field, so update with SHA
                     new_tag = certified_components[current_component]["sha"]
                 else:
-                    # Original uses version in .tag field, so update with version
-                    new_tag = certified_components[current_component]["version"]
+                    # Original uses version in .tag field, so update with version.
+                    # Strip -ubi for components that publish non-ubi images publicly.
+                    version = certified_components[current_component]["version"]
+                    if current_component in COMPONENTS_STRIP_UBI_SUFFIX:
+                        version = re.sub(r"-ubi$", "", version)
+                    new_tag = version
 
                 if current_tag != new_tag:
                     updated_line = re.sub(r"\.tag=[^\s\\]+", f".tag={new_tag}", line)
@@ -122,7 +142,9 @@ def main():
         print("ERROR: No certified components found", file=sys.stderr)
         sys.exit(1)
 
-    update_helm_install(args.helm_install, components, args.helm_chart_version, args.output)
+    update_helm_install(
+        args.helm_install, components, args.helm_chart_version, args.output
+    )
 
 
 if __name__ == "__main__":
