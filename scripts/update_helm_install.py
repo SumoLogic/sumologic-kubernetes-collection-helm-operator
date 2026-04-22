@@ -35,9 +35,7 @@ def parse_images_file(images_file_path):
     return components
 
 
-def update_helm_install(
-    helm_install_path, certified_components, helm_chart_version, output_path
-):
+def update_helm_install(helm_install_path, certified_components, helm_chart_version, output_path):
     # pylint: disable=too-many-locals,too-many-branches,too-many-statements
     """Update helm_install.sh with certified images by parsing repository URLs."""
 
@@ -79,9 +77,7 @@ def update_helm_install(
                     component = None
 
             if component:
-                current_component = (
-                    component if component in certified_components else None
-                )
+                current_component = component if component in certified_components else None
             else:
                 current_component = None
 
@@ -91,9 +87,7 @@ def update_helm_install(
             if tag_match:
                 current_tag = tag_match.group(1)
                 # Check if current tag is a SHA hash (64 hex characters)
-                is_sha_format = len(current_tag) == 64 and all(
-                    c in "0123456789abcdef" for c in current_tag.lower()
-                )
+                is_sha_format = len(current_tag) == 64 and all(c in "0123456789abcdef" for c in current_tag.lower())
 
                 if is_sha_format:
                     # Original uses SHA in .tag field, so update with SHA
@@ -142,9 +136,7 @@ def main():
         print("ERROR: No certified components found", file=sys.stderr)
         sys.exit(1)
 
-    update_helm_install(
-        args.helm_install, components, args.helm_chart_version, args.output
-    )
+    update_helm_install(args.helm_install, components, args.helm_chart_version, args.output)
 
 
 if __name__ == "__main__":
