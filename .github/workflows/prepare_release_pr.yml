@@ -80,7 +80,6 @@ jobs:
           git add bundle.yaml
           git add config/manager/kustomization.yaml
           git add tests/deploy_helm_operator.sh
-          git add tests/helm_install.sh
 
           if ! git diff --cached --quiet; then
             [ "${RELEASE_TYPE}" = "rc" ] && MSG="chore: prepare release ${VERSION} (RC)" || MSG="chore: prepare release ${VERSION}"
