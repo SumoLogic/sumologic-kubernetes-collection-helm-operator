@@ -143,9 +143,7 @@ def generate_image_lists(image_list_file: str):
     return related_images, image_envs
 
 
-def create_new_file_path(
-    file_path: str, create_new_file: bool, extension=".yaml"
-) -> str:
+def create_new_file_path(file_path: str, create_new_file: bool, extension=".yaml") -> str:
     """Creates path for the file with updated list of components images
 
     Args:
@@ -207,9 +205,7 @@ def update_envs(envs: list, new_image_envs) -> list:
     return not_image_envs + list(existing_image_envs.values())
 
 
-def update_cluster_service_version(
-    file_path: str, new_related_images: list, new_image_envs: list, create_new_file
-):  # pylint: disable=too-many-locals
+def update_cluster_service_version(file_path: str, new_related_images: list, new_image_envs: list, create_new_file):  # pylint: disable=too-many-locals
     """Updates components images in bundle/manifests/operator.clusterserviceversion.yaml
 
     Args:
@@ -239,9 +235,7 @@ def update_cluster_service_version(
         updated_images = [helm_operator_image] + list(existing_images_map.values())
         cluster_service_version["spec"]["relatedImages"] = updated_images
 
-        containers = cluster_service_version["spec"]["install"]["spec"]["deployments"][
-            0
-        ]["spec"]["template"]["spec"]["containers"]
+        containers = cluster_service_version["spec"]["install"]["spec"]["deployments"][0]["spec"]["template"]["spec"]["containers"]
         # pylint: disable=C0200
         for i in range(len(containers)):
             name = containers[i]["name"]
@@ -271,9 +265,7 @@ def update_manager(file_path: str, new_image_envs: list, create_new_file):
                 new_contents.append(yaml_content)
             else:
                 envs = yaml_content["spec"]["template"]["spec"]["containers"][0]["env"]
-                yaml_content["spec"]["template"]["spec"]["containers"][0]["env"] = (
-                    update_envs(envs, new_image_envs)
-                )
+                yaml_content["spec"]["template"]["spec"]["containers"][0]["env"] = update_envs(envs, new_image_envs)
                 new_contents.append(yaml_content)
 
         new_file_path = create_new_file_path(file_path, create_new_file)
@@ -281,9 +273,7 @@ def update_manager(file_path: str, new_image_envs: list, create_new_file):
             yaml.safe_dump_all(new_contents, manager_file_new)
 
 
-def update_replace_components_images(
-    image_file_path: str, create_new_file: bool
-):  # pylint: disable=too-many-locals
+def update_replace_components_images(image_file_path: str, create_new_file: bool):  # pylint: disable=too-many-locals
     """Updates components images in tests/replace_components_images.sh
 
     Args:
@@ -298,9 +288,7 @@ def update_replace_components_images(
                 line = line.strip()
                 if line.startswith("sed -i.bak"):
                     # Extract component name from Red Hat registry URL (handles both :tag and @sha256 formats)
-                    match = re.search(
-                        r"registry\.connect\.redhat\.com/sumologic/([^:@]+)", line
-                    )
+                    match = re.search(r"registry\.connect\.redhat\.com/sumologic/([^:@]+)", line)
                     if match:
                         component = match.group(1)
                         existing_commands[component] = line
@@ -312,19 +300,11 @@ def update_replace_components_images(
 
         if component in COMPONENTS_USING_VERSION_TAG:
             # Use version tag on ECR; strip -ubi suffix if needed.
-            ecr_version = (
-                re.sub(r"-ubi$", "", tag)
-                if component in COMPONENTS_STRIP_UBI_SUFFIX
-                else tag
-            )
+            ecr_version = re.sub(r"-ubi$", "", tag) if component in COMPONENTS_STRIP_UBI_SUFFIX else tag
             public_ecr_target = f"{PUBLIC_ECR_REGISTRY}{component}:{ecr_version}"
-            new_commands[component] = (
-                f'sed -i.bak "s#{image_with_sha256}#{public_ecr_target}#g" bundle.yaml'
-            )
+            new_commands[component] = f'sed -i.bak "s#{image_with_sha256}#{public_ecr_target}#g" bundle.yaml'
         else:
-            public_ecr_image_with_tag = image_with_tag.replace(
-                RED_HAT_REGISTRY, PUBLIC_ECR_REGISTRY
-            )
+            public_ecr_image_with_tag = image_with_tag.replace(RED_HAT_REGISTRY, PUBLIC_ECR_REGISTRY)
             docker_output = subprocess.run(
                 ["docker", "pull", public_ecr_image_with_tag],
                 stdout=subprocess.PIPE,
@@ -334,20 +314,14 @@ def update_replace_components_images(
             for line in str(docker_output.stdout).split("\\n"):
                 if "Digest" in line:
                     digest = line.removeprefix("Digest:").strip()
-                    public_ecr_image_with_sha256 = (
-                        f"{PUBLIC_ECR_REGISTRY}{component}@{digest}"
-                    )
-                    new_commands[component] = (
-                        f'sed -i.bak "s#{image_with_sha256}#{public_ecr_image_with_sha256}#g" bundle.yaml'
-                    )
+                    public_ecr_image_with_sha256 = f"{PUBLIC_ECR_REGISTRY}{component}@{digest}"
+                    new_commands[component] = f'sed -i.bak "s#{image_with_sha256}#{public_ecr_image_with_sha256}#g" bundle.yaml'
 
     # Merge: update existing with new, keep rest
     existing_commands.update(new_commands)
 
     # Write to file
-    new_file_path = create_new_file_path(
-        REPLACE_COMPONENTS_IMAGES_PATH, create_new_file, ".sh"
-    )
+    new_file_path = create_new_file_path(REPLACE_COMPONENTS_IMAGES_PATH, create_new_file, ".sh")
     with open(new_file_path, "w", encoding="utf-8") as new_file:
         new_file.write(BASH_HEADER)
         for cmd in existing_commands.values():
@@ -387,9 +361,7 @@ def get_image_digest(image_with_tag: str) -> str:
     Returns:
         digest(str): digest for given image
     """
-    docker_output = subprocess.run(
-        ["docker", "pull", image_with_tag], stdout=subprocess.PIPE, check=False
-    )
+    docker_output = subprocess.run(["docker", "pull", image_with_tag], stdout=subprocess.PIPE, check=False)
 
     digest = ""
     for line in str(docker_output.stdout).split("\\n"):
@@ -422,9 +394,7 @@ def prepare_components_images_map(file_path: str) -> dict:
     return images_map
 
 
-def update_helm_install(
-    image_file_path: str, create_new_file: bool, helm_chart_version: str
-):
+def update_helm_install(image_file_path: str, create_new_file: bool, helm_chart_version: str):
     """Updates helm install command in tests/helm_install.sh - only updates certified images
 
     Args:
@@ -499,9 +469,7 @@ if __name__ == "__main__":
     related_images_list, image_envs_list = generate_image_lists(args.images_file)
 
     csv_path = os.path.join(args.operator_repo_dir, CLUSTER_SERVICE_VERSION_PATH)
-    update_cluster_service_version(
-        csv_path, related_images_list, image_envs_list, args.create_new_file
-    )
+    update_cluster_service_version(csv_path, related_images_list, image_envs_list, args.create_new_file)
 
     m_path = os.path.join(args.operator_repo_dir, MANAGER_PATH)
     update_manager(m_path, image_envs_list, args.create_new_file)
