@@ -5,3 +5,5 @@ entries:
 - name: sumologic-kubernetes-collection-helm-operator.v4.21.0-0
 - name: sumologic-kubernetes-collection-helm-operator.v4.27.1-0
   replaces: sumologic-kubernetes-collection-helm-operator.v4.21.0-0
+- name: sumologic-kubernetes-collection-helm-operator.v4.27.1-1
+  replaces: sumologic-kubernetes-collection-helm-operator.v4.27.1-0
