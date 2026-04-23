@@ -362,3 +362,185 @@ relatedImages:
 - image: registry.connect.redhat.com/sumologic/thanos@sha256:16faf7191668e86d8b576bba055dd0cbdeb009635976b9e07bd00f926032f11c
   name: RELATED_IMAGE_THANOS
 schema: olm.bundle
+---
+image: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator-bundle:4.27.1-1
+name: sumologic-kubernetes-collection-helm-operator.v4.27.1-1
+package: sumologic-kubernetes-collection-helm-operator
+properties:
+- type: olm.gvk
+  value:
+    group: helm-operator.sumologic.com
+    kind: SumologicCollection
+    version: v1alpha1
+- type: olm.package
+  value:
+    packageName: sumologic-kubernetes-collection-helm-operator
+    version: 4.27.1-1
+- type: olm.csv.metadata
+  value:
+    annotations:
+      alm-examples: |-
+        [
+            {
+                "apiVersion": "helm-operator.sumologic.com/v1alpha1",
+                "kind": "SumologicCollection",
+                "metadata": {
+                    "name": "collection"
+                },
+                "spec": {
+                    "sumologic": {
+                        "accessId": "",
+                        "accessKey": "",
+                        "clusterName": "kubernetes",
+                        "scc": {
+                            "create": true
+                        }
+                    },
+                    "kube-prometheus-stack": {
+                        "prometheus-node-exporter": {
+                            "service": {
+                                "port": 9200,
+                                "targetPort": 9200
+                            }
+                        }
+                    },
+                    "otellogs": {
+                        "daemonset": {
+                            "containers": {
+                                "otelcol": {
+                                    "securityContext": {
+                                        "privileged": true
+                                    }
+                                }
+                            },
+                            "initContainers": {
+                                "changeowner": {
+                                    "securityContext": {
+                                        "privileged": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+      capabilities: Basic Install
+      categories: Logging & Tracing,Monitoring
+      containerImage: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:6b4e47588ba16c39cf36d7ad56c82a8e0c3ef3bcf350c1109ed3d5c8c1725538
+      createdAt: "2026-04-21T06:04:15Z"
+      features.operators.openshift.io/cnf: "false"
+      features.operators.openshift.io/csi: "false"
+      features.operators.openshift.io/disconnected: "true"
+      features.operators.openshift.io/fips-compliant: "false"
+      features.operators.openshift.io/proxy-aware: "true"
+      features.operators.openshift.io/tls-profiles: "false"
+      features.operators.openshift.io/token-auth-aws: "false"
+      features.operators.openshift.io/token-auth-azure: "false"
+      features.operators.openshift.io/token-auth-gcp: "false"
+      operators.openshift.io/valid-subscription: ""
+      operators.operatorframework.io/builder: operator-sdk-v1.6.1+git
+      operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
+      repository: https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator.git
+      support: Sumo Logic
+    apiServiceDefinitions: {}
+    crdDescriptions:
+      owned:
+      - description: Configuration for Sumo Logic Kubernetes Collection
+        displayName: SumologicCollection
+        kind: SumologicCollection
+        name: sumologiccollections.helm-operator.sumologic.com
+        specDescriptors:
+        - description: Sumo access ID
+          displayName: Access ID
+          path: sumologic.accessId
+          x-descriptors:
+          - urn:alm:descriptor:com.tectonic.ui:text
+        - description: Sumo access key
+          displayName: Access key
+          path: sumologic.accessKey
+          x-descriptors:
+          - urn:alm:descriptor:com.tectonic.ui:text
+        - description: Identifier for the Kubernetes cluster
+          displayName: Cluster name
+          path: sumologic.clusterName
+          x-descriptors:
+          - urn:alm:descriptor:com.tectonic.ui:text
+        version: v1alpha1
+    description: Helm Operator for the Sumo Logic Kubernetes Collection Helm Chart
+      v4.27.1
+    displayName: Sumo Logic Kubernetes Collection Helm Operator
+    installModes:
+    - supported: true
+      type: OwnNamespace
+    - supported: true
+      type: SingleNamespace
+    - supported: true
+      type: MultiNamespace
+    - supported: true
+      type: AllNamespaces
+    keywords:
+    - collection
+    - logging
+    - metrics
+    - monitoring
+    links:
+    - name: Sumo Logic Kubernetes Collection Helm Operator
+      url: https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator
+    maintainers:
+    - email: collection@sumologic.com
+      name: Sumo Logic
+    maturity: alpha
+    provider:
+      name: Sumo Logic
+      url: https://www.sumologic.com/
+relatedImages:
+- image: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator-bundle:4.27.1-1
+  name: ""
+- image: registry.connect.redhat.com/sumologic/autoinstrumentation-dotnet@sha256:f4f385c4489c74b5c43f2fe6b6620a9eb8d9ecab470567236b3c45f636106640
+  name: RELATED_IMAGE_AUTOINSTRUMENTATION_DOTNET
+- image: registry.connect.redhat.com/sumologic/autoinstrumentation-java@sha256:757841fb1cf34b5dd687f93200badcaf7f2e923b9752e8ebcc7dc97d30e23bf4
+  name: RELATED_IMAGE_AUTOINSTRUMENTATION_JAVA
+- image: registry.connect.redhat.com/sumologic/autoinstrumentation-nodejs@sha256:c206eef4fdecaa58b4f01e5e7f0dbd74e9606eab2b4debf47461d36191e248d1
+  name: RELATED_IMAGE_AUTOINSTRUMENTATION_NODEJS
+- image: registry.connect.redhat.com/sumologic/autoinstrumentation-python@sha256:f0fa45fa45e64c7df88f21181ae18ee96fe83cd3988258663d0806ea6f39e6bb
+  name: RELATED_IMAGE_AUTOINSTRUMENTATION_PYTHON
+- image: registry.connect.redhat.com/sumologic/busybox@sha256:209bc8e0b1d958fc699f3bb75b1248544e372ad35cdc46c991bd1698f641e1f9
+  name: RELATED_IMAGE_BUSYBOX
+- image: registry.connect.redhat.com/sumologic/kube-rbac-proxy@sha256:a119a01cfc8930ff123a00c67faebe4200431e53a786ae8dd37ff1776e17409c
+  name: RELATED_IMAGE_KUBE_RBAC_PROXY
+- image: registry.connect.redhat.com/sumologic/kube-state-metrics@sha256:a48055ea8611c5b1aa12be58381cc7112f1ab4edabd225e600af681690a4cd3f
+  name: RELATED_IMAGE_KUBE_STATE_METRICS
+- image: registry.connect.redhat.com/sumologic/kubernetes-setup@sha256:f07eaf68fa11ffc708e4485a83bd3763fc5712f7d73d29edfe5b9c9e08f05df6
+  name: RELATED_IMAGE_KUBERNETES_SETUP
+- image: registry.connect.redhat.com/sumologic/kubernetes-tools-kubectl@sha256:b6ab6acbe3eb5b51ab5e8f6a78fa32477de4c0d202c8b1473c8a6b778039190f
+  name: RELATED_IMAGE_KUBERNETES_TOOLS_KUBECTL
+- image: registry.connect.redhat.com/sumologic/metrics-server@sha256:134de194a3044ff2730452f105ebad8780fa7114a6d0b2af0158c6547e38cd8b
+  name: RELATED_IMAGE_METRICS_SERVER
+- image: registry.connect.redhat.com/sumologic/nginx-unprivileged@sha256:7260555d16c94c4fe1e016626b4cb8a5c0de6b700e2eea28744331fb298f71ae
+  name: RELATED_IMAGE_NGINX_UNPRIVILEGED
+- image: registry.connect.redhat.com/sumologic/node-exporter:1.8.2-ubi
+  name: RELATED_IMAGE_NODE_EXPORTER
+- image: registry.connect.redhat.com/sumologic/opentelemetry-operator@sha256:cf4c871416bc30cc3fcd7e40835acc6c0282eba3b86134c783db7c7a10a3e265
+  name: RELATED_IMAGE_OPENTELEMETRY_OPERATOR
+- image: registry.connect.redhat.com/sumologic/prometheus-config-reloader@sha256:0b605d36782afd8f50fd631d0e9c7b19d39ce962af89b7a737b2f09a8ceff291
+  name: RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER
+- image: registry.connect.redhat.com/sumologic/prometheus-operator@sha256:58a329e6582456b32abebb470086191f8366b927af4703741613993465f116b8
+  name: RELATED_IMAGE_PROMETHEUS_OPERATOR
+- image: registry.connect.redhat.com/sumologic/prometheus@sha256:0ef6eaf570a40499dd5de92a79593e950bc771b014e0ee6ff7419b4b82a36fcc
+  name: RELATED_IMAGE_PROMETHEUS
+- image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:6b4e47588ba16c39cf36d7ad56c82a8e0c3ef3bcf350c1109ed3d5c8c1725538
+  name: sumologic-kubernetes-collection-helm-operator
+- image: registry.connect.redhat.com/sumologic/sumologic-otel-collector@sha256:ebab71cc483772e65945295b98c085be10d5ee3e55930580e3798efec3115fdf
+  name: RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR
+- image: registry.connect.redhat.com/sumologic/tailing-sidecar-operator@sha256:e56f06b3bd5f7e64917818805b91f0bcc40e43f43122cd708a4fdc2e57201dee
+  name: RELATED_IMAGE_TAILING_SIDECAR_OPERATOR
+- image: registry.connect.redhat.com/sumologic/tailing-sidecar@sha256:ea788184e0e0a597623a1e3863f23cb20fb08bb03703df15166739c35dacc8a3
+  name: RELATED_IMAGE_TAILING_SIDECAR
+- image: registry.connect.redhat.com/sumologic/telegraf-operator@sha256:ff958222be01c0c3966474463e43bbd5bcf348790dd34bb761718cb1cea2d793
+  name: RELATED_IMAGE_TELEGRAF_OPERATOR
+- image: registry.connect.redhat.com/sumologic/telegraf@sha256:75efd2e509c6017ea0fc5c9103ce068cbc89087b16506a4ef48cb5ff00eab84e
+  name: RELATED_IMAGE_TELEGRAF
+- image: registry.connect.redhat.com/sumologic/thanos@sha256:16faf7191668e86d8b576bba055dd0cbdeb009635976b9e07bd00f926032f11c
+  name: RELATED_IMAGE_THANOS
+schema: olm.bundle
