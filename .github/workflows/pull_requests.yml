@@ -43,6 +43,27 @@ jobs:
       - name: Check bundle.yaml
         run: make test-bundle-status
 
+  check-csv-images:
+    name: Check CSV images are available in registry
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Detect CSV changes
+        id: detect
+        run: |
+          git fetch origin "${{ github.base_ref }}" --depth=1
+          CHANGED=$(git diff --name-only "origin/${{ github.base_ref }}" -- bundle/manifests/operator.clusterserviceversion.yaml)
+          if [[ -n "${CHANGED}" ]]; then
+            echo "changed=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "changed=false" >> "${GITHUB_OUTPUT}"
+          fi
+      - name: Check images availability
+        if: steps.detect.outputs.changed == 'true'
+        run: make check-csv-images
+
   test-helm-operator:
     name: Test Helm operator
     runs-on: ubuntu-24.04
