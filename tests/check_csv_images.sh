@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# This line is added to ensure a visible diff for the PR.
 # Validates that digest-pinned images added or changed in the CSV are published
 # in the Red Hat Ecosystem Catalog (public API, no credentials required).
 #
