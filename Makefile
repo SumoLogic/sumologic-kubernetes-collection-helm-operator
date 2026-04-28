@@ -92,9 +92,6 @@ test-quick-using-public-images: deploy-receiver-mock deploy-helm-operator-using-
 test-bundle-status:
 	tests/check_bundle_status.sh
 
-check-csv-images:
-	tests/check_csv_images.sh
-
 shellcheck:
 	tests/shellcheck.sh
 
