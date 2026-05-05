@@ -8,6 +8,7 @@ This project was generated using [Operator SDK][operator-sdk].
 
 | Sumo Logic Kubernetes Collection Helm Operator version | OpenShift version                                                      |
 |--------------------------------------------------------|------------------------------------------------------------------------|
+| v4.27.1-1                                              | 4.14 – 4.21                                                            |
 | v4.27.1-0                                              | 4.14 – 4.21                                                            |
 | v4.21.0-0                                              | 4.14 – 4.21                                                            |
 | v4.17.1-0 [**Deprecated**]                             | 4.13 – 4.19                                                            |
@@ -17,9 +18,9 @@ This project was generated using [Operator SDK][operator-sdk].
 | v4.13.0-0 [**Deprecated**]                             | 4.13 – 4.18                                                            |
 | v4.9.0-3  [**Deprecated**]                             | 4.13 – 4.18                                                            |
 | v4.9.0-1  [**Deprecated**]                             | 4.13 – 4.15                                                            |
-| v2.19.1-0                                              | 4.11 – 4.12 [special configuration for OpenShift v4.12][config_4.12]  |
-| v2.17.0-0                                              | 4.8 – 4.10                                                             |
-| v2.1.4-0                                               | 4.6 – 4.7                                                              |
+| v2.19.1-0 [**Deprecated**]                             | 4.11 – 4.12 [special configuration for OpenShift v4.12][config_4.12]   |
+| v2.17.0-0 [**Deprecated**]                             | 4.8 – 4.10                                                             |
+| v2.1.4-0  [**Deprecated**]                             | 4.6 – 4.7                                                              |
 
 **Note:** using Sumo Logic Kubernetes Collection Helm Operator on OpenShift v4.12 requires special configuration with `PodSecurityPolicy` disabled
 because`PodSecurityPolicy` was completely removed on Kubernetes 1.25+.
