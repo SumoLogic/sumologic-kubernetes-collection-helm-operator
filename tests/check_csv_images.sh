@@ -26,19 +26,20 @@ echo "CSV file : ${CSV_FILE}"
 echo "Base ref : ${BASE_REF}"
 echo ""
 
+
 # grep exits 1 on no match; || true prevents set -e from aborting.
-IMAGES=$(git diff "${BASE_REF}" -- "${CSV_FILE}" \
+mapfile -t IMAGES < <(git diff "${BASE_REF}" -- "${CSV_FILE}" \
     | grep '^+[^+]' \
-    | grep -oE 'registry\.[a-zA-Z0-9._-]+\.[a-zA-Z]+/[a-zA-Z0-9._/-]+@sha256:[a-f0-9]+' \
+    | grep -oE 'registry\.[a-zA-Z0-9._-]+\.[a-zA-Z]+/[a-zA-Z0-9._/-]+@sha256:[A-Fa-f0-9]{64}' \
     | sort -u || true)
 
-if [[ -z "${IMAGES}" ]]; then
+if [[ ${#IMAGES[@]} -eq 0 ]]; then
     echo "Result  : No digest-pinned image changes detected — check skipped."
     exit 0
 fi
 
 DETECTED=0
-for IMAGE in ${IMAGES}; do
+for IMAGE in "${IMAGES[@]}"; do
     DETECTED=$((DETECTED + 1))
     echo "  [+] ${IMAGE}"
 done
@@ -49,15 +50,18 @@ echo "=== Check ==="
 FAILED=0
 CHECKED=0
 
-for IMAGE in ${IMAGES}; do
+for IMAGE in "${IMAGES[@]}"; do
     CHECKED=$((CHECKED + 1))
     DIGEST="sha256:${IMAGE##*@sha256:}"
     printf "Checking %-85s ... " "${IMAGE}"
 
-    TOTAL=$(curl -sf "${CATALOG_API}?filter=image_id==${DIGEST}&page_size=1" \
-        | python3 -c "import sys,json; print(json.load(sys.stdin).get('total', 0))")
+    TOTAL=$(curl --retry 3 --retry-delay 3 --connect-timeout 10 --max-time 30 -sf "${CATALOG_API}?filter=image_id==${DIGEST}&page_size=1" \
+        | python3 -c "import sys,json; print(json.load(sys.stdin).get('total', 0))" || echo "curl_error")
 
-    if [[ "${TOTAL}" -gt 0 ]]; then
+    if [[ "${TOTAL}" == "curl_error" ]]; then
+        echo "API ERROR"
+        FAILED=$((FAILED + 1))
+    elif [[ "${TOTAL}" -gt 0 ]]; then
         echo "OK"
     else
         echo "NOT FOUND IN CATALOG"

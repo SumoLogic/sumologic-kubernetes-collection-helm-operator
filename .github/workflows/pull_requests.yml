@@ -33,10 +33,10 @@ jobs:
         run: make black-check
 
   check-csv-images:
-    name: Check CSV images are available in registry
+    name: Check CSV images are published in Red Hat Catalog
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Detect CSV changes
@@ -49,7 +49,7 @@ jobs:
           else
             echo "changed=false" >> "${GITHUB_OUTPUT}"
           fi
-      - name: Check images availability
+      - name: Check images in Red Hat Catalog
         if: steps.detect.outputs.changed == 'true'
         run: make check-csv-images
         
