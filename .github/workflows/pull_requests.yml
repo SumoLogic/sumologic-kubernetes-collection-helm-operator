@@ -87,18 +87,14 @@ jobs:
       - uses: imranismail/setup-kustomize@v2.1.0
       - name: Check kustomize version
         run: kustomize version
-      - name: Install k3d
-        run: |
-          curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | TAG=v5.9.0 bash
-          k3d version
-      - name: Create single k3d Cluster
+      - uses: nolar/setup-k3d-k3s@v1
         id: single-cluster
-        run: |
-          k3d cluster create k3s-default \
-            --agents 2 \
-            --no-lb \
-            --k3s-arg "--no-deploy=traefik,servicelb,metrics-server@server:*"
-
+        name: Create single k3d Cluster
+        with:
+          k3d-name: k3s-default
+          k3d-args: --agents 2 --no-lb
+          k3s-args: --disable=traefik --disable=servicelb --disable=metrics-server@server:*
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout submodules
         run: git submodule update --init
