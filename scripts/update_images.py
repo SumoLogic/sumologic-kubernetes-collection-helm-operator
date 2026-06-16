@@ -53,7 +53,7 @@ COMPONENTS_CONFIG_MAP = {
     "opentelemetry-operator.manager.autoInstrumentationImage.dotnet": "autoinstrumentation-dotnet",
     "opentelemetry-operator.manager.autoInstrumentationImage.java": "autoinstrumentation-java",
     "opentelemetry-operator.manager.autoInstrumentationImage.nodejs": "autoinstrumentation-nodejs",
-    "opentelemetry-operator.manager.autoInstrumentationImage.python": "autoinstrumentation-nodejs",
+    "opentelemetry-operator.manager.autoInstrumentationImage.python": "autoinstrumentation-python",
     "opentelemetry-operator.manager.collectorImage": "sumologic-otel-collector",
     "opentelemetry-operator.manager.image": "opentelemetry-operator",
     "otelcolInstrumentation.statefulset.image": "sumologic-otel-collector",
