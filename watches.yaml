@@ -14,38 +14,12 @@
       | split ":")._0 }}'
     kube-prometheus-stack.prometheus-node-exporter.image.tag: '{{ ("$RELATED_IMAGE_NODE_EXPORTER"
       | split ":")._1 }}'
-    kube-prometheus-stack.prometheus.prometheusSpec.image.repository: '{{ ("$RELATED_IMAGE_PROMETHEUS"
-      | split "@")._0 }}'
-    kube-prometheus-stack.prometheus.prometheusSpec.image.sha: '{{ ("$RELATED_IMAGE_PROMETHEUS"
-      | split ":")._1 }}'
-    kube-prometheus-stack.prometheus.prometheusSpec.image.tag: v2.39.0-ubi
-    kube-prometheus-stack.prometheus.prometheusSpec.thanos.image: $RELATED_IMAGE_THANOS
-    kube-prometheus-stack.prometheusOperator.image.repository: '{{ ("$RELATED_IMAGE_PROMETHEUS_OPERATOR"
-      | split "@")._0 }}'
-    kube-prometheus-stack.prometheusOperator.image.sha: '{{ ("$RELATED_IMAGE_PROMETHEUS_OPERATOR"
-      | split ":")._1 }}'
-    kube-prometheus-stack.prometheusOperator.image.tag: v0.79.1-ubi
-    kube-prometheus-stack.prometheusOperator.prometheusConfigReloader.image.repository: '{{
-      ("$RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER" | split "@")._0 }}'
-    kube-prometheus-stack.prometheusOperator.prometheusConfigReloader.image.sha: '{{
-      ("$RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER" | split ":")._1 }}'
-    kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.sha: ''
-    kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.tag: v0.79.1-ubi
-    kube-prometheus-stack.prometheusOperator.thanosImage.repository: '{{ ("$RELATED_IMAGE_THANOS"
-      | split "@")._0 }}'
-    kube-prometheus-stack.prometheusOperator.thanosImage.sha: '{{ ("$RELATED_IMAGE_THANOS"
-      | split ":")._1 }}'
-    kube-prometheus-stack.prometheusOperator.thanosImage.tag: v0.33.0-ubi
     metadata.image.repository: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR" | split
       ":")._0 }}'
     metadata.image.tag: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR" | split ":")._1
       }}'
     metrics-server.image.repository: '{{ ("$RELATED_IMAGE_METRICS_SERVER" | split ":")._0 }}'
     metrics-server.image.tag: '{{ ("$RELATED_IMAGE_METRICS_SERVER" | split ":")._1 }}'
-    opentelemetry-operator.kubeRBACProxy.image.repository: '{{ ("$RELATED_IMAGE_KUBE_RBAC_PROXY"
-      | split ":")._0 }}'
-    opentelemetry-operator.kubeRBACProxy.image.tag: '{{ ("$RELATED_IMAGE_KUBE_RBAC_PROXY"
-      | split ":")._1 }}'
     opentelemetry-operator.manager.autoInstrumentationImage.dotnet.repository: '{{
       ("$RELATED_IMAGE_AUTOINSTRUMENTATION_DOTNET" | split ":")._0 }}'
     opentelemetry-operator.manager.autoInstrumentationImage.dotnet.tag: '{{ ("$RELATED_IMAGE_AUTOINSTRUMENTATION_DOTNET"

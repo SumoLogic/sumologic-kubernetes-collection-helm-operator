@@ -24,7 +24,7 @@ spec:
       create: true
 
   ## Configure metrics-server
-  ## ref: https://github.com/bitnami/charts/blob/master/bitnami/metrics-server/values.yaml
+  ## ref: https://github.com/kubernetes-sigs/metrics-server/blob/master/charts/metrics-server/values.yaml
   metrics-server:
     ## Set the enabled flag to true for enabling metrics-server.
     ## This is required before enabling autoscaling unless you have an existing metrics-server in the cluster.

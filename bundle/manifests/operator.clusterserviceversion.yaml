@@ -412,12 +412,6 @@ spec:
                   value: registry.connect.redhat.com/sumologic/node-exporter:1.8.2-ubi
                 - name: RELATED_IMAGE_OPENTELEMETRY_OPERATOR
                   value: registry.connect.redhat.com/sumologic/opentelemetry-operator@sha256:cf4c871416bc30cc3fcd7e40835acc6c0282eba3b86134c783db7c7a10a3e265
-                - name: RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER
-                  value: registry.connect.redhat.com/sumologic/prometheus-config-reloader@sha256:0b605d36782afd8f50fd631d0e9c7b19d39ce962af89b7a737b2f09a8ceff291
-                - name: RELATED_IMAGE_PROMETHEUS_OPERATOR
-                  value: registry.connect.redhat.com/sumologic/prometheus-operator@sha256:58a329e6582456b32abebb470086191f8366b927af4703741613993465f116b8
-                - name: RELATED_IMAGE_PROMETHEUS
-                  value: registry.connect.redhat.com/sumologic/prometheus@sha256:0ef6eaf570a40499dd5de92a79593e950bc771b014e0ee6ff7419b4b82a36fcc
                 - name: RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR
                   value: registry.connect.redhat.com/sumologic/sumologic-otel-collector@sha256:ebab71cc483772e65945295b98c085be10d5ee3e55930580e3798efec3115fdf
                 - name: RELATED_IMAGE_TAILING_SIDECAR_OPERATOR
@@ -428,8 +422,6 @@ spec:
                   value: registry.connect.redhat.com/sumologic/telegraf-operator@sha256:ff958222be01c0c3966474463e43bbd5bcf348790dd34bb761718cb1cea2d793
                 - name: RELATED_IMAGE_TELEGRAF
                   value: registry.connect.redhat.com/sumologic/telegraf@sha256:75efd2e509c6017ea0fc5c9103ce068cbc89087b16506a4ef48cb5ff00eab84e
-                - name: RELATED_IMAGE_THANOS
-                  value: registry.connect.redhat.com/sumologic/thanos@sha256:16faf7191668e86d8b576bba055dd0cbdeb009635976b9e07bd00f926032f11c
                 image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:e87f776c7eee19f421d621c4711671dcfb42d71efaa3f90e10f371c95b0cded0
                 livenessProbe:
                   httpGet:
@@ -535,12 +527,6 @@ spec:
     name: RELATED_IMAGE_NODE_EXPORTER
   - image: registry.connect.redhat.com/sumologic/opentelemetry-operator@sha256:cf4c871416bc30cc3fcd7e40835acc6c0282eba3b86134c783db7c7a10a3e265
     name: RELATED_IMAGE_OPENTELEMETRY_OPERATOR
-  - image: registry.connect.redhat.com/sumologic/prometheus-config-reloader@sha256:0b605d36782afd8f50fd631d0e9c7b19d39ce962af89b7a737b2f09a8ceff291
-    name: RELATED_IMAGE_PROMETHEUS_CONFIG_RELOADER
-  - image: registry.connect.redhat.com/sumologic/prometheus-operator@sha256:58a329e6582456b32abebb470086191f8366b927af4703741613993465f116b8
-    name: RELATED_IMAGE_PROMETHEUS_OPERATOR
-  - image: registry.connect.redhat.com/sumologic/prometheus@sha256:0ef6eaf570a40499dd5de92a79593e950bc771b014e0ee6ff7419b4b82a36fcc
-    name: RELATED_IMAGE_PROMETHEUS
   - image: registry.connect.redhat.com/sumologic/sumologic-otel-collector@sha256:ebab71cc483772e65945295b98c085be10d5ee3e55930580e3798efec3115fdf
     name: RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR
   - image: registry.connect.redhat.com/sumologic/tailing-sidecar-operator@sha256:e56f06b3bd5f7e64917818805b91f0bcc40e43f43122cd708a4fdc2e57201dee
@@ -551,7 +537,5 @@ spec:
     name: RELATED_IMAGE_TELEGRAF_OPERATOR
   - image: registry.connect.redhat.com/sumologic/telegraf@sha256:75efd2e509c6017ea0fc5c9103ce068cbc89087b16506a4ef48cb5ff00eab84e
     name: RELATED_IMAGE_TELEGRAF
-  - image: registry.connect.redhat.com/sumologic/thanos@sha256:16faf7191668e86d8b576bba055dd0cbdeb009635976b9e07bd00f926032f11c
-    name: RELATED_IMAGE_THANOS
   replaces: sumologic-kubernetes-collection-helm-operator.v4.27.1-0
   version: 4.27.1-1

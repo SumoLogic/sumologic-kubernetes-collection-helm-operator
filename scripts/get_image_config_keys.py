@@ -60,18 +60,9 @@ known_image_keys = [
     "tailing-sidecar-operator.operator.image.tag",
     "tailing-sidecar-operator.kubeRbacProxy.image.tag",
     "opentelemetry-operator.manager.image.tag",
-    "opentelemetry-operator.kubeRBACProxy.image.tag",
     "opentelemetry-operator.manager.collectorImage.tag",
     "telegraf-operator.image.tag",
-    "kube-prometheus-stack.prometheus.prometheusSpec.image.tag",
-    "kube-prometheus-stack.prometheus.prometheusSpec.image.sha",
     "kube-prometheus-stack.prometheus-node-exporter.image.tag",
-    "kube-prometheus-stack.prometheusOperator.thanosImage.tag",
-    "kube-prometheus-stack.prometheusOperator.thanosImage.sha",
-    "kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.tag",
-    "kube-prometheus-stack.prometheusOperator.prometheusConfigReloaderImage.sha",
-    "kube-prometheus-stack.prometheusOperator.image.tag",
-    "kube-prometheus-stack.prometheusOperator.image.sha",
     "metrics-server.image.tag",
 ]
 
