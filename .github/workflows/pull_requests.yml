@@ -92,8 +92,10 @@ jobs:
         name: Create single k3d Cluster
         with:
           k3d-name: k3s-default
-          k3d-args: --agents 2 --no-lb
-          k3s-args: --disable=traefik --disable=servicelb --disable=metrics-server@server:*
+          k3d-args: >-
+            --agents 2
+            --no-lb
+            --k3s-arg "--disable=traefik,servicelb,metrics-server@server:*"
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout submodules
