@@ -95,7 +95,7 @@ jobs:
           k3d-args: >-
             --agents 2
             --no-lb
-            --k3s-arg "--disable=traefik,servicelb,metrics-server@server:*"
+            --k3s-arg --disable=traefik,servicelb,metrics-server@server:*
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout submodules
