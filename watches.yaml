@@ -43,7 +43,7 @@
     opentelemetry-operator.manager.collectorImage.tag: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
       | split ":")._1 }}'
     opentelemetry-operator.manager.image.repository: '{{ ("$RELATED_IMAGE_OPENTELEMETRY_OPERATOR"
-      | split "@")._0 }}'
+      | split ":")._0 }}'
     opentelemetry-operator.manager.image.tag: '{{ ("$RELATED_IMAGE_OPENTELEMETRY_OPERATOR"
       | split ":")._1 }}'
     otelagent.daemonset.image.repository: '{{ ("$RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR"
