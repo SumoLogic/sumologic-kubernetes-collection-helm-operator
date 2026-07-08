@@ -56,24 +56,9 @@ def update_csv(csv_file, version, operator_name, previous_version=None):
     csv_data["metadata"]["name"] = f"{operator_name}.v{version}"
     csv_data["metadata"]["annotations"]["createdAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    operator_image = f"registry.connect.redhat.com/sumologic/{operator_name}:{version}"
-    csv_data["metadata"]["annotations"]["containerImage"] = operator_image
-
     # Set spec.replaces so OLM can build the upgrade path N-1 → N
     if previous_version:
         csv_data["spec"]["replaces"] = f"{operator_name}.v{previous_version}"
-
-    for deployment in csv_data["spec"]["install"]["spec"]["deployments"]:
-        if deployment["name"] == operator_name:
-            for container in deployment["spec"]["template"]["spec"]["containers"]:
-                if container["name"] == "manager":
-                    container["image"] = operator_image
-
-    if "relatedImages" in csv_data["spec"]:
-        for img in csv_data["spec"]["relatedImages"]:
-            if img.get("name") == operator_name:
-                img["image"] = operator_image
-                break
 
     with open(csv_file, "w", encoding="utf-8") as f:
         yaml.dump(csv_data, f, default_flow_style=False, sort_keys=False)
