@@ -230,12 +230,23 @@ def update_cluster_service_version(file_path: str, new_related_images: list, new
         cluster_service_version["spec"]["relatedImages"] = updated_images
 
         containers = cluster_service_version["spec"]["install"]["spec"]["deployments"][0]["spec"]["template"]["spec"]["containers"]
+
+        # Find new kube-rbac-proxy image from updated env list
+        kube_rbac_proxy_env_name = f"{ENV_PREFIX}KUBE_RBAC_PROXY"
+        kube_rbac_proxy_image = None
+        for env in new_image_envs:
+            if env["name"] == kube_rbac_proxy_env_name:
+                kube_rbac_proxy_image = env["value"]
+                break
+
         # pylint: disable=C0200
         for i in range(len(containers)):
             name = containers[i]["name"]
             if name == "operator":
                 envs = containers[i]["env"]
                 containers[i]["env"] = update_envs(envs, new_image_envs)
+            elif name == "kube-rbac-proxy" and kube_rbac_proxy_image:
+                containers[i]["image"] = kube_rbac_proxy_image
 
     new_file_path = create_new_file_path(file_path, create_new_file)
     with open(new_file_path, "w", encoding="utf-8") as cluster_service_version_file_new:

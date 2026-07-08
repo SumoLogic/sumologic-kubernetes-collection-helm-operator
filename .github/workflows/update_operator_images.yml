@@ -166,6 +166,8 @@ jobs:
         run: |
           git add bundle/manifests/operator.clusterserviceversion.yaml \
                   config/manager/manager.yaml \
+                  config/default/manager_auth_proxy_patch.yaml \
+                  config/public_images/manager_auth_proxy_patch.yaml \
                   bundle.yaml \
                   tests/replace_components_images.sh \
                   tests/helm_install.sh \
