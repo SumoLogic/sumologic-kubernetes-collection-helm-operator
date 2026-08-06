@@ -1,35 +1,40 @@
 # AGENTS.md
 
 ## Commands
-- Build: `make`
-- Test: `<!-- TODO: what is the test command? -->`
+
+- Setup: `git submodule update --init`
+- Build: `make docker-build`
+- Lint: `make shellcheck && make pylint && make black-check`
+- Test (integration, requires k3d cluster): `make test-using-public-images`
+- Check bundle is up to date: `make test-bundle-status`
+- Regenerate watches.yaml: `make generate-watches`
+- Regenerate bundle.yaml: `make generate-bundle`
 
 ## Tooling
+
 - Build system: Make
+- No Go code — pure Helm-based operator; `helm-operator` binary (auto-downloaded to `bin/`) does all reconciliation
+- Python scripts in `scripts/` are release automation only (not app code)
 
 ## Boundaries
+
 - Never: commit secrets or credentials
-- <!-- TODO: are there paths/files agents should never modify? -->
+- Never edit `watches.yaml` directly — regenerate with `make generate-watches`
+- Never edit `bundle.yaml` directly — regenerate with `make generate-bundle`; verify with `make test-bundle-status`
+- Never edit `helm-charts/` directly — it is a git submodule
 
 ## Testing
-- <!-- TODO: what testing framework is used? Any special setup? -->
+
+- All tests are integration/end-to-end against a live Kubernetes cluster (k3d in CI); no unit tests
+- `make test` requires Red Hat registry credentials; use `make test-using-public-images` locally
 
 ## Git workflow
-- Branch naming: Jira ticket prefix (e.g., SUMO-XXXXX/description)
-- <!-- TODO: any specific PR/review conventions? -->
+
+- Branch naming: Jira ticket prefix (e.g., `SUMO-XXXXX/description`)
 
 ## Gotchas / context
-- <!-- TODO: what non-obvious things would trip up an agent? -->
+
+- `watches.yaml` is the sole runtime config — maps CRD to Helm chart and overrides ~35 image paths for OpenShift
+- `bundle_tmp*/` dirs at repo root are stale build artifacts; safe to ignore
 
 <!-- See README for project overview — not duplicated here. -->
-
----
-<!-- ONBOARDING: Remove this section once all TODOs above are resolved. -->
-## Developer onboarding (temporary)
-
-This AGENTS.md was auto-scaffolded and has unresolved TODO prompts above.
-When you start a session in this repo, please help complete them:
-
-1. Run `/aidp:agents-md-generator` — it will detect the TODOs and interview you.
-2. Or just search for `<!-- TODO:` and answer the questions inline.
-3. Once all TODOs are resolved, delete this section.
