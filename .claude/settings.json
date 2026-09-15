@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 /var/folders/mp/2r3ybngx5g9ctdmffzph3z980000gp/T/tmp.Vo2RCHoX2r/scripts/update_operator_version.py --operator-version 5.1.2-0 --operator-repo-dir /var/folders/mp/2r3ybngx5g9ctdmffzph3z980000gp/T/tmp.Vo2RCHoX2r)",
+      "Bash(echo \"Exit code: $?\")",
+      "Bash(echo \"===== bundle/manifests/operator.clusterserviceversion.yaml diff =====\")",
+      "Read(//private/var/folders/mp/2r3ybngx5g9ctdmffzph3z980000gp/T/tmp.Vo2RCHoX2r/bundle/manifests/**)",
+      "Bash(echo \"\")",
+      "Bash(echo \"===== Makefile diff =====\")",
+      "Read(//private/var/folders/mp/2r3ybngx5g9ctdmffzph3z980000gp/T/tmp.Vo2RCHoX2r/**)",
+      "Bash(echo \"=== SHA references in updated CSV ===\")",
+      "Bash(rm -rf /var/folders/mp/2r3ybngx5g9ctdmffzph3z980000gp/T/tmp.Vo2RCHoX2r)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ],
+    "additionalDirectories": [
+      "/private/var/folders/mp/2r3ybngx5g9ctdmffzph3z980000gp/T/tmp.Vo2RCHoX2r"
+    ]
+  }
+}
