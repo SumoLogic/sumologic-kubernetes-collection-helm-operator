@@ -403,7 +403,7 @@ spec:
                 - name: RELATED_IMAGE_KUBERNETES_SETUP
                   value: registry.connect.redhat.com/sumologic/kubernetes-setup@sha256:4e58e2940915e243b92f1ecea01bca72d5d7cab54d7fedd03ad015dc54554a94
                 - name: RELATED_IMAGE_KUBERNETES_TOOLS_KUBECTL
-                  value: registry.connect.redhat.com/sumologic/kubernetes-tools-kubectl@sha256:b8913a9da365a9122c916bb1f183dfbbe52a83eaf91f9010c60dc0e3fc605e71
+                  value: registry.connect.redhat.com/sumologic/kubernetes-tools-kubectl@sha256:9d5b2f2d5c51b867543ad0e85834af9071a0ba7b922039d0b5d736830999f40d
                 - name: RELATED_IMAGE_METRICS_SERVER
                   value: registry.connect.redhat.com/sumologic/metrics-server@sha256:2fe257e8c8298e7389bd8f81b56860887e2917261858a2fbddc4e967b86b548c
                 - name: RELATED_IMAGE_NGINX_UNPRIVILEGED
@@ -517,7 +517,7 @@ spec:
     name: RELATED_IMAGE_KUBE_STATE_METRICS
   - image: registry.connect.redhat.com/sumologic/kubernetes-setup@sha256:4e58e2940915e243b92f1ecea01bca72d5d7cab54d7fedd03ad015dc54554a94
     name: RELATED_IMAGE_KUBERNETES_SETUP
-  - image: registry.connect.redhat.com/sumologic/kubernetes-tools-kubectl@sha256:b8913a9da365a9122c916bb1f183dfbbe52a83eaf91f9010c60dc0e3fc605e71
+  - image: registry.connect.redhat.com/sumologic/kubernetes-tools-kubectl@sha256:9d5b2f2d5c51b867543ad0e85834af9071a0ba7b922039d0b5d736830999f40d
     name: RELATED_IMAGE_KUBERNETES_TOOLS_KUBECTL
   - image: registry.connect.redhat.com/sumologic/metrics-server@sha256:2fe257e8c8298e7389bd8f81b56860887e2917261858a2fbddc4e967b86b548c
     name: RELATED_IMAGE_METRICS_SERVER
