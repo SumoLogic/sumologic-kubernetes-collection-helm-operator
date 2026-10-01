@@ -1,6 +1,6 @@
 # Build the manager binary
 FROM registry.access.redhat.com/ubi9/ubi-minimal:9.8
-FROM quay.io/operator-framework/helm-operator:v1.42.2
+FROM quay.io/operator-framework/helm-operator:v1.42.3
 
 ARG VERSION=${VERSION}
 ARG RELEASE_NUMBER=${RELEASE_NUMBER}
