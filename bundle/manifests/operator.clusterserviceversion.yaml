@@ -23,8 +23,8 @@ metadata:
       \       }\n            }\n        }\n    }\n]"
     capabilities: Basic Install
     categories: Logging & Tracing,Monitoring
-    containerImage: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:495ff7e4cf5b06ddb3ff73471fef8b0776110ec7a921e5f9f93b54994e801936
-    createdAt: '2026-10-05T06:58:23Z'
+    containerImage: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:d40034fb3a5cd2fc3c031f4dae9b59e4c70fb1158312938d11d23dcf6a365931
+    createdAt: '2026-10-05T07:15:38Z'
     features.operators.openshift.io/cnf: 'false'
     features.operators.openshift.io/csi: 'false'
     features.operators.openshift.io/disconnected: 'true'
@@ -422,7 +422,7 @@ spec:
                   value: registry.connect.redhat.com/sumologic/telegraf-operator@sha256:ff958222be01c0c3966474463e43bbd5bcf348790dd34bb761718cb1cea2d793
                 - name: RELATED_IMAGE_TELEGRAF
                   value: registry.connect.redhat.com/sumologic/telegraf@sha256:abf9fe16343e2310f463872b4990e5a30dadb3ede0e3df4387277a22e2e3c862
-                image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:495ff7e4cf5b06ddb3ff73471fef8b0776110ec7a921e5f9f93b54994e801936
+                image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:d40034fb3a5cd2fc3c031f4dae9b59e4c70fb1158312938d11d23dcf6a365931
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -499,7 +499,7 @@ spec:
     name: Sumo Logic
     url: https://www.sumologic.com/
   relatedImages:
-  - image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:495ff7e4cf5b06ddb3ff73471fef8b0776110ec7a921e5f9f93b54994e801936
+  - image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:d40034fb3a5cd2fc3c031f4dae9b59e4c70fb1158312938d11d23dcf6a365931
     name: sumologic-kubernetes-collection-helm-operator
   - image: registry.connect.redhat.com/sumologic/autoinstrumentation-dotnet@sha256:6d9f2ee35c196837a04c1459fa811fd798e16c5683feaae8d1fa2511d828f66f
     name: RELATED_IMAGE_AUTOINSTRUMENTATION_DOTNET
