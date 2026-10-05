@@ -354,8 +354,8 @@ relatedImages:
   name: RELATED_IMAGE_TELEGRAF
 schema: olm.bundle
 ---
-image: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator-bundle:5.7.0-0-rc.0
-name: sumologic-kubernetes-collection-helm-operator.v5.7.0-0-rc.0
+image: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator-bundle:5.7.0-0
+name: sumologic-kubernetes-collection-helm-operator.v5.7.0-0
 package: sumologic-kubernetes-collection-helm-operator
 properties:
 - type: olm.gvk
@@ -366,7 +366,7 @@ properties:
 - type: olm.package
   value:
     packageName: sumologic-kubernetes-collection-helm-operator
-    version: 5.7.0-0-rc.0
+    version: 5.7.0-0
 - type: olm.csv.metadata
   value:
     annotations:
@@ -418,8 +418,8 @@ properties:
         ]
       capabilities: Basic Install
       categories: Logging & Tracing,Monitoring
-      containerImage: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:495ff7e4cf5b06ddb3ff73471fef8b0776110ec7a921e5f9f93b54994e801936
-      createdAt: "2026-10-01T08:45:56Z"
+      containerImage: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:d40034fb3a5cd2fc3c031f4dae9b59e4c70fb1158312938d11d23dcf6a365931
+      createdAt: "2026-10-05T07:15:38Z"
       features.operators.openshift.io/cnf: "false"
       features.operators.openshift.io/csi: "false"
       features.operators.openshift.io/disconnected: "true"
@@ -486,7 +486,7 @@ properties:
       name: Sumo Logic
       url: https://www.sumologic.com/
 relatedImages:
-- image: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator-bundle:5.7.0-0-rc.0
+- image: public.ecr.aws/sumologic/sumologic-kubernetes-collection-helm-operator-bundle:5.7.0-0
   name: ""
 - image: registry.connect.redhat.com/sumologic/autoinstrumentation-dotnet@sha256:6d9f2ee35c196837a04c1459fa811fd798e16c5683feaae8d1fa2511d828f66f
   name: RELATED_IMAGE_AUTOINSTRUMENTATION_DOTNET
@@ -514,7 +514,7 @@ relatedImages:
   name: RELATED_IMAGE_NODE_EXPORTER
 - image: registry.connect.redhat.com/sumologic/opentelemetry-operator@sha256:bb1d58b4bea16d379e5b478103394fd3632f5fef96c1e3f8d3b3469b08538148
   name: RELATED_IMAGE_OPENTELEMETRY_OPERATOR
-- image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:495ff7e4cf5b06ddb3ff73471fef8b0776110ec7a921e5f9f93b54994e801936
+- image: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:d40034fb3a5cd2fc3c031f4dae9b59e4c70fb1158312938d11d23dcf6a365931
   name: sumologic-kubernetes-collection-helm-operator
 - image: registry.connect.redhat.com/sumologic/sumologic-otel-collector@sha256:14023353d100fd8b0a963f4aab3dbff02f0628c63856eb6743f6cbb67e3795aa
   name: RELATED_IMAGE_SUMOLOGIC_OTEL_COLLECTOR
