@@ -16,20 +16,41 @@ def detect_release_type(version):
     return "rc" if re.search(r"[-\.]rc[\.\-]\d+$", version) else "final"
 
 
-def get_previous_version_from_csv(csv_file):
-    """Get current version from CSV file."""
+def base_of_rc(version):
+    """Strip the -rc.N suffix to get the base release version."""
+    return re.sub(r"[-\.]rc\.\d+$", "", version)
+
+
+def get_previous_version_from_csv(csv_file, operator_name, version):
+    """Return the version the new CSV should replace.
+
+    First RC of a release: the version currently in the CSV (the last release).
+    Any later RC or the final of the same base version: whatever the current RC
+    replaced, so RCs never end up in the upgrade path.
+    """
     try:
         with open(csv_file, "r", encoding="utf-8") as f:
             csv_data = yaml.safe_load(f)
-            current_version = csv_data.get("spec", {}).get("version", "")
-            if current_version:
-                return current_version
     except (IOError, yaml.YAMLError) as e:
         print(f"Error reading CSV: {e}")
         sys.exit(1)
 
-    print("Cannot find version in CSV file")
-    sys.exit(1)
+    spec = csv_data.get("spec", {})
+    current_version = spec.get("version", "")
+    if not current_version:
+        print("Cannot find version in CSV file")
+        sys.exit(1)
+
+    same_release = base_of_rc(current_version) == base_of_rc(version)
+    if same_release and (detect_release_type(current_version) == "rc" or current_version == version):
+        replaces = spec.get("replaces", "")
+        prefix = f"{operator_name}.v"
+        if not replaces.startswith(prefix):
+            print(f"CSV is at RC {current_version} but spec.replaces is missing or invalid: '{replaces}'")
+            sys.exit(1)
+        return replaces[len(prefix) :]
+
+    return current_version
 
 
 def validate_version_format(version, release_type):
@@ -147,7 +168,7 @@ def main():
 
     release_type = detect_release_type(version)
     validate_version_format(version, release_type)
-    previous_version = get_previous_version_from_csv(csv_file)
+    previous_version = get_previous_version_from_csv(csv_file, operator_name, version)
 
     update_csv(csv_file, version, operator_name, previous_version=previous_version)
     update_makefile(repo_dir / "Makefile", version, operator_name)
