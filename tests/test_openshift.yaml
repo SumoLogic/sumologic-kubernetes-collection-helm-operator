@@ -7,6 +7,12 @@ spec:
     accessId: "dummy"
     accessKey: "dummy"
     endpoint: "http://receiver-mock.receiver-mock:3000/terraform/api/"
+    sourcelessMode: false
+    metrics:
+      collector:
+        otelcol:
+          singleLayerPipeline:
+            migrationDocAcknowledged: true
     scc:
       create: true
 
