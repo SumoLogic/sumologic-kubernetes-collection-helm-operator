@@ -12,6 +12,7 @@ spec:
       collector:
         otelcol:
           singleLayerPipeline:
+            enabled: false
             migrationDocAcknowledged: true
     scc:
       create: true
