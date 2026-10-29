@@ -4,7 +4,7 @@ FROM quay.io/operator-framework/helm-operator:v1.42.3
 
 ARG VERSION=${VERSION}
 ARG RELEASE_NUMBER=${RELEASE_NUMBER}
-ARG HELM_VERSION=3.21.1
+ARG HELM_VERSION=3.22.1
 
 LABEL name="Sumologic Kubernetes Collection Helm Operator"
 LABEL maintainer="opensource-collection-team@sumologic.com"
