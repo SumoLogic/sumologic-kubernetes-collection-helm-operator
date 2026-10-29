@@ -47,6 +47,10 @@ spec:
     ## Cluster name: Note spaces are not allowed and will be replaced with dashes.
     clusterName: "kubernetes"
 
+    ## Required by Helm Chart v6: acknowledge the sourceless mode change.
+    ## See: https://www.sumologic.com/help/docs/send-data/kubernetes/v6/how-to-upgrade/
+    sourcelessModeAck: true
+
     ## Cluster DNS Domain
     ## We use the DNS domain in internal urls to speed up DNS resolution, see https://github.com/kubernetes/kubernetes/issues/56903
     ## Change this if you have set a non-default DNS domain in your cluster
@@ -496,6 +500,11 @@ spec:
         ## To enable, you need opentelemetry-operator enabled as well.
         otelcol:
           enabled: true
+
+          ## Required by Helm Chart v6: acknowledge the single-layer metrics pipeline migration guide.
+          ## See: https://www.sumologic.com/help/docs/send-data/kubernetes/v6/how-to-upgrade/
+          singleLayerPipeline:
+            migrationDocAcknowledged: true
 
           ## Configure image for Opentelemetry Collector
           image:
