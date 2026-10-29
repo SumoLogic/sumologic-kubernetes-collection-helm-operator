@@ -3,60 +3,60 @@
 readonly ROOT_DIR="$(dirname "$(dirname "${0}")")"
 
 helm upgrade --install test-openshift sumologic/sumologic \
-  --version 5.7.0 \
+  --version 6.2.0 \
   -n sumologic-system \
   --create-namespace -f "${ROOT_DIR}/tests/values.yaml" \
   --set instrumentation.instrumentationJobImage.image.repository=public.ecr.aws/sumologic/kubernetes-tools-kubectl@sha256 \
-  --set instrumentation.instrumentationJobImage.image.tag=b8c1b186a3dff050801706cf114930dae9c72867d8d599f0e330b708acad837e \
+  --set instrumentation.instrumentationJobImage.image.tag=47eedb5134d2cba81fda29a4bbef3c4dffbbb2c653b5e5f02d6e5dc058d2b73f \
   --set kube-prometheus-stack.kube-state-metrics.image.repository=public.ecr.aws/sumologic/kube-state-metrics@sha256 \
   --set kube-prometheus-stack.kube-state-metrics.image.tag=45dcc27ccc31100a5b93fb4511de38668cef7c2835b1c4e1d93e7a36f661fef1 \
   --set kube-prometheus-stack.prometheus-node-exporter.image.repository=public.ecr.aws/sumologic/node-exporter \
   --set kube-prometheus-stack.prometheus-node-exporter.image.tag=1.8.2-ubi \
   --set metadata.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
-  --set metadata.image.tag=0.161.0-sumo-0-ubi \
+  --set metadata.image.tag=0.163.0-sumo-0-ubi \
   --set metrics-server.image.repository=public.ecr.aws/sumologic/metrics-server@sha256 \
   --set metrics-server.image.tag=2fe257e8c8298e7389bd8f81b56860887e2917261858a2fbddc4e967b86b548c \
   --set opentelemetry-operator.manager.autoInstrumentationImage.dotnet.repository=public.ecr.aws/sumologic/autoinstrumentation-dotnet@sha256 \
   --set opentelemetry-operator.manager.autoInstrumentationImage.dotnet.tag=6d9f2ee35c196837a04c1459fa811fd798e16c5683feaae8d1fa2511d828f66f \
   --set opentelemetry-operator.manager.autoInstrumentationImage.java.repository=public.ecr.aws/sumologic/autoinstrumentation-java@sha256 \
-  --set opentelemetry-operator.manager.autoInstrumentationImage.java.tag=02aa27c134d5ce8f8d15c43a6f1bfa341031ff1c5b2dd2bac806883e706df69e \
+  --set opentelemetry-operator.manager.autoInstrumentationImage.java.tag=0cff7163964b34f3d290b86e3b395a9692b9e9e5b4a54e88700258c1dd941bd4 \
   --set opentelemetry-operator.manager.autoInstrumentationImage.nodejs.repository=public.ecr.aws/sumologic/autoinstrumentation-nodejs@sha256 \
   --set opentelemetry-operator.manager.autoInstrumentationImage.nodejs.tag=a8e1d036018f34e1b67277e3458c946f9db2c08bf806fe0fdb11f02e5a56b40a \
   --set opentelemetry-operator.manager.autoInstrumentationImage.python.repository=public.ecr.aws/sumologic/autoinstrumentation-python@sha256 \
   --set opentelemetry-operator.manager.autoInstrumentationImage.python.tag=f0fa45fa45e64c7df88f21181ae18ee96fe83cd3988258663d0806ea6f39e6bb \
   --set opentelemetry-operator.manager.collectorImage.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
-  --set opentelemetry-operator.manager.collectorImage.tag=0.161.0-sumo-0-ubi \
+  --set opentelemetry-operator.manager.collectorImage.tag=0.163.0-sumo-0-ubi \
   --set opentelemetry-operator.manager.image.repository=public.ecr.aws/sumologic/opentelemetry-operator \
   --set opentelemetry-operator.manager.image.tag=0.160.0 \
   --set otelcolInstrumentation.statefulset.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
-  --set otelcolInstrumentation.statefulset.image.tag=0.161.0-sumo-0-ubi \
+  --set otelcolInstrumentation.statefulset.image.tag=0.163.0-sumo-0-ubi \
   --set otelevents.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
-  --set otelevents.image.tag=0.161.0-sumo-0-ubi \
+  --set otelevents.image.tag=0.163.0-sumo-0-ubi \
   --set otellogs.daemonset.initContainers.changeowner.image.repository=public.ecr.aws/sumologic/busybox@sha256 \
   --set otellogs.daemonset.initContainers.changeowner.image.tag=7215b2a41004fec27d77d23e259727b6eac5b0ac21d6020e030937e9b183b8db \
   --set otellogs.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
-  --set otellogs.image.tag=0.161.0-sumo-0-ubi \
+  --set otellogs.image.tag=0.163.0-sumo-0-ubi \
   --set pvcCleaner.job.image.repository=public.ecr.aws/sumologic/kubernetes-tools-kubectl@sha256 \
-  --set pvcCleaner.job.image.tag=b8c1b186a3dff050801706cf114930dae9c72867d8d599f0e330b708acad837e \
+  --set pvcCleaner.job.image.tag=47eedb5134d2cba81fda29a4bbef3c4dffbbb2c653b5e5f02d6e5dc058d2b73f \
   --set sumologic.metrics.collector.otelcol.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
-  --set sumologic.metrics.collector.otelcol.image.tag=0.161.0-sumo-0-ubi \
+  --set sumologic.metrics.collector.otelcol.image.tag=0.163.0-sumo-0-ubi \
   --set sumologic.metrics.remoteWriteProxy.image.repository=public.ecr.aws/sumologic/nginx-unprivileged@sha256 \
   --set sumologic.metrics.remoteWriteProxy.image.tag=7260555d16c94c4fe1e016626b4cb8a5c0de6b700e2eea28744331fb298f71ae \
   --set sumologic.otelcolImage.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
-  --set sumologic.otelcolImage.tag=0.161.0-sumo-0-ubi \
+  --set sumologic.otelcolImage.tag=0.163.0-sumo-0-ubi \
   --set sumologic.setup.job.image.repository=public.ecr.aws/sumologic/kubernetes-setup@sha256 \
-  --set sumologic.setup.job.image.tag=e9b6548cd4290d66870b583f8e2b9a0d20f7055654902f1a88251ad61e657df5 \
+  --set sumologic.setup.job.image.tag=fbb24dfef31f3210dd026073aecbb816c839a2972e353c5c70ec95924656f7d2 \
   --set sumologic.setup.job.initContainerImage.repository=public.ecr.aws/sumologic/busybox@sha256 \
   --set sumologic.setup.job.initContainerImage.tag=7215b2a41004fec27d77d23e259727b6eac5b0ac21d6020e030937e9b183b8db \
   --set tailing-sidecar-operator.kubeRbacProxy.image.repository=public.ecr.aws/sumologic/kube-rbac-proxy@sha256 \
-  --set tailing-sidecar-operator.kubeRbacProxy.image.tag=0ba225277712466b338f618bf17d050bfc08607c958b87d90b9646a2f9a8715e \
+  --set tailing-sidecar-operator.kubeRbacProxy.image.tag=03e53613747a2025cb3597a2befa0a1df6bff99c23141ca1948c0156bde5313f \
    --set tailing-sidecar-operator.operator.image.repository=public.ecr.aws/sumologic/tailing-sidecar-operator@sha256 \
-  --set tailing-sidecar-operator.operator.image.tag=f43aa4c82b8638d31dcd6bd2e5501ed297bb240d17b4ec6a9f1b95d1b061b50c \
+  --set tailing-sidecar-operator.operator.image.tag=87a087df82f0ef8154bc1ae53f342b97f5b816d8ed915332143bb22066ad7311 \
   --set tailing-sidecar-operator.sidecar.image.repository=public.ecr.aws/sumologic/tailing-sidecar@sha256 \
-  --set tailing-sidecar-operator.sidecar.image.tag=5b4717a2a37c220ecfcdcede37d6526ab195d3f8adf3932fb8c2aafc9646b8d9 \
+  --set tailing-sidecar-operator.sidecar.image.tag=837b542d18e952e96bf1395d9167b076b9d4387067bd988ffdeb94b72a69b887 \
   --set telegraf-operator.image.repository=public.ecr.aws/sumologic/telegraf-operator-ubi \
   --set telegraf-operator.image.sidecarImage=public.ecr.aws/sumologic/telegraf@sha256:75efd2e509c6017ea0fc5c9103ce068cbc89087b16506a4ef48cb5ff00eab84e \
   --set tracesGateway.deployment.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
-  --set tracesGateway.deployment.image.tag=0.161.0-sumo-0-ubi \
+  --set tracesGateway.deployment.image.tag=0.163.0-sumo-0-ubi \
   --set tracesSampler.deployment.image.repository=public.ecr.aws/sumologic/sumologic-otel-collector \
-  --set tracesSampler.deployment.image.tag=0.161.0-sumo-0-ubi
+  --set tracesSampler.deployment.image.tag=0.163.0-sumo-0-ubi
