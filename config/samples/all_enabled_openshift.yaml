@@ -23,9 +23,12 @@ spec:
     scc:
       create: true
 
-    ## Required by Helm Chart v6: acknowledge the sourceless mode and single-layer metrics pipeline changes.
+    ## Helm Chart v6 enables sourceless mode by default, which registers collectors with an installation token.
+    ## Keep it disabled to use the HTTP/OTLP sources created by the setup job.
+    sourcelessMode: false
+
+    ## Required by Helm Chart v6: acknowledge the single-layer metrics pipeline changes.
     ## See: https://www.sumologic.com/help/docs/send-data/kubernetes/v6/how-to-upgrade/
-    sourcelessModeAck: true
     metrics:
       collector:
         otelcol:
