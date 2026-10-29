@@ -2,62 +2,31 @@ apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
   annotations:
-    alm-examples: |-
-      [
-          {
-              "apiVersion": "helm-operator.sumologic.com/v1alpha1",
-              "kind": "SumologicCollection",
-              "metadata": {
-                  "name": "collection"
-              },
-              "spec": {
-                  "sumologic": {
-                      "accessId": "",
-                      "accessKey": "",
-                      "clusterName": "kubernetes",
-                      "scc": {
-                          "create": true
-                      },
-                      "sourcelessMode": false,
-                      "metrics": {
-                          "collector": {
-                              "otelcol": {
-                                  "singleLayerPipeline": {
-                                      "migrationDocAcknowledged": true
-                                  }
-                              }
-                          }
-                      }
-                  },
-                  "kube-prometheus-stack": {
-                      "prometheus-node-exporter": {
-                          "service": {
-                              "port": 9200,
-                              "targetPort": 9200
-                          }
-                      }
-                  },
-                  "otellogs": {
-                      "daemonset": {
-                          "containers": {
-                              "otelcol": {
-                                  "securityContext": {
-                                      "privileged": true
-                                  }
-                              }
-                          },
-                          "initContainers": {
-                              "changeowner": {
-                                  "securityContext": {
-                                      "privileged": true
-                                  }
-                              }
-                          }
-                      }
-                  }
-              }
-          }
-      ]
+    alm-examples: "[\n    {\n        \"apiVersion\": \"helm-operator.sumologic.c\
+      om/v1alpha1\",\n        \"kind\": \"SumologicCollection\",\n        \"meta\
+      data\": {\n            \"name\": \"collection\"\n        },\n        \"spe\
+      c\": {\n            \"sumologic\": {\n                \"accessId\": \"\",\
+      \n                \"accessKey\": \"\",\n                \"clusterName\": \
+      \"kubernetes\",\n                \"scc\": {\n                    \"create\
+      \": true\n                },\n                \"sourcelessMode\": false,\n\
+      \                \"metrics\": {\n                    \"collector\": {\n   \
+      \                     \"otelcol\": {\n                            \"single\
+      LayerPipeline\": {\n                                \"migrationDocAcknowle\
+      dged\": true\n                            }\n                        }\n  \
+      \                  }\n                }\n            },\n            \"kub\
+      e-prometheus-stack\": {\n                \"prometheus-node-exporter\": {\n\
+      \                    \"service\": {\n                        \"port\": 920\
+      0,\n                        \"targetPort\": 9200\n                    }\n \
+      \               }\n            },\n            \"otellogs\": {\n          \
+      \      \"daemonset\": {\n                    \"containers\": {\n          \
+      \              \"otelcol\": {\n                            \"securityConte\
+      xt\": {\n                                \"privileged\": true\n           \
+      \                 }\n                        }\n                    },\n  \
+      \                  \"initContainers\": {\n                        \"change\
+      owner\": {\n                            \"securityContext\": {\n          \
+      \                      \"privileged\": true\n                            }\
+      \n                        }\n                    }\n                }\n   \
+      \         }\n        }\n    }\n]"
     capabilities: Basic Install
     categories: Logging & Tracing,Monitoring
     containerImage: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:354e4baf44b49023c0c49f56a58b5c9a08c04381af34d3e8d1df56931460b374
