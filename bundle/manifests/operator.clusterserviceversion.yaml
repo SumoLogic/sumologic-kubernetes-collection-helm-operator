@@ -8,25 +8,25 @@ metadata:
       c\": {\n            \"sumologic\": {\n                \"accessId\": \"\",\
       \n                \"accessKey\": \"\",\n                \"clusterName\": \
       \"kubernetes\",\n                \"scc\": {\n                    \"create\
-      \": true\n                },\n                \"sourcelessMode\": false,\n\
-      \                \"metrics\": {\n                    \"collector\": {\n   \
-      \                     \"otelcol\": {\n                            \"single\
-      LayerPipeline\": {\n                                \"migrationDocAcknowle\
-      dged\": true\n                            }\n                        }\n  \
-      \                  }\n                }\n            },\n            \"kub\
-      e-prometheus-stack\": {\n                \"prometheus-node-exporter\": {\n\
-      \                    \"service\": {\n                        \"port\": 920\
-      0,\n                        \"targetPort\": 9200\n                    }\n \
-      \               }\n            },\n            \"otellogs\": {\n          \
-      \      \"daemonset\": {\n                    \"containers\": {\n          \
-      \              \"otelcol\": {\n                            \"securityConte\
-      xt\": {\n                                \"privileged\": true\n           \
-      \                 }\n                        }\n                    },\n  \
-      \                  \"initContainers\": {\n                        \"change\
-      owner\": {\n                            \"securityContext\": {\n          \
-      \                      \"privileged\": true\n                            }\
-      \n                        }\n                    }\n                }\n   \
-      \         }\n        }\n    }\n]"
+      \": true\n                },\n                \"sourcelessModeAck\": true,\
+      \n                \"metrics\": {\n                    \"collector\": {\n  \
+      \                      \"otelcol\": {\n                            \"singl\
+      eLayerPipeline\": {\n                                \"migrationDocAcknowl\
+      edged\": true\n                            }\n                        }\n \
+      \                   }\n                }\n            },\n            \"ku\
+      be-prometheus-stack\": {\n                \"prometheus-node-exporter\": {\
+      \n                    \"service\": {\n                        \"port\": 92\
+      00,\n                        \"targetPort\": 9200\n                    }\n\
+      \                }\n            },\n            \"otellogs\": {\n         \
+      \       \"daemonset\": {\n                    \"containers\": {\n         \
+      \               \"otelcol\": {\n                            \"securityCont\
+      ext\": {\n                                \"privileged\": true\n          \
+      \                  }\n                        }\n                    },\n \
+      \                   \"initContainers\": {\n                        \"chang\
+      eowner\": {\n                            \"securityContext\": {\n         \
+      \                       \"privileged\": true\n                            \
+      }\n                        }\n                    }\n                }\n  \
+      \          }\n        }\n    }\n]"
     capabilities: Basic Install
     categories: Logging & Tracing,Monitoring
     containerImage: registry.connect.redhat.com/sumologic/sumologic-kubernetes-collection-helm-operator@sha256:354e4baf44b49023c0c49f56a58b5c9a08c04381af34d3e8d1df56931460b374
