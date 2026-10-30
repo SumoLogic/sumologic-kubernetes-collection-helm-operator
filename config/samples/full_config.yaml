@@ -47,9 +47,9 @@ spec:
     ## Cluster name: Note spaces are not allowed and will be replaced with dashes.
     clusterName: "kubernetes"
 
-    ## Helm Chart v6 enables sourceless mode by default, which registers collectors with an installation token.
-    ## Keep it disabled to use the HTTP/OTLP sources created by the setup job.
-    sourcelessMode: false
+    ## Required by Helm Chart v6: acknowledge the sourceless mode change.
+    ## See: https://www.sumologic.com/help/docs/send-data/kubernetes/v6/how-to-upgrade/
+    sourcelessModeAck: true
 
     ## Cluster DNS Domain
     ## We use the DNS domain in internal urls to speed up DNS resolution, see https://github.com/kubernetes/kubernetes/issues/56903
